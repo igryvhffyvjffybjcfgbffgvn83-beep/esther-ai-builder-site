@@ -1,0 +1,941 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AIOS Orchestrator Demo</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f4ef;
+      --panel: #fffdf8;
+      --panel-strong: #ffffff;
+      --ink: #202124;
+      --muted: #6a6760;
+      --line: #ded8ce;
+      --teal: #0f766e;
+      --teal-soft: #d9f0ea;
+      --amber: #b45f06;
+      --amber-soft: #f8e5c2;
+      --red: #b42318;
+      --red-soft: #f6d5d2;
+      --green: #247344;
+      --green-soft: #dcebd8;
+      --blue: #295ea8;
+      --blue-soft: #dbe7f6;
+      --shadow: 0 18px 55px rgba(52, 47, 38, 0.12);
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(255, 253, 248, 0.85), rgba(246, 244, 239, 0.96)),
+        repeating-linear-gradient(90deg, rgba(32, 33, 36, 0.04) 0, rgba(32, 33, 36, 0.04) 1px, transparent 1px, transparent 80px);
+      color: var(--ink);
+      font-family: var(--sans);
+      letter-spacing: 0;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: 0.55; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 248px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--line);
+      background: rgba(255, 253, 248, 0.78);
+      padding: 22px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: conic-gradient(from 120deg, #0f766e, #295ea8, #b45f06, #0f766e);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 800;
+      box-shadow: 0 12px 28px rgba(15, 118, 110, 0.22);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.15;
+    }
+
+    .brand p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav button {
+      min-height: 38px;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px;
+      text-align: left;
+    }
+
+    .nav button.active,
+    .nav button:hover {
+      background: var(--panel-strong);
+      border-color: var(--line);
+    }
+
+    svg {
+      width: 17px;
+      height: 17px;
+      stroke-width: 2;
+      flex: 0 0 auto;
+    }
+
+    .status-block {
+      margin-top: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+    }
+
+    .status-block strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .metric-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    main {
+      min-width: 0;
+      padding: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .title h2 {
+      margin: 0;
+      font-size: 26px;
+      line-height: 1.15;
+    }
+
+    .title p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 820px;
+      line-height: 1.55;
+    }
+
+    .run-id {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-strong);
+      padding: 10px 12px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.9fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .panel,
+    .tile,
+    .log-pane,
+    .phone-shell,
+    .summary-row,
+    .toast {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      padding: 18px;
+      min-width: 0;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .panel-header h3 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 28px;
+      border-radius: 999px;
+      padding: 0 10px;
+      font-size: 12px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .pill.green { background: var(--green-soft); color: var(--green); }
+    .pill.amber { background: var(--amber-soft); color: var(--amber); }
+    .pill.blue { background: var(--blue-soft); color: var(--blue); }
+    .pill.red { background: var(--red-soft); color: var(--red); }
+    .pill.teal { background: var(--teal-soft); color: var(--teal); }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(86px, 1fr));
+      gap: 10px;
+    }
+
+    .step {
+      min-height: 108px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-strong);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .step.done {
+      background: var(--green-soft);
+      border-color: rgba(36, 115, 68, 0.32);
+    }
+
+    .step.active {
+      border-color: var(--teal);
+      background: var(--teal-soft);
+      transform: translateY(-2px);
+    }
+
+    .step.failed {
+      border-color: var(--red);
+      background: var(--red-soft);
+    }
+
+    .step span {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .step strong {
+      font-size: 13px;
+      line-height: 1.25;
+    }
+
+    .step small {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.3;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .tile {
+      box-shadow: none;
+      padding: 14px;
+      min-height: 112px;
+    }
+
+    .tile span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .tile strong {
+      display: block;
+      margin-top: 10px;
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .tile p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .phone-wrap {
+      display: grid;
+      place-items: center;
+      min-height: 100%;
+    }
+
+    .phone-shell {
+      width: min(100%, 360px);
+      aspect-ratio: 0.52;
+      padding: 12px;
+      background: #282520;
+      box-shadow: 0 28px 65px rgba(32, 33, 36, 0.25);
+    }
+
+    .phone-screen {
+      height: 100%;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #f8faf8;
+      display: grid;
+      grid-template-rows: 36px 1fr 70px;
+    }
+
+    .phone-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      background: #202124;
+      color: white;
+      font-size: 11px;
+    }
+
+    .phone-content {
+      padding: 16px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+    }
+
+    .screen-card {
+      border-radius: 8px;
+      border: 1px solid #d7ded7;
+      background: white;
+      padding: 12px;
+      min-height: 78px;
+    }
+
+    .screen-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .screen-line {
+      height: 7px;
+      border-radius: 8px;
+      background: #dce7df;
+      margin-top: 7px;
+    }
+
+    .phone-actions {
+      border-top: 1px solid #dce2dc;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: #fff;
+    }
+
+    .phone-actions div {
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-size: 11px;
+      border-right: 1px solid #e6ebe6;
+    }
+
+    .phone-actions div:last-child { border-right: 0; }
+
+    .work-area {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .logs { display: grid; gap: 12px; }
+
+    .log-pane {
+      box-shadow: none;
+      background: #1f211f;
+      color: #d7e8d4;
+      min-height: 250px;
+      max-height: 250px;
+      padding: 14px;
+      overflow: auto;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .log-line {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .log-line.warn { color: #ffd48a; }
+    .log-line.ok { color: #9fe1b3; }
+    .log-line.fail { color: #ffaaa3; }
+
+    .controls {
+      display: grid;
+      gap: 10px;
+    }
+
+    .control {
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-strong);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+    }
+
+    .control:hover {
+      border-color: var(--teal);
+    }
+
+    .control.primary {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: white;
+    }
+
+    .control.danger:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .command-box {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .command-box input {
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0 12px;
+      background: var(--panel-strong);
+      min-width: 0;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .summary {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .summary-row {
+      box-shadow: none;
+      min-height: 54px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .summary-row span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .summary-row strong {
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 10;
+      padding: 12px 14px;
+      color: var(--ink);
+      transform: translateY(18px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+      max-width: min(420px, calc(100vw - 32px));
+      font-size: 13px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1120px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar {
+        position: static;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .nav { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .status-block { margin-top: 0; }
+      .hero-grid, .work-area { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      main { padding: 16px; }
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .run-id {
+        width: 100%;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+      .pipeline, .dashboard, .nav { grid-template-columns: 1fr 1fr; }
+      .title h2 { font-size: 22px; }
+    }
+
+    @media (max-width: 480px) {
+      .pipeline, .dashboard, .nav { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="mark">A</div>
+        <div>
+          <h1>AIOS Plugin</h1>
+          <p>Orchestrator + Telemetry Bridge</p>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Demo sections">
+        <button class="active" type="button" data-nav="workspace">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+          工作台
+        </button>
+        <button type="button" data-nav="evidence">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 4h14v16H5z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
+          证据
+        </button>
+        <button type="button" data-nav="archive">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3v18M4 11l8-8 8 8"/></svg>
+          归档
+        </button>
+        <button type="button" data-nav="history">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+          历史
+        </button>
+      </nav>
+
+      <div class="status-block">
+        <strong>Telemetry Bridge</strong>
+        <div class="pill green" id="bridge-pill"><span class="dot"></span><span id="bridge-state">CONNECTED</span></div>
+        <div class="metric-line"><span>Device</span><b id="device-name">iPhone 15</b></div>
+        <div class="metric-line"><span>Policy</span><b id="policy-name">Sign-off</b></div>
+        <div class="metric-line"><span>Token</span><b>Header only</b></div>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div class="title">
+          <h2>自动化工作流控制台</h2>
+          <p>
+            AIOS Plugin 是一款面向开发者和团队的本地化 AI 工程自动化产品，用可视化工作流把需求拆解、代码实现、真机测试、问题修复和交付归档串成完整闭环。
+          </p>
+        </div>
+        <div class="run-id" id="pipeline-id">PL-20260502-143022-Q8K1</div>
+      </header>
+
+      <section class="hero-grid" aria-label="Pipeline overview">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Pipeline State Machine</h3>
+            <span class="pill teal" id="state-pill"><span class="dot"></span><span id="state-label">TEST</span></span>
+          </div>
+          <div class="pipeline" id="pipeline">
+            <div class="step" data-step="PLAN"><span>01</span><strong>PLAN</strong><small>需求拆解</small></div>
+            <div class="step" data-step="REVIEW"><span>02</span><strong>REVIEW</strong><small>契约审查</small></div>
+            <div class="step" data-step="IMPLEMENT"><span>03</span><strong>IMPLEMENT</strong><small>代码执行</small></div>
+            <div class="step" data-step="TEST"><span>04</span><strong>TEST</strong><small>真机回归</small></div>
+            <div class="step" data-step="FIX"><span>05</span><strong>FIX</strong><small>失败修复</small></div>
+            <div class="step" data-step="ARCHIVE"><span>06</span><strong>ARCHIVE</strong><small>证据归档</small></div>
+          </div>
+
+          <div class="dashboard">
+            <div class="tile">
+              <span>Review Loops</span>
+              <strong id="review-loops">1/2</strong>
+              <p>REQUEST_CHANGES 自动回到 IMPLEMENT。</p>
+            </div>
+            <div class="tile">
+              <span>Fix Budget</span>
+              <strong id="fix-budget">3</strong>
+              <p>BUILD 与 TEST_ASSERTION 消耗预算。</p>
+            </div>
+            <div class="tile">
+              <span>Evidence Runs</span>
+              <strong id="run-count">48</strong>
+              <p>current 与 latest 指针保护最新证据。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="phone-wrap">
+          <div class="phone-shell" aria-label="Device preview">
+            <div class="phone-screen">
+              <div class="phone-bar"><span>9:41</span><span id="phone-title">AIOS Test App</span><span>100%</span></div>
+              <div class="phone-content">
+                <div class="screen-card">
+                  <strong id="screen-flow">Login Flow</strong>
+                  <div class="screen-line" style="width: 96%"></div>
+                  <div class="screen-line" style="width: 76%"></div>
+                  <div class="screen-line" style="width: 88%"></div>
+                </div>
+                <div class="screen-card">
+                  <strong id="screen-assertion">Checkout Assertion</strong>
+                  <div class="pill amber" id="capture-pill"><span class="dot"></span><span id="capture-state">CAPTURING</span></div>
+                </div>
+                <div class="screen-card">
+                  <strong>Attachment Index</strong>
+                  <div class="screen-line" style="width: 62%"></div>
+                  <div class="screen-line" style="width: 82%"></div>
+                </div>
+              </div>
+              <div class="phone-actions">
+                <div>build.log</div>
+                <div>screen.png</div>
+                <div>xcresult</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="work-area" aria-label="Live operations">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Live Evidence</h3>
+            <span class="pill blue"><span class="dot"></span><span id="test-run-id">TR-20260502-143104-M2AC</span></span>
+          </div>
+          <div class="logs">
+            <div class="log-pane" id="log-pane" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Control</h3>
+            <span class="pill amber" id="control-pill"><span class="dot"></span><span id="control-state">READY</span></span>
+          </div>
+          <div class="controls">
+            <button class="control primary" type="button" data-action="continue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              Continue
+            </button>
+            <button class="control" type="button" data-action="pause">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 5v14M14 5v14"/></svg>
+              Pause
+            </button>
+            <button class="control" type="button" data-action="capture">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 7h4l2-2h4l2 2h4v12H4z"/><circle cx="12" cy="13" r="3"/></svg>
+              Capture
+            </button>
+            <button class="control" type="button" data-action="bundle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 7h16v12H4z"/><path d="M8 7V5h8v2"/></svg>
+              Bundle
+            </button>
+            <button class="control" type="button" data-action="reset">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v6h6"/></svg>
+              Reset
+            </button>
+            <button class="control danger" type="button" data-action="abort">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 6l12 12M18 6L6 18"/></svg>
+              Abort
+            </button>
+          </div>
+          <div class="command-box">
+            <input id="command-preview" value="python3 -m tools.orchestrator.pipeline --resume" aria-label="Command preview">
+          </div>
+          <div class="summary">
+            <div class="summary-row"><span>Failure Class</span><strong id="failure-class">NONE</strong></div>
+            <div class="summary-row"><span>Signature</span><strong id="signature">sha256: clean</strong></div>
+            <div class="summary-row"><span>Archive</span><strong id="archive-state">waiting</strong></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const steps = ["PLAN", "REVIEW", "IMPLEMENT", "TEST", "FIX", "ARCHIVE"];
+    const stepNotes = {
+      PLAN: "需求已拆成实现任务和验收条件。",
+      REVIEW: "Reviewer 正在检查 PRD 契约和模块边界。",
+      IMPLEMENT: "Implement skill 正在落地最小代码改动。",
+      TEST: "Telemetry Bridge 已连接真机并采集证据。",
+      FIX: "检测到失败，进入预算内修复回路。",
+      ARCHIVE: "报告、证据和变更摘要已准备归档。"
+    };
+    const logs = [];
+    let stepIndex = 3;
+    let reviewLoops = 1;
+    let fixBudget = 3;
+    let runCount = 48;
+    let paused = false;
+    let aborted = false;
+    let toastTimer = null;
+
+    const nodes = {
+      pipeline: document.querySelectorAll(".step"),
+      stateLabel: document.querySelector("#state-label"),
+      statePill: document.querySelector("#state-pill"),
+      reviewLoops: document.querySelector("#review-loops"),
+      fixBudget: document.querySelector("#fix-budget"),
+      runCount: document.querySelector("#run-count"),
+      logPane: document.querySelector("#log-pane"),
+      failureClass: document.querySelector("#failure-class"),
+      signature: document.querySelector("#signature"),
+      archiveState: document.querySelector("#archive-state"),
+      bridgeState: document.querySelector("#bridge-state"),
+      bridgePill: document.querySelector("#bridge-pill"),
+      controlState: document.querySelector("#control-state"),
+      controlPill: document.querySelector("#control-pill"),
+      captureState: document.querySelector("#capture-state"),
+      capturePill: document.querySelector("#capture-pill"),
+      command: document.querySelector("#command-preview"),
+      testRunId: document.querySelector("#test-run-id"),
+      phoneTitle: document.querySelector("#phone-title"),
+      screenFlow: document.querySelector("#screen-flow"),
+      screenAssertion: document.querySelector("#screen-assertion"),
+      toast: document.querySelector("#toast")
+    };
+
+    function addLog(text, tone = "") {
+      const stamp = new Date().toLocaleTimeString("zh-CN", { hour12: false });
+      logs.push({ text: `[${stamp}] ${text}`, tone });
+      if (logs.length > 40) logs.shift();
+      renderLogs();
+    }
+
+    function renderLogs() {
+      nodes.logPane.innerHTML = logs.map((entry) => (
+        `<div class="log-line ${entry.tone}">${entry.text}</div>`
+      )).join("");
+      nodes.logPane.scrollTop = nodes.logPane.scrollHeight;
+    }
+
+    function setPill(node, color) {
+      node.className = `pill ${color}`;
+    }
+
+    function toast(message) {
+      nodes.toast.textContent = message;
+      nodes.toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => nodes.toast.classList.remove("show"), 1800);
+    }
+
+    function render() {
+      const current = steps[stepIndex];
+      nodes.pipeline.forEach((node, index) => {
+        node.classList.toggle("done", index < stepIndex && !aborted);
+        node.classList.toggle("active", index === stepIndex && !aborted);
+        node.classList.toggle("failed", aborted && index === stepIndex);
+      });
+      nodes.stateLabel.textContent = aborted ? "ABORTED" : current;
+      setPill(nodes.statePill, aborted ? "red" : current === "ARCHIVE" ? "green" : current === "FIX" ? "amber" : "teal");
+      nodes.reviewLoops.textContent = `${reviewLoops}/2`;
+      nodes.fixBudget.textContent = String(fixBudget);
+      nodes.runCount.textContent = String(runCount);
+      nodes.controlState.textContent = aborted ? "ABORTED" : paused ? "PAUSED" : "READY";
+      setPill(nodes.controlPill, aborted ? "red" : paused ? "amber" : "green");
+      nodes.bridgeState.textContent = paused ? "PAUSED" : aborted ? "INTERRUPTED" : "CONNECTED";
+      setPill(nodes.bridgePill, aborted ? "red" : paused ? "amber" : "green");
+      nodes.captureState.textContent = current === "TEST" && !aborted ? "CAPTURING" : current === "ARCHIVE" ? "EXPORTED" : "READY";
+      setPill(nodes.capturePill, current === "ARCHIVE" ? "green" : current === "TEST" ? "amber" : "blue");
+      nodes.failureClass.textContent = aborted ? "INFRA" : current === "FIX" ? "TEST_ASSERTION" : "NONE";
+      nodes.signature.textContent = aborted ? "sha256: aborted" : current === "FIX" ? "sha256: 9f2a18c4" : "sha256: clean";
+      nodes.archiveState.textContent = aborted ? "WAITING_FOR_HUMAN" : current === "ARCHIVE" ? "sign-off required" : "waiting";
+      nodes.command.value = paused
+        ? "curl -H 'X-Token: ***' -d '{\"command\":\"reset\"}' /control/command"
+        : current === "TEST"
+          ? "python3 -m tools.orchestrator.pipeline --resume"
+          : `python3 -m tools.orchestrator.pipeline --resume --step ${current}`;
+      nodes.phoneTitle.textContent = current === "ARCHIVE" ? "Evidence Bundle" : "AIOS Test App";
+      nodes.screenFlow.textContent = current === "PLAN" ? "Requirement Map" : current === "FIX" ? "Failure Replay" : "Login Flow";
+      nodes.screenAssertion.textContent = current === "ARCHIVE" ? "Review Report" : current === "FIX" ? "Assertion Diff" : "Checkout Assertion";
+      document.querySelector('[data-action="continue"]').disabled = paused || aborted;
+      document.querySelector('[data-action="pause"]').disabled = aborted;
+      document.querySelector('[data-action="capture"]').disabled = aborted;
+      document.querySelector('[data-action="bundle"]').disabled = aborted;
+    }
+
+    function continueRun() {
+      const previous = steps[stepIndex];
+      if (stepIndex < steps.length - 1) {
+        stepIndex += 1;
+      } else {
+        stepIndex = 0;
+        reviewLoops = 1;
+        fixBudget = 3;
+        runCount += 1;
+        nodes.testRunId.textContent = `TR-20260502-${Math.floor(143100 + Math.random() * 500)}-M2AC`;
+      }
+      const current = steps[stepIndex];
+      if (current === "REVIEW") reviewLoops = Math.min(2, reviewLoops + 1);
+      addLog(`${previous} -> ${current}: ${stepNotes[current]}`, "ok");
+      toast(`已推进到 ${current}`);
+      render();
+    }
+
+    function pauseRun() {
+      paused = !paused;
+      addLog(paused ? "pause accepted: 拒绝新 run，当前证据保持可读。" : "reset accepted: pause cleared，允许继续执行。", paused ? "warn" : "ok");
+      toast(paused ? "已暂停新任务" : "已恢复执行");
+      render();
+    }
+
+    function captureEvidence() {
+      runCount += 1;
+      addLog("capture accepted: screen.png refreshed, attachment index updated.", "ok");
+      toast("已采集截图与附件索引");
+      render();
+    }
+
+    function bundleEvidence() {
+      stepIndex = steps.indexOf("ARCHIVE");
+      addLog("bundle accepted: runs/TR...zip ready, review_report.md generated.", "ok");
+      toast("证据包已生成");
+      render();
+    }
+
+    function resetRun() {
+      paused = false;
+      aborted = false;
+      stepIndex = steps.indexOf("PLAN");
+      reviewLoops = 0;
+      fixBudget = 3;
+      addLog("reset accepted: pipeline returned to PLAN with clean control state.", "warn");
+      toast("已重置到 PLAN");
+      render();
+    }
+
+    function abortRun() {
+      aborted = true;
+      fixBudget = Math.max(0, fixBudget - 1);
+      addLog("abort accepted: active run interrupted, WAITING_FOR_HUMAN generated.", "fail");
+      toast("已中止，等待人工介入");
+      render();
+    }
+
+    document.querySelectorAll("[data-action]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const action = button.dataset.action;
+        if (action === "continue") continueRun();
+        if (action === "pause") pauseRun();
+        if (action === "capture") captureEvidence();
+        if (action === "bundle") bundleEvidence();
+        if (action === "reset") resetRun();
+        if (action === "abort") abortRun();
+      });
+    });
+
+    document.querySelectorAll("[data-nav]").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll("[data-nav]").forEach((node) => node.classList.remove("active"));
+        button.classList.add("active");
+        addLog(`dashboard view switched: ${button.dataset.nav}`, "ok");
+        toast(`已切换到${button.textContent.trim()}`);
+      });
+    });
+
+    [
+      ["plan", "loaded prd.md and architecture.md", "ok"],
+      ["review", "verdict=APPROVE loops=1/2", "ok"],
+      ["implement", "changed tools/telemetry_bridge/server.py", "ok"],
+      ["test", "POST /control/command continue accepted", "ok"],
+      ["device", "xcodebuild test started, syslog attached", ""],
+      ["capture", "exporting Test.xcresult attachments", ""],
+      ["gate", "failed_count=0 passed_count=18", "ok"],
+      ["archive", "review_report.md ready for sign-off", "warn"]
+    ].forEach(([scope, text, tone]) => addLog(`${scope}: ${text}`, tone));
+
+    render();
+  </script>
+</body>
+</html>
