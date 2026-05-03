@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Esther — AI Builder Lab</title>
+  <desc id="desc">Warm off-white social preview with tomato accent.</desc>
+  <rect width="1200" height="630" fill="#fbf7ef"/>
+  <rect x="72" y="70" width="1056" height="490" rx="24" fill="#fffdf8" stroke="#e4d9cb" stroke-width="2"/>
+  <circle cx="1010" cy="162" r="46" fill="#c84b31"/>
+  <path d="M995 115c18 10 34 10 51 0" fill="none" stroke="#2f7d47" stroke-width="9" stroke-linecap="round"/>
+  <text x="120" y="176" fill="#c84b31" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700" letter-spacing="4">ESTHER</text>
+  <text x="120" y="292" fill="#191714" font-family="Fraunces, Georgia, serif" font-size="78" font-weight="650">AI Builder Lab</text>
+  <text x="120" y="382" fill="#3b3630" font-family="Inter, Arial, sans-serif" font-size="36">I just turn the problems I run into into tools.</text>
+  <text x="120" y="456" fill="#686057" font-family="Inter, Arial, sans-serif" font-size="26">A public lab of AI products, demos, and experiments.</text>
+  <line x1="120" y1="500" x2="330" y2="500" stroke="#c84b31" stroke-width="8" stroke-linecap="round"/>
+</svg>

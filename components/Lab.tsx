@@ -3,28 +3,28 @@ import LabCard from "./LabCard";
 
 export default function Lab() {
   return (
-    <section id="lab" className="px-5 py-16 sm:px-8 sm:py-24">
-      <div className="mx-auto max-w-6xl">
+    <section id="lab" className="px-0 py-12 sm:py-20">
+      <div className="shell">
         <div className="max-w-2xl">
-          <p className="text-sm font-medium uppercase tracking-[0.18em] text-[#C84B31]">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#C84B31]">
             The Lab
           </p>
-          <h2 className="mt-4 font-serif text-4xl font-semibold text-[#1A1A1A] sm:text-5xl">
+          <h2 className="mt-4 text-balance font-serif text-4xl font-semibold text-[#191714] sm:text-5xl">
             Products, prototypes, and experiments.
           </h2>
         </div>
 
-        <div className="mt-12 space-y-12">
+        <div className="mt-10 space-y-10 sm:space-y-12">
           {labGroupOrder.map((group) => {
             const items = getLabItemsByGroup(group);
 
             return (
               <div key={group}>
-                <div className="mb-5 flex items-center gap-4">
-                  <h3 className="font-mono text-sm font-semibold tracking-[0.18em] text-[#C84B31]">
+                <div className="mb-4 flex items-center gap-4">
+                  <h3 className="font-mono text-sm font-semibold tracking-[0.16em] text-[#C84B31]">
                     {labGroupLabels[group]}
                   </h3>
-                  <div className="h-px flex-1 bg-[#E5DFD6]" />
+                  <div className="h-px flex-1 bg-[#E4D9CB]" />
                 </div>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {items.map((item) => (

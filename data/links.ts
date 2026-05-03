@@ -13,7 +13,7 @@ export const links = {
   lab: "/#lab",
   subscribe: "/#subscribe",
   manifesto: "/#manifesto",
-  about: "/about",
+  about: null,
   email: `mailto:${contactEmail}`,
   x: null,
   linkedIn: null,

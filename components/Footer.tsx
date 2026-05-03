@@ -2,10 +2,10 @@ import { site } from "@/data/site";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-[#E5DFD6] px-5 py-10 sm:px-8">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 text-sm text-[#5F5952] md:flex-row md:items-end md:justify-between">
+    <footer className="border-t border-[#E4D9CB] px-0 py-10">
+      <div className="shell flex flex-col gap-6 text-sm text-[#686057] md:flex-row md:items-end md:justify-between">
         <div className="space-y-3">
-          <p className="text-[#1A1A1A]">{site.footer.microcopy}</p>
+          <p className="text-[#191714]">{site.footer.microcopy}</p>
           <div className="flex flex-wrap gap-4">
             {site.footer.links.map((link) =>
               link.href ? (

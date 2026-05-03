@@ -4,44 +4,44 @@ export default function Hero() {
   const { hero } = site;
 
   return (
-    <section className="px-5 pt-20 pb-16 sm:px-8 sm:pt-28 sm:pb-24">
-      <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
+    <section className="relative px-0 pt-14 pb-12 sm:pt-24 sm:pb-20">
+      <div className="shell grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-end">
         <div>
-          <p className="mb-5 text-sm font-medium uppercase tracking-[0.18em] text-[#C84B31]">
+          <p className="mb-5 text-sm font-semibold uppercase tracking-[0.16em] text-[#C84B31]">
             {hero.title}
           </p>
-          <h1 className="max-w-3xl font-serif text-5xl leading-[1.02] font-semibold text-[#1A1A1A] sm:text-7xl">
+          <h1 className="max-w-3xl text-balance font-serif text-[3rem] leading-[1.02] font-semibold text-[#191714] sm:text-7xl lg:text-[5.4rem]">
             {hero.thesis}
           </h1>
-          <div className="mt-10 flex flex-col gap-3 text-lg leading-8 text-[#3B3732]">
+          <div className="mt-8 flex flex-col gap-2.5 text-base leading-7 text-[#3B3630] sm:mt-10 sm:text-lg sm:leading-8">
             {hero.productLines.map((line) => (
               <p key={line}>{line}</p>
             ))}
           </div>
         </div>
 
-        <div className="border-l-0 border-[#E5DFD6] lg:border-l lg:pl-10">
-          <p className="font-serif text-3xl leading-tight text-[#1A1A1A]">
+        <div className="rounded-lg border border-[#E4D9CB] bg-[#FFFDF8]/78 p-5 shadow-[0_18px_45px_rgb(82_53_34_/_7%)] sm:p-7 lg:border-l-4 lg:border-l-[#C84B31]">
+          <p className="font-serif text-2xl leading-tight text-[#191714] sm:text-3xl">
             {hero.proof}
           </p>
-          <p className="mt-6 whitespace-pre-line text-lg leading-8 text-[#3B3732]">
+          <p className="mt-5 whitespace-pre-line text-base leading-7 text-[#3B3630] sm:text-lg sm:leading-8">
             {hero.builderLines.join("\n")}
           </p>
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
               href={hero.primaryCta.href}
-              className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#C84B31] px-5 py-3 text-sm font-semibold text-[#FAF8F5] transition-colors hover:bg-[#A93D27]"
+              className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#C84B31] px-5 py-3 text-sm font-semibold text-[#FFFDF8] transition-colors hover:bg-[#A93D27]"
             >
               {hero.primaryCta.label}
             </a>
             <a
               href={hero.secondaryCta.href}
-              className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#E5DFD6] px-5 py-3 text-sm font-semibold text-[#1A1A1A] transition-colors hover:border-[#C84B31] hover:text-[#C84B31]"
+              className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#E4D9CB] px-5 py-3 text-sm font-semibold text-[#191714] transition-colors hover:border-[#C84B31] hover:text-[#C84B31]"
             >
               {hero.secondaryCta.label}
             </a>
           </div>
-          <p className="mt-8 text-sm text-[#5F5952]">
+          <p className="mt-7 text-sm leading-6 text-[#686057]">
             {hero.contactLine}{" "}
             <a
               href={hero.contactCta.href}

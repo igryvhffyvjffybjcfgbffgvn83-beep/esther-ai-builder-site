@@ -1,12 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background: #FAF8F5;
-  --foreground: #1A1A1A;
-  --tomato: #C84B31;
-  --peach: #F4D8C0;
-  --line: #E5DFD6;
-  --muted: #5F5952;
+  --background: #fbf7ef;
+  --surface: #fffdf8;
+  --surface-warm: #f6eadc;
+  --foreground: #191714;
+  --body: #3b3630;
+  --tomato: #c84b31;
+  --tomato-dark: #a93d27;
+  --peach: #f3d7bf;
+  --line: #e4d9cb;
+  --muted: #686057;
+  --shadow: 0 18px 45px rgb(82 53 34 / 8%);
 }
 
 @theme inline {
@@ -24,12 +29,14 @@
 html {
   scroll-behavior: smooth;
   background: var(--background);
+  overflow-x: hidden;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
 }
 
 a {
@@ -39,4 +46,21 @@ a {
 ::selection {
   background: var(--peach);
   color: var(--foreground);
+}
+
+.shell {
+  width: min(100% - 2.5rem, 72rem);
+  margin-inline: auto;
+}
+
+.warm-card {
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 94%, white);
+  box-shadow: var(--shadow);
+}
+
+@media (min-width: 640px) {
+  .shell {
+    width: min(100% - 4rem, 72rem);
+  }
 }
