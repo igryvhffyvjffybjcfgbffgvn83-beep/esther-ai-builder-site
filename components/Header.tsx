@@ -29,12 +29,6 @@ export default function Header() {
           )}
         </nav>
         <a
-          href={site.header.cta.href}
-          className="hidden rounded-full border border-[#C84B31]/70 px-4 py-2 text-sm font-medium text-[#C84B31] transition-colors hover:bg-[#C84B31] hover:text-[#FFFDF8] sm:inline-flex"
-        >
-          {site.header.cta.label}
-        </a>
-        <a
           href={site.links.subscribe}
           className="inline-flex rounded-full bg-[#C84B31] px-3.5 py-2 text-sm font-semibold text-[#FFFDF8] transition-colors hover:bg-[#A93D27] sm:hidden"
         >

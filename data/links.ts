@@ -24,6 +24,7 @@ export const headerLinks = [
   { label: "The Lab", href: links.lab },
   { label: "Manifesto", href: links.manifesto },
   { label: "About", href: links.about },
+  { label: "Subscribe", href: links.subscribe },
 ] satisfies NamedLink[];
 
 export const footerLinks = [

@@ -52,17 +52,6 @@ export default function LabCard({ item }: LabCardProps) {
         <p className="mt-4 text-sm leading-6 text-[#3B3630]">{item.description}</p>
       ) : null}
 
-      <div className="mt-5 space-y-3 border-t border-[#E4D9CB] pt-5 text-sm leading-6 text-[#3B3630]">
-        <p>
-          <span className="font-semibold text-[#191714]">Problem → </span>
-          {item.problem}
-        </p>
-        <p>
-          <span className="font-semibold text-[#191714]">Tool → </span>
-          {item.tool}
-        </p>
-      </div>
-
       <div className="mt-auto pt-6">
         {item.href ? (
           <a
@@ -75,7 +64,7 @@ export default function LabCard({ item }: LabCardProps) {
           </a>
         ) : (
           <span className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#E4D9CB] px-4 py-2 text-sm font-semibold text-[#686057]">
-            Coming soon
+            {item.ctaLabel}
           </span>
         )}
       </div>

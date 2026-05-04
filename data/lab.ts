@@ -1,3 +1,5 @@
+import { links } from "./links";
+
 export type LabGroup = "LIVE" | "DEMO" | "NEXT";
 
 export type LabStatus =
@@ -50,8 +52,8 @@ export const labItems: LabItem[] = [
     problem: "Job applications are hard to tailor for each role.",
     tool: "An AI that matches your real experience to the JD and rewrites your resume to fit.",
     description: "Started because I couldn't get my own resume to match the jobs I wanted. Live on the App Store.",
-    href: null,
-    ctaLabel: "Coming soon",
+    href: links.appStore,
+    ctaLabel: links.appStore ? "View on App Store →" : "App Store link coming soon",
     isFeatured: true,
     isExternal: true,
     screenshot: "/images/lab/tailorcv.png",

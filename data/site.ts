@@ -7,10 +7,6 @@ export const site = {
   links,
   header: {
     links: headerLinks,
-    cta: {
-      label: "Say hi",
-      href: links.email,
-    },
   },
   hero: {
     title: "Esther.",
@@ -19,9 +15,7 @@ export const site = {
     productLines: [
       "Job applications I couldn't get right → a resume AI.",
       "Photos I couldn't pose for → a photography app.",
-      "Astrology I couldn't decode → a transit timeline tool.",
       "User feedback I couldn't get → a simulation plugin.",
-      "Engineering chains that kept breaking → a workflow orchestrator.",
     ],
     proof: "Five products. Different domains. Same method.",
     builderLines: [
@@ -69,7 +63,7 @@ export const site = {
       "Most of my products started the same way.",
       "I'd run into a problem.\nGet frustrated.\nTry to fix it with what already exists.\nFail.\nThen quietly think:\nsomeone should make a tool for this.",
       "Eventually I realized —\nthat someone could be me.",
-      "I'm not a developer.\nI don't have a CS background.\nBut I have AI now,\nand I have problems —\nmy own and other people's.",
+      "I'm not a traditional developer.\nI don't have a CS background.\nBut I have AI now,\nand I have problems —\nmy own and other people's.",
       "That turns out to be enough.",
     ],
   },
@@ -81,8 +75,8 @@ export const site = {
   aboutShort: {
     title: "About Esther",
     paragraphs: [
-      "I'm based between China, Australia, and Thailand —\ndepending on what visa I'm on.",
-      "Most of what I build started as something I personally got stuck on.\nA resume I couldn't tailor. A photo I couldn't pose for.\nAn astrology report I couldn't decode.",
+      "I'm Esther, a non-coder builder from China, currently building between places.",
+      "Most of what I build started as something I personally got stuck on:\na resume I couldn't tailor, a photo I couldn't pose for,\na product loop I couldn't debug.",
       "The pattern keeps repeating, so I keep building.",
     ],
     cta: {
