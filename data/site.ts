@@ -83,6 +83,38 @@ export const site = {
       href: links.about,
     },
   },
+  aboutPage: {
+    title: "About Esther",
+    paragraphs: [
+      "I'm Esther — a non-coder builder from China,\nlearning product, code, and distribution by shipping real things.",
+      "I used to think building software was something only engineers did.\nThen AI changed the distance between having a problem\nand making a tool for it.",
+      "So I started building. Mostly from things that personally annoyed me —\nresumes I couldn't tailor, photos I couldn't pose for,\nastrology reports I couldn't decode, AI workflows that kept breaking.",
+      "I'm not trying to build a clean startup arc.\nI'm just building from things that actually bothered me.",
+      "Some of these turned into products.\nSome are still rough demos.\nA few will probably never go anywhere —\nand that's fine, because each one taught me how to take\nsomething messy and make it slightly more usable.",
+      "This site is where I keep the receipts:\nthe products that worked,\nthe demos that are still rough,\nthe ideas I'm still testing,\nand the notes I'm collecting along the way.",
+    ],
+    principles: {
+      title: "How I build",
+      items: [
+        {
+          title: "Start from real friction.",
+          body: "I don't begin with market maps. I begin with something\nthat bothered me enough to make a tool for it.",
+        },
+        {
+          title: "Make the first version visible.",
+          body: "A working demo teaches me more than a perfect idea.",
+        },
+        {
+          title: "Keep the human feeling.",
+          body: "The best AI tools shouldn't feel like machines judging people.\nThey should feel like someone helping you move forward.",
+        },
+        {
+          title: "Ship before it feels ready.",
+          body: "That's the whole point. Confusion turns into clarity faster\nwhen something is already in front of you.",
+        },
+      ],
+    },
+  },
   workWithMe: {
     title: "Work with me",
     intro: "I'm open to thoughtful conversations around:",
