@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI 用户模拟测试插件 Demo</title>
+    <title>AI User Simulation Testing Plugin Demo</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <main class="shell">
-      <aside class="sidebar" aria-label="插件导航">
+      <aside class="sidebar" aria-label="Plugin navigation">
         <div class="brand">
           <span class="brand-mark">UT</span>
           <div>
@@ -18,40 +18,40 @@
         </div>
 
         <p class="one-liner">
-          一个基于模拟用户决策的反馈插件，帮助开发者用 AI 画像复现产品体验、收集结构化反馈并快速确定下一轮迭代重点。
+          A feedback plugin that simulates user decisions with AI personas, helping builders replay product experiences, collect structured feedback, and prioritize the next iteration.
         </p>
 
-        <nav class="steps" aria-label="Demo 步骤">
+        <nav class="steps" aria-label="Demo steps">
           <button class="step is-active" data-step="brief">
             <span>01</span>
-            <strong>导入测试材料</strong>
+            <strong>Import Test Materials</strong>
           </button>
           <button class="step" data-step="personas">
             <span>02</span>
-            <strong>选择用户画像</strong>
+            <strong>Select Personas</strong>
           </button>
           <button class="step" data-step="simulate">
             <span>03</span>
-            <strong>模拟用户决策</strong>
+            <strong>Simulate Decisions</strong>
           </button>
           <button class="step" data-step="insights">
             <span>04</span>
-            <strong>反馈与迭代</strong>
+            <strong>Feedback & Iteration</strong>
           </button>
         </nav>
 
         <div class="metric-panel">
           <div>
             <span class="metric-value" id="personaCount">6</span>
-            <span class="metric-label">画像</span>
+            <span class="metric-label">Personas</span>
           </div>
           <div>
             <span class="metric-value" id="issueCount">0</span>
-            <span class="metric-label">问题</span>
+            <span class="metric-label">Issues</span>
           </div>
           <div>
             <span class="metric-value" id="scoreValue">--</span>
-            <span class="metric-label">满意度</span>
+            <span class="metric-label">Score</span>
           </div>
         </div>
       </aside>
@@ -59,21 +59,21 @@
       <section class="workspace" aria-live="polite">
         <header class="topbar">
           <div>
-            <p class="eyebrow">AI 模拟用户测试</p>
-            <h2 id="screenTitle">导入产品流程、截图和测试目标</h2>
+            <p class="eyebrow">AI User Simulation Testing</p>
+            <h2 id="screenTitle">Import the product flow, screenshots, and test goals</h2>
           </div>
           <div class="top-actions">
-            <button class="icon-btn" id="resetBtn" title="重置 Demo" aria-label="重置 Demo">
+            <button class="icon-btn" id="resetBtn" title="Reset demo" aria-label="Reset demo">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v6h6"/></svg>
             </button>
-            <button class="primary-btn" id="nextBtn">下一步</button>
+            <button class="primary-btn" id="nextBtn">Next</button>
           </div>
         </header>
 
         <div class="content-grid">
           <section class="main-panel" id="stage"></section>
 
-          <aside class="side-panel" aria-label="测试运行状态">
+          <aside class="side-panel" aria-label="Test run status">
             <div class="run-card">
               <p class="eyebrow">Current Run</p>
               <h3 id="runName">R1 · Onboarding Flow</h3>
@@ -86,13 +86,13 @@
                 <span class="line"></span>
                 <span class="dot"></span>
               </div>
-              <p id="runNote">等待导入材料后开始模拟。</p>
+              <p id="runNote">Waiting for imported materials before starting the simulation.</p>
             </div>
 
             <div class="screenshot-strip">
-              <img src="../screenshots/01_upload_materials.png" alt="产品截图 1" />
-              <img src="../screenshots/02_card_library.png" alt="产品截图 2" />
-              <img src="../screenshots/08_live_resume_preview.png" alt="产品截图 3" />
+              <img src="../screenshots/01_upload_materials.png" alt="Product screenshot 1" />
+              <img src="../screenshots/02_card_library.png" alt="Product screenshot 2" />
+              <img src="../screenshots/08_live_resume_preview.png" alt="Product screenshot 3" />
             </div>
           </aside>
         </div>
@@ -102,88 +102,88 @@
     <template id="briefTemplate">
       <div class="stage-head">
         <p class="eyebrow">Input</p>
-        <h3>把产品上下文交给模拟用户</h3>
-        <p>导入流程文档、截图序列和本轮测试目标，插件会把它们整理成可复用的用户测试任务。</p>
+        <h3>Give simulated users the product context</h3>
+        <p>Import the flow document, screenshot sequence, and goals for this round. The plugin turns them into a reusable user testing task.</p>
       </div>
       <div class="input-grid">
         <label class="field">
-          <span>产品流程文档</span>
-          <textarea spellcheck="false">用户首次打开 App，上传素材，AI 分析，查看卡片库，粘贴 JD，生成简历并导出 PDF。</textarea>
+          <span>Product flow document</span>
+          <textarea spellcheck="false">A first-time user opens the app, uploads source materials, waits for AI analysis, reviews the card library, pastes a JD, generates a resume, and exports a PDF.</textarea>
         </label>
         <label class="field">
-          <span>本轮测试目标</span>
-          <textarea spellcheck="false">验证新用户是否理解第一步该做什么，并找出最可能导致放弃的页面。</textarea>
+          <span>Test goal for this round</span>
+          <textarea spellcheck="false">Validate whether new users understand what to do first, and identify the screen most likely to make them drop off.</textarea>
         </label>
       </div>
       <div class="upload-row">
         <div class="upload-tile">
-          <strong>15 张截图</strong>
-          <small>已读取 screenshots/ 用户路径</small>
+          <strong>15 screenshots</strong>
+          <small>Loaded from the screenshots/ user journey</small>
         </div>
         <div class="upload-tile">
           <strong>JSON Schema</strong>
-          <small>结构化收集评分、投诉和决策日志</small>
+          <small>Structured capture for scores, complaints, and decision logs</small>
         </div>
         <div class="upload-tile">
-          <strong>分析脚本</strong>
-          <small>汇总 CSV 并生成迭代报告</small>
+          <strong>Analysis script</strong>
+          <small>Summarizes CSV output and generates an iteration report</small>
         </div>
       </div>
-      <button class="primary-btn wide" id="prepareBtn">生成模拟测试任务</button>
+      <button class="primary-btn wide" id="prepareBtn">Generate Simulation Task</button>
     </template>
 
     <template id="personasTemplate">
       <div class="stage-head">
         <p class="eyebrow">Personas</p>
-        <h3>选择要模拟的用户画像</h3>
-        <p>不同画像会用不同目标、耐心、技术水平和付费意愿做决策，反馈会按画像保留上下文。</p>
+        <h3>Select the user personas to simulate</h3>
+        <p>Each persona makes decisions with different goals, patience, technical comfort, and willingness to pay. Feedback keeps the persona context attached.</p>
       </div>
       <div class="persona-grid" id="personaGrid"></div>
-      <button class="primary-btn wide" id="startRunBtn">开始模拟 6 个用户</button>
+      <button class="primary-btn wide" id="startRunBtn">Start Simulating 6 Users</button>
     </template>
 
     <template id="simulateTemplate">
       <div class="stage-head">
         <p class="eyebrow">Simulation</p>
-        <h3>AI 正在逐屏模拟用户反应</h3>
-        <p>每个模拟用户都会记录继续/放弃决策、情绪、阻力点、评分和可执行建议。</p>
+        <h3>AI is simulating reactions screen by screen</h3>
+        <p>Each simulated user records continue/drop-off decisions, sentiment, friction points, scores, and actionable recommendations.</p>
       </div>
       <div class="console" id="consoleLog"></div>
       <div class="analysis-box">
         <div class="progress-row">
-          <span id="analysisText">准备运行</span>
+          <span id="analysisText">Ready to run</span>
           <span id="analysisPct">0%</span>
         </div>
         <div class="progress-track"><span id="analysisBar"></span></div>
       </div>
-      <button class="secondary-btn wide" id="skipBtn">跳过动画查看结果</button>
+      <button class="secondary-btn wide" id="skipBtn">Skip Animation and View Results</button>
     </template>
 
     <template id="insightsTemplate">
       <div class="stage-head">
         <p class="eyebrow">Insights</p>
-        <h3>把模拟反馈转成迭代优先级</h3>
-        <p>插件聚合评分、掉队点和高频投诉，帮助开发者决定下一轮先改哪里。</p>
+        <h3>Turn simulated feedback into iteration priorities</h3>
+        <p>The plugin aggregates scores, drop-off points, and repeated complaints so builders can decide what to improve next.</p>
       </div>
       <div class="insight-grid">
         <section class="score-card">
-          <span>平均满意度</span>
+          <span>Average satisfaction</span>
           <strong>5.4 / 10</strong>
-          <p>信任感、空状态引导和中间步骤解释是主要扣分项。</p>
+          <p>Trust, empty-state guidance, and explanations for intermediate steps are the main score reducers.</p>
         </section>
         <section class="score-card danger">
-          <span>最高风险掉队点</span>
-          <strong>素材页空状态</strong>
-          <p>3/6 用户表示打开后不确定第一步要做什么。</p>
+          <span>Highest-risk drop-off</span>
+          <strong>Empty state on the materials page</strong>
+          <p>3/6 users said they were unsure what to do first after opening the page.</p>
         </section>
         <section class="score-card">
-          <span>推荐优先级</span>
+          <span>Recommended priorities</span>
           <strong>Top 3 Fixes</strong>
-          <p>新手引导、快速生成通道、隐私说明。</p>
+          <p>First-run guidance, a fast generation path, and clearer privacy messaging.</p>
         </section>
       </div>
       <div class="issue-list" id="issueList"></div>
-      <button class="primary-btn wide" id="exportBtn">导出反馈 CSV + 迭代报告</button>
+      <button class="primary-btn wide" id="exportBtn">Export Feedback CSV + Iteration Report</button>
       <p class="export-note" id="exportNote"></p>
     </template>
 

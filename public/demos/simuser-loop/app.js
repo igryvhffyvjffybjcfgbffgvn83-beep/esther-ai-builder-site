@@ -2,57 +2,57 @@ const state = {
   step: "brief",
   prepared: false,
   simulated: false,
-  selectedPersonas: new Set(["小张", "刘总", "Mia"]),
+  selectedPersonas: new Set(["Alex", "Morgan", "Mia"]),
 };
 
 const steps = ["brief", "personas", "simulate", "insights"];
 
 const screenMeta = {
   brief: {
-    title: "导入产品流程、截图和测试目标",
-    note: "等待导入材料后开始模拟。",
+    title: "Import the product flow, screenshots, and test goals",
+    note: "Waiting for imported materials before starting the simulation.",
     run: "R1 · Onboarding Flow",
   },
   personas: {
-    title: "选择用户画像，覆盖不同决策习惯",
-    note: "已生成测试任务，等待选择画像。",
+    title: "Select personas across different decision patterns",
+    note: "The test task is generated. Select personas to continue.",
     run: "R1 · Persona Matrix",
   },
   simulate: {
-    title: "逐屏模拟用户决策并记录反馈",
-    note: "模拟用户正在阅读截图并做继续/放弃判断。",
+    title: "Simulate user decisions screen by screen",
+    note: "Simulated users are reading screenshots and deciding whether to continue or drop off.",
     run: "R1 · Simulation Running",
   },
   insights: {
-    title: "聚合反馈，生成下一轮迭代重点",
-    note: "已汇总结构化反馈和 Top 问题。",
+    title: "Aggregate feedback into next-iteration priorities",
+    note: "Structured feedback and top issues have been summarized.",
     run: "R1 · Iteration Report",
   },
 };
 
 const personas = [
-  ["小张", "应届开发", "第一次正式写简历，愿意尝试但需要明确引导。"],
-  ["刘总", "高管候选人", "时间少、付费意愿高，只接受直接有效的流程。"],
-  ["Mia", "海外求职", "关注英文表达、隐私和导出质量。"],
-  ["阿杰", "转行用户", "不熟悉 JD 和简历术语，容易被复杂步骤劝退。"],
-  ["Grace", "产品经理", "关注结果可控性、改写依据和可编辑程度。"],
-  ["王老师", "低技术用户", "需要强提示、低认知负担和清晰错误恢复。"],
+  ["Alex", "New Graduate Developer", "Writing a professional resume for the first time. Willing to try, but needs clear guidance."],
+  ["Morgan", "Executive Candidate", "Short on time with high willingness to pay. Only accepts a direct, obviously useful flow."],
+  ["Mia", "International Job Seeker", "Cares about English phrasing, privacy, and export quality."],
+  ["Jordan", "Career Switcher", "Unfamiliar with JD and resume terminology, and easily discouraged by complex steps."],
+  ["Grace", "Product Manager", "Cares about controllability, rewrite rationale, and how editable the output remains."],
+  ["Taylor", "Low-Tech User", "Needs strong prompts, low cognitive load, and clear recovery from errors."],
 ];
 
 const logs = [
-  "P01 小张：看到空状态后继续，但不确定应该上传什么文件。",
-  "P06 刘总：在卡片库页面放弃，认为中间步骤解释不足。",
-  "P03 Mia：继续到导出页，但要求更清晰的数据隐私说明。",
-  "P04 阿杰：对 JD 输入有疑问，需要示例和占位提示。",
-  "P05 Grace：认可来源说明，希望能编辑 AI 选用哪些素材。",
-  "P02 王老师：上传前需要更明确的文件格式和错误提示。",
+  "P01 Alex: Continues after seeing the empty state, but is unsure which files to upload.",
+  "P06 Morgan: Drops off on the card library page because the intermediate step is not explained well enough.",
+  "P03 Mia: Reaches the export page, but asks for clearer data privacy messaging.",
+  "P04 Jordan: Is confused by the JD input and needs examples plus placeholder guidance.",
+  "P05 Grace: Likes the source explanation, but wants to edit which materials the AI uses.",
+  "P02 Taylor: Needs clearer file format guidance and error messaging before uploading.",
 ];
 
 const issues = [
-  ["P0", "空状态缺少第一步引导", "用户不知道要上传什么、上传后会得到什么，直接影响首次留存。"],
-  ["P1", "卡片库价值解释不足", "部分用户不理解为什么生成简历前要先管理卡片。"],
-  ["P1", "信任与隐私说明弱", "高价值用户在上传简历前需要看到数据处理边界。"],
-  ["P2", "JD 输入缺少示例", "非技术用户不知道 JD 该粘贴什么，建议提供示例填充。"],
+  ["P0", "Empty state lacks first-step guidance", "Users do not know what to upload or what they will receive afterward, directly hurting first-session retention."],
+  ["P1", "Card library value is under-explained", "Some users do not understand why they need to manage cards before generating a resume."],
+  ["P1", "Trust and privacy messaging is weak", "High-value users need to see clear data handling boundaries before uploading a resume."],
+  ["P2", "JD input needs examples", "Non-technical users do not know what kind of JD to paste, so an example-fill option would help."],
 ];
 
 const stage = document.querySelector("#stage");
@@ -127,7 +127,7 @@ function renderSimulation() {
     const progress = Math.round((index / logs.length) * 100);
     bar.style.width = `${progress}%`;
     pct.textContent = `${progress}%`;
-    text.textContent = index >= logs.length ? "模拟完成" : "正在记录用户决策";
+    text.textContent = index >= logs.length ? "Simulation complete" : "Recording user decisions";
 
     if (index >= logs.length) {
       state.simulated = true;
@@ -158,7 +158,7 @@ function renderInsights() {
   );
 
   document.querySelector("#exportBtn").addEventListener("click", () => {
-    document.querySelector("#exportNote").textContent = "已模拟导出 feedback.csv、analysis_report.md 和 clustering_prompt.md";
+    document.querySelector("#exportNote").textContent = "Simulated export complete: feedback.csv, analysis_report.md, and clustering_prompt.md";
   });
 }
 
@@ -182,7 +182,7 @@ resetBtn.addEventListener("click", () => {
   state.step = "brief";
   state.prepared = false;
   state.simulated = false;
-  state.selectedPersonas = new Set(["小张", "刘总", "Mia"]);
+  state.selectedPersonas = new Set(["Alex", "Morgan", "Mia"]);
   render();
 });
 
