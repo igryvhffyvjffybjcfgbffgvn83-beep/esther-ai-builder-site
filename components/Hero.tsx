@@ -4,16 +4,19 @@ export default function Hero() {
   const { hero } = site;
 
   return (
-    <section className="relative px-0 pt-14 pb-12 sm:pt-24 sm:pb-20">
-      <div className="shell grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-end">
+    <section className="relative px-0 pt-12 pb-12 sm:pt-20 sm:pb-18">
+      <div className="shell grid gap-10 lg:grid-cols-2 lg:items-end">
         <div>
           <p className="mb-5 text-sm font-semibold uppercase tracking-[0.16em] text-[#C84B31]">
             {hero.title}
           </p>
-          <h1 className="max-w-3xl text-balance font-serif text-[3rem] leading-[1.02] font-semibold text-[#191714] sm:text-7xl lg:text-[5.4rem]">
-            {hero.thesis}
+          <h1 className="max-w-2xl text-balance font-serif text-[3.25rem] leading-[1.02] font-semibold text-[#191714] sm:text-7xl lg:text-[5.35rem]">
+            {hero.headline}
           </h1>
-          <div className="mt-8 flex flex-col gap-2.5 text-base leading-7 text-[#3B3630] sm:mt-10 sm:text-lg sm:leading-8">
+          <p className="mt-5 max-w-2xl text-balance text-2xl leading-snug text-[#3B3630] sm:text-[2rem] sm:leading-tight">
+            {hero.thesis}
+          </p>
+          <div className="mt-7 flex flex-col gap-2 text-base leading-7 text-[#3B3630] sm:mt-8 sm:text-xl sm:leading-8">
             {hero.productLines.map((line) => (
               <p key={line}>{line}</p>
             ))}

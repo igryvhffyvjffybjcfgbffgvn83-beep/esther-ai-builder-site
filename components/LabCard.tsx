@@ -34,10 +34,10 @@ export default function LabCard({ item }: LabCardProps) {
 
       <div className="flex flex-wrap items-center gap-2">
         <span className="rounded-full bg-[#F3D7BF] px-3 py-1 text-xs font-semibold text-[#7D2F1F]">
-          {item.status}
+          {item.statusLabel}
         </span>
         <span className="rounded-full border border-[#E4D9CB] px-3 py-1 text-xs font-medium text-[#686057]">
-          {item.type}
+          {item.domainLabel}
         </span>
       </div>
 

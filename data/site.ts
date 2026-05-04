@@ -14,7 +14,8 @@ export const site = {
   },
   hero: {
     title: "Esther.",
-    thesis: "I just turn the problems I run into into tools.",
+    headline: "Building in public.",
+    thesis: "I turn real friction into tools.",
     productLines: [
       "Job applications I couldn't get right → a resume AI.",
       "Photos I couldn't pose for → a photography app.",
@@ -55,6 +56,12 @@ export const site = {
       "→ Writing the first essay for this site.",
     ],
     ongoing: "Ongoing: turning every real friction into a small public tool.",
+    stats: [
+      { value: "5", label: "Products" },
+      { value: "1", label: "Live" },
+      { value: "3", label: "Demos" },
+      { value: "Public", label: "Build mode" },
+    ],
   },
   manifesto: {
     title: "What I'm building toward",

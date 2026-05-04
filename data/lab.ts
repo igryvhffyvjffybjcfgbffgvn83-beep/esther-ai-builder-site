@@ -16,6 +16,8 @@ export type LabItem = {
   category: string;
   group: LabGroup;
   status: LabStatus;
+  statusLabel: string;
+  domainLabel: string;
   type: string;
   problem: string;
   tool: string;
@@ -40,6 +42,8 @@ export const labItems: LabItem[] = [
     title: "TailorCV",
     tagline: "A resume AI for role-specific self-presentation.",
     status: "Live Product",
+    statusLabel: "Live",
+    domainLabel: "Career",
     group: "LIVE",
     type: "Product",
     category: "Career AI",
@@ -57,6 +61,8 @@ export const labItems: LabItem[] = [
     title: "JustPhoto",
     tagline: "A camera that coaches you through the shot.",
     status: "Building",
+    statusLabel: "Building",
+    domainLabel: "Camera",
     group: "NEXT",
     type: "Product",
     category: "Camera / Self-expression",
@@ -74,6 +80,8 @@ export const labItems: LabItem[] = [
     title: "Exact Transit",
     tagline: "A transparent transit timeline for self-reflection.",
     status: "Experiment",
+    statusLabel: "Experiment",
+    domainLabel: "Astrology",
     group: "DEMO",
     type: "Demo",
     category: "Astrology / Timeline",
@@ -91,6 +99,8 @@ export const labItems: LabItem[] = [
     title: "SimUser Loop",
     tagline: "AI feedback simulation for early product builders.",
     status: "Functional Prototype",
+    statusLabel: "Prototype",
+    domainLabel: "Product Feedback",
     group: "DEMO",
     type: "Prototype",
     category: "Product Feedback",
@@ -108,6 +118,8 @@ export const labItems: LabItem[] = [
     title: "Orchestrator + Telemetry Bridge",
     tagline: "A visible loop for fragmented AI coding workflows.",
     status: "Developer Prototype",
+    statusLabel: "Prototype",
+    domainLabel: "Dev Tools",
     group: "DEMO",
     type: "Prototype",
     category: "AI Engineering Workflow",
@@ -125,6 +137,8 @@ export const labItems: LabItem[] = [
     title: "What's next?",
     tagline: "The next small tool starts from the next thing that bothers me.",
     status: "Coming Soon",
+    statusLabel: "Coming Soon",
+    domainLabel: "Lab",
     group: "NEXT",
     type: "Placeholder",
     category: "—",
