@@ -1,0 +1,1022 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auto Promo Recorder Demo</title>
+    <style>
+      :root {
+        --background: #fbf7ef;
+        --surface: #fffdf8;
+        --surface-warm: #f6eadc;
+        --ink: #191714;
+        --body: #3b3630;
+        --muted: #686057;
+        --line: #e4d9cb;
+        --tomato: #c84b31;
+        --tomato-dark: #7d2f1f;
+        --gold: #c98b34;
+        --green: #1f7a5c;
+        --green-soft: #eef7f2;
+        --shadow: 0 18px 45px rgb(82 53 34 / 8%);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--background);
+        color: var(--ink);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .shell {
+        width: min(100% - 40px, 1160px);
+        margin: 0 auto;
+      }
+
+      .site-header,
+      .site-footer {
+        border-color: var(--line);
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-bottom: 1px solid rgb(228 217 203 / 85%);
+        background: rgb(251 247 239 / 92%);
+        backdrop-filter: blur(14px);
+      }
+
+      .nav {
+        display: flex;
+        min-height: 64px;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .brand {
+        color: var(--ink);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 22px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 24px;
+        font-size: 14px;
+      }
+
+      .nav-links a {
+        color: var(--muted);
+        text-decoration: none;
+      }
+
+      .nav-links a:hover {
+        color: var(--tomato);
+      }
+
+      .hero {
+        padding: 48px 0 34px;
+      }
+
+      .back-link {
+        display: inline-flex;
+        min-height: 40px;
+        align-items: center;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 700;
+        padding: 0 16px;
+        text-decoration: none;
+      }
+
+      .hero-grid {
+        display: grid;
+        gap: 32px;
+        grid-template-columns: minmax(0, 1fr) 320px;
+        align-items: end;
+        margin-top: 32px;
+      }
+
+      .eyebrow {
+        color: var(--tomato);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        margin: 0;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        max-width: 760px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(52px, 9vw, 96px);
+        line-height: 0.95;
+        margin-top: 16px;
+      }
+
+      .hero-copy {
+        max-width: 650px;
+        color: var(--body);
+        font-size: 18px;
+        line-height: 1.75;
+        margin-top: 22px;
+      }
+
+      .note {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--surface);
+        padding: 16px;
+      }
+
+      .note strong {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+
+      .note p {
+        color: var(--body);
+        font-size: 14px;
+        line-height: 1.6;
+        margin-top: 10px;
+      }
+
+      .demo {
+        padding: 14px 0 72px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 18px;
+      }
+
+      .section-head h2 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(30px, 4vw, 44px);
+        line-height: 1.05;
+        margin-top: 10px;
+      }
+
+      .section-head p:last-child {
+        max-width: 390px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .comparison {
+        display: grid;
+        grid-template-columns: minmax(0, 0.95fr) minmax(280px, 0.7fr);
+        gap: 16px;
+        margin-bottom: 34px;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+        padding: 16px;
+      }
+
+      .panel.after {
+        border-color: #b9d8ca;
+        background: var(--green-soft);
+      }
+
+      .panel-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .pill {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        padding: 5px 10px;
+      }
+
+      .recording-frame {
+        min-height: 430px;
+        border: 1px solid #d8c8b7;
+        border-radius: 8px;
+        background: #fffaf2;
+        overflow: hidden;
+      }
+
+      .browser-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--line);
+        padding: 10px 12px;
+      }
+
+      .lights {
+        display: flex;
+        gap: 7px;
+      }
+
+      .lights span {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: var(--line);
+      }
+
+      .lights span:nth-child(1) {
+        background: var(--tomato);
+      }
+
+      .lights span:nth-child(2) {
+        background: var(--gold);
+      }
+
+      .lights span:nth-child(3) {
+        background: var(--green);
+      }
+
+      .browser-title {
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .raw-app {
+        display: grid;
+        gap: 12px;
+        padding: 14px;
+      }
+
+      .app-toolbar,
+      .app-card,
+      .plugin-card {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--surface);
+        padding: 12px;
+      }
+
+      .app-toolbar {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .app-title {
+        font-size: 15px;
+        font-weight: 800;
+      }
+
+      .app-subtitle {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.5;
+        margin-top: 4px;
+      }
+
+      .ghost-button {
+        align-self: start;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        padding: 7px 10px;
+      }
+
+      .app-grid {
+        display: grid;
+        grid-template-columns: 0.7fr 1.3fr;
+        gap: 12px;
+      }
+
+      .sidebar-lines,
+      .content-lines {
+        display: grid;
+        gap: 8px;
+      }
+
+      .line {
+        display: block;
+        height: 9px;
+        border-radius: 999px;
+        background: #e7d8c5;
+      }
+
+      .content-lines .large {
+        height: 96px;
+        border-radius: 7px;
+        background: var(--surface-warm);
+      }
+
+      .cursor-note {
+        display: inline-flex;
+        width: fit-content;
+        border: 1px solid #f1bba7;
+        border-radius: 6px;
+        background: #fff3ec;
+        color: var(--tomato-dark);
+        font-size: 12px;
+        font-weight: 800;
+        padding: 7px 9px;
+      }
+
+      .timeline {
+        display: grid;
+        gap: 8px;
+        padding: 12px 14px 16px;
+      }
+
+      .track {
+        display: grid;
+        grid-template-columns: 1.2fr 0.35fr 0.7fr 0.45fr 1fr 0.4fr;
+        gap: 4px;
+      }
+
+      .track span {
+        height: 12px;
+        border-radius: 999px;
+        background: #d8c8b7;
+      }
+
+      .track .useful {
+        background: var(--tomato);
+      }
+
+      .track .pause {
+        background: #eadfd0;
+      }
+
+      .timeline-labels {
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 11px;
+      }
+
+      .output-phone {
+        max-width: 310px;
+        min-height: 520px;
+        margin: 0 auto;
+        border: 1px solid #b9d8ca;
+        border-radius: 22px;
+        background: #18221e;
+        padding: 14px;
+        color: white;
+      }
+
+      .promo-screen {
+        display: flex;
+        height: 100%;
+        min-height: 490px;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid rgb(255 255 255 / 16%);
+        border-radius: 14px;
+        padding: 18px;
+      }
+
+      .promo-screen h3 {
+        font-size: 30px;
+        line-height: 1.05;
+        margin-top: 14px;
+      }
+
+      .scene-stack {
+        display: grid;
+        gap: 10px;
+      }
+
+      .scene {
+        border-radius: 8px;
+        background: rgb(255 255 255 / 10%);
+        padding: 12px;
+      }
+
+      .scene.active {
+        background: var(--green);
+      }
+
+      .scene strong {
+        display: block;
+        font-size: 14px;
+      }
+
+      .scene small {
+        color: #d9eee6;
+        display: block;
+        line-height: 1.5;
+        margin-top: 4px;
+      }
+
+      .panel-copy {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+        margin-top: 13px;
+      }
+
+      .workbench {
+        border: 1px solid #d8c8b7;
+        border-radius: 8px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .workbench-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        border-bottom: 1px solid var(--line);
+        padding: 14px 16px;
+      }
+
+      .workbench-title {
+        font-weight: 900;
+      }
+
+      .workbench-subtitle {
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 4px;
+      }
+
+      .workbench-grid {
+        display: grid;
+        grid-template-columns: 180px minmax(0, 1fr) 260px;
+      }
+
+      .nav-rail {
+        border-right: 1px solid var(--line);
+        background: #fbf7ef;
+        padding: 12px;
+      }
+
+      .step-button {
+        width: 100%;
+        min-height: 50px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 800;
+        margin-bottom: 8px;
+        padding: 10px;
+        text-align: left;
+      }
+
+      .step-button.is-active {
+        border-color: var(--tomato);
+        background: var(--surface);
+        color: var(--ink);
+      }
+
+      .plugin-main {
+        display: grid;
+        gap: 14px;
+        padding: 16px;
+      }
+
+      .active-brief {
+        display: grid;
+        grid-template-columns: 0.75fr 1.25fr;
+        gap: 14px;
+        align-items: center;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbf7ef;
+        padding: 14px;
+      }
+
+      .active-brief h3 {
+        font-size: 22px;
+        line-height: 1.2;
+        margin-top: 8px;
+      }
+
+      .active-brief p:last-child {
+        color: var(--body);
+        font-size: 14px;
+        line-height: 1.65;
+      }
+
+      .moment-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .moment-list,
+      .script-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--surface);
+        padding: 14px;
+      }
+
+      .card-title {
+        font-size: 15px;
+        font-weight: 900;
+        margin-bottom: 12px;
+      }
+
+      .moment {
+        display: grid;
+        grid-template-columns: 46px 1fr;
+        gap: 10px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: #fbf7ef;
+        margin-top: 8px;
+        padding: 10px;
+      }
+
+      .moment time {
+        color: var(--tomato);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .moment strong {
+        display: block;
+        font-size: 13px;
+      }
+
+      .moment small {
+        color: var(--muted);
+        display: block;
+        line-height: 1.45;
+        margin-top: 3px;
+      }
+
+      .script-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+
+      .script-scene {
+        border: 1px solid #b9d8ca;
+        border-radius: 6px;
+        background: var(--green-soft);
+        padding: 10px;
+      }
+
+      .script-scene span {
+        color: var(--green);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .script-scene strong {
+        display: block;
+        font-size: 13px;
+        line-height: 1.35;
+        margin-top: 8px;
+      }
+
+      .render-panel {
+        border-left: 1px solid var(--line);
+        background: #fbf7ef;
+        padding: 16px;
+      }
+
+      .render-preview {
+        display: flex;
+        min-height: 410px;
+        flex-direction: column;
+        justify-content: space-between;
+        border-radius: 14px;
+        background: #18221e;
+        color: white;
+        padding: 16px;
+      }
+
+      .render-preview h3 {
+        font-size: 24px;
+        line-height: 1.1;
+      }
+
+      .render-button {
+        border: 0;
+        border-radius: 7px;
+        background: var(--green);
+        color: white;
+        font-size: 14px;
+        font-weight: 900;
+        padding: 11px 12px;
+      }
+
+      .asset-note {
+        margin-top: 10px;
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 11px;
+        line-height: 1.5;
+        word-break: break-all;
+      }
+
+      .asset-video {
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        object-fit: cover;
+      }
+
+      .site-footer {
+        border-top: 1px solid var(--line);
+        padding: 34px 0;
+      }
+
+      .footer-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 980px) {
+        .hero-grid,
+        .comparison,
+        .workbench-grid,
+        .moment-grid,
+        .active-brief {
+          grid-template-columns: 1fr;
+        }
+
+        .render-panel,
+        .nav-rail {
+          border-left: 0;
+          border-right: 0;
+          border-top: 1px solid var(--line);
+        }
+      }
+
+      @media (max-width: 680px) {
+        .shell {
+          width: min(100% - 28px, 1160px);
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .section-head,
+        .footer-row,
+        .workbench-top {
+          align-items: start;
+          flex-direction: column;
+        }
+
+        .script-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="shell nav">
+        <a class="brand" href="/">Esther</a>
+        <nav class="nav-links" aria-label="Site navigation">
+          <a href="/#lab">Lab</a>
+          <a href="/about">About</a>
+          <a href="/build-log">Build Log</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="shell">
+          <a class="back-link" href="/#lab">Back to Lab</a>
+
+          <div class="hero-grid">
+            <div>
+              <p class="eyebrow">Developer Prototype / Video Automation</p>
+              <h1>Auto Promo Recorder</h1>
+              <p class="hero-copy">
+                A concrete plugin workbench for turning raw app screen recordings into
+                structured short-form product promo videos with Codex + HyperFrames.
+              </p>
+            </div>
+
+            <aside class="note">
+              <strong>Built today</strong>
+              <p class="eyebrow">Today · May 7, 2026</p>
+              <p>
+                Built an automatic screen-recording promo plugin for my own software
+                using Codex + HyperFrames.
+              </p>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="demo">
+        <div class="shell">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Before / After</p>
+              <h2>Make the plugin visible, not abstract.</h2>
+            </div>
+            <p>
+              This is a static front-end prototype. The two MP4 slots can be replaced
+              later by dropping files into this demo folder.
+            </p>
+          </div>
+
+          <div class="comparison">
+            <article class="panel">
+              <div class="panel-top">
+                <p class="eyebrow">Before</p>
+                <span class="pill">Raw recording</span>
+              </div>
+              <div class="recording-frame">
+                <video class="asset-video" controls preload="metadata" hidden>
+                  <source src="./raw-recording.mp4" type="video/mp4" />
+                </video>
+                <div class="asset-fallback">
+                  <div class="browser-bar">
+                    <div class="lights"><span></span><span></span><span></span></div>
+                    <span class="browser-title">screen recording · app-walkthrough.mov</span>
+                  </div>
+                  <div class="raw-app">
+                    <div class="app-toolbar">
+                      <div>
+                        <p class="app-title">Builder app dashboard</p>
+                        <p class="app-subtitle">
+                          The raw capture still has setup time, cursor movement, repeated
+                          clicks, and pauses.
+                        </p>
+                      </div>
+                      <span class="ghost-button">Recording</span>
+                    </div>
+                    <div class="app-grid">
+                      <div class="app-card sidebar-lines">
+                        <span class="line" style="width: 90%"></span>
+                        <span class="line" style="width: 65%"></span>
+                        <span class="line" style="width: 78%"></span>
+                        <span class="line" style="width: 54%"></span>
+                      </div>
+                      <div class="app-card content-lines">
+                        <span class="line" style="width: 42%"></span>
+                        <span class="large"></span>
+                        <span class="cursor-note">Pause · repeated click · keep only result</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="timeline">
+                    <div class="track">
+                      <span class="pause"></span>
+                      <span class="useful"></span>
+                      <span></span>
+                      <span class="useful"></span>
+                      <span></span>
+                      <span class="pause"></span>
+                    </div>
+                    <div class="timeline-labels">
+                      <span>00:00</span>
+                      <span>raw recording timeline</span>
+                      <span>00:34</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p class="panel-copy">
+                The source is real product behavior, but it is not yet a promo video.
+              </p>
+              <p class="asset-note">Future asset path: public/demos/auto-promo-recorder/raw-recording.mp4</p>
+            </article>
+
+            <article class="panel after">
+              <div class="panel-top">
+                <p class="eyebrow" style="color: var(--green)">After</p>
+                <span class="pill">Promo output</span>
+              </div>
+              <div class="output-phone">
+                <video class="asset-video" controls preload="metadata" hidden>
+                  <source src="./promo-output.mp4" type="video/mp4" />
+                </video>
+                <div class="asset-fallback promo-screen">
+                  <div>
+                    <p class="eyebrow" style="color: #9fe0c7">Rendered promo</p>
+                    <h3>Turn raw app recordings into launch-ready demos.</h3>
+                  </div>
+                  <div class="scene-stack">
+                    <div class="scene"><strong>Hook</strong><small>Start with the product problem.</small></div>
+                    <div class="scene active"><strong>Product beat</strong><small>Show the core action clearly.</small></div>
+                    <div class="scene"><strong>Result</strong><small>End on the generated output.</small></div>
+                  </div>
+                  <p>Codex structures the story. HyperFrames renders the cut.</p>
+                </div>
+              </div>
+              <p class="panel-copy">
+                The output is a short-form demo structure with scenes, captions, and a render target.
+              </p>
+              <p class="asset-note">Future asset path: public/demos/auto-promo-recorder/promo-output.mp4</p>
+            </article>
+          </div>
+
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Plugin workflow</p>
+              <h2>The actual workbench shape.</h2>
+            </div>
+            <p>Click each step to change the active part of the plugin.</p>
+          </div>
+
+          <section class="workbench" aria-label="Auto Promo Recorder plugin workbench">
+            <header class="workbench-top">
+              <div>
+                <p class="workbench-title">Auto Promo Recorder.plugin</p>
+                <p class="workbench-subtitle">Local Codex + HyperFrames promo cutting workflow</p>
+              </div>
+              <span class="pill">Developer Prototype</span>
+            </header>
+
+            <div class="workbench-grid">
+              <nav class="nav-rail" aria-label="Workflow steps">
+                <button class="step-button is-active" data-step="0">Upload recording</button>
+                <button class="step-button" data-step="1">Detect product moments</button>
+                <button class="step-button" data-step="2">Generate promo structure</button>
+                <button class="step-button" data-step="3">Render short-form video</button>
+              </nav>
+
+              <div class="plugin-main">
+                <div class="active-brief">
+                  <div>
+                    <p class="eyebrow" id="activePanel">Source recording</p>
+                    <h3 id="activeTitle">Import the rough walkthrough</h3>
+                  </div>
+                  <p id="activeBody">
+                    The plugin starts with the screen recording you already have after
+                    testing or demoing the app.
+                  </p>
+                </div>
+
+                <div class="moment-grid">
+                  <section class="moment-list">
+                    <p class="card-title">Codex moment detector</p>
+                    <div class="moment">
+                      <time>00:04</time>
+                      <div><strong>Open app dashboard</strong><small>Context for the viewer.</small></div>
+                    </div>
+                    <div class="moment">
+                      <time>00:12</time>
+                      <div><strong>Trigger the core action</strong><small>The product beat worth keeping.</small></div>
+                    </div>
+                    <div class="moment">
+                      <time>00:21</time>
+                      <div><strong>Show generated result</strong><small>The payoff moment.</small></div>
+                    </div>
+                    <div class="moment">
+                      <time>00:28</time>
+                      <div><strong>Export final asset</strong><small>The closing state.</small></div>
+                    </div>
+                  </section>
+
+                  <section class="script-card">
+                    <p class="card-title">Generated HyperFrames brief</p>
+                    <div class="script-grid">
+                      <div class="script-scene"><span>Scene</span><strong>Hook</strong></div>
+                      <div class="script-scene"><span>Scene</span><strong>Product beat</strong></div>
+                      <div class="script-scene"><span>Scene</span><strong>Result</strong></div>
+                      <div class="script-scene"><span>Scene</span><strong>Close</strong></div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+
+              <aside class="render-panel">
+                <p class="card-title">Render panel</p>
+                <div class="render-preview">
+                  <p class="eyebrow" style="color: #9fe0c7">9:16 draft</p>
+                  <div>
+                    <h3 id="renderTitle">Promo cut generated from recording</h3>
+                    <p class="panel-copy" style="color: #d9eee6">
+                      Captions, pacing, and product scenes are ready for review.
+                    </p>
+                  </div>
+                  <button class="render-button" type="button">Render in HyperFrames</button>
+                </div>
+              </aside>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-row">
+        <p>Building small AI products in public.</p>
+        <p>Auto Promo Recorder · Static HTML demo</p>
+      </div>
+    </footer>
+
+    <script>
+      const steps = [
+        {
+          panel: "Source recording",
+          title: "Import the rough walkthrough",
+          body: "The plugin starts with the screen recording you already have after testing or demoing the app.",
+          render: "Waiting for an imported recording",
+        },
+        {
+          panel: "Moment map",
+          title: "Mark the parts worth showing",
+          body: "Codex separates useful product moments from pauses, repeated clicks, setup time, and dead air.",
+          render: "Useful moments are selected",
+        },
+        {
+          panel: "Promo script",
+          title: "Turn the moments into an edit plan",
+          body: "The workflow creates scene order, captions, pacing notes, and a short-form render structure.",
+          render: "Promo structure is ready",
+        },
+        {
+          panel: "Render queue",
+          title: "Send the structured cut to HyperFrames",
+          body: "HyperFrames turns the edit plan into a product demo that can be reviewed, rerendered, or adapted.",
+          render: "Promo cut generated from recording",
+        },
+      ];
+
+      const buttons = Array.from(document.querySelectorAll(".step-button"));
+      const panel = document.querySelector("#activePanel");
+      const title = document.querySelector("#activeTitle");
+      const body = document.querySelector("#activeBody");
+      const renderTitle = document.querySelector("#renderTitle");
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const step = steps[Number(button.dataset.step)];
+          buttons.forEach((item) => item.classList.remove("is-active"));
+          button.classList.add("is-active");
+          panel.textContent = step.panel;
+          title.textContent = step.title;
+          body.textContent = step.body;
+          renderTitle.textContent = step.render;
+        });
+      });
+
+      document.querySelectorAll(".asset-video").forEach((video) => {
+        const fallback = video.parentElement.querySelector(".asset-fallback");
+        video.addEventListener("loadedmetadata", () => {
+          video.hidden = false;
+          fallback.hidden = true;
+        });
+        video.addEventListener("error", () => {
+          video.hidden = true;
+          fallback.hidden = false;
+        });
+        video.load();
+      });
+    </script>
+  </body>
+</html>

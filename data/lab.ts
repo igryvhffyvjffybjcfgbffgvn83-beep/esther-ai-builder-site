@@ -77,8 +77,8 @@ export const labItems: LabItem[] = [
   },
   {
     id: "auto-promo-recorder",
-    title: "Auto Promo Recorder",
-    tagline: "Automatic promo videos from raw app recordings.",
+    title: "Promo Video Pipeline",
+    tagline: "Reproducible promo videos from real app recordings.",
     status: "Developer Prototype",
     statusLabel: "Developer Prototype",
     domainLabel: "Video Automation",
@@ -90,7 +90,7 @@ export const labItems: LabItem[] = [
     tool:
       "A Codex + HyperFrames workflow that turns raw recordings into structured short-form demo videos.",
     description:
-      "A compact workflow demo for turning rough recordings into edit-ready promo videos.",
+      "A compact plugin workflow demo for turning real product recordings into rendered launch videos.",
     href: "/lab/auto-promo-recorder",
     ctaLabel: "View the demo →",
     isFeatured: false,
