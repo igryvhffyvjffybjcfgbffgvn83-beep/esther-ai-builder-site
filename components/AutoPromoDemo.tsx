@@ -50,7 +50,7 @@ export default function AutoPromoDemo() {
         <div className="mt-5 min-w-0 overflow-hidden rounded-md border border-[#E4D9CB] bg-[#FBF7EF] p-3 sm:p-5">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-xs font-semibold text-[#686057]">
             <span>Demo output: reproducible 9:16 render</span>
-            <span>29.5s</span>
+            <span>20.0s</span>
           </div>
           <video
             className="mx-auto aspect-[9/16] max-h-[72vh] w-full max-w-[25rem] rounded-md border border-[#E4D9CB] bg-[#191714] object-cover"
