@@ -60,10 +60,12 @@ export const site = {
   manifesto: {
     title: "What I'm building toward",
     paragraphs: [
-      "Most of my products started the same way.",
-      "I'd run into a problem.\nGet frustrated.\nTry to fix it with what already exists.\nFail.\nThen quietly think:\nsomeone should make a tool for this.",
-      "Eventually I realized —\nthat someone could be me.",
-      "I'm not a traditional developer.\nI don't have a CS background.\nBut I have AI now,\nand I have problems —\nmy own and other people's.",
+      "Most of my products start with a problem.",
+      "First, I try to solve it the normal way.\nThen I notice the same problem keeps coming back —\nfor me, or for other people.",
+      "At that point, it stops being just a problem.\nIt becomes a pattern.",
+      "And once something becomes a pattern,\nI start thinking about how to turn the solution into a tool —\nso the next time, it takes less effort,\nless time,\nand fewer repeated decisions.",
+      "I'm not a traditional developer.\nI don't have a CS background.",
+      "But I have AI now,\nand I pay attention to problems.",
       "That turns out to be enough.",
     ],
   },
