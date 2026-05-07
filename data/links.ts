@@ -15,9 +15,9 @@ export const links = {
   manifesto: "/#manifesto",
   about: "/about",
   email: `mailto:${contactEmail}`,
-  x: null,
+  x: "https://x.com/tomatoteacher_",
   linkedIn: null,
-  appStore: null,
+  appStore: "https://apps.apple.com/app/id6764646313",
 } satisfies Record<string, LinkHref>;
 
 export const headerLinks = [
