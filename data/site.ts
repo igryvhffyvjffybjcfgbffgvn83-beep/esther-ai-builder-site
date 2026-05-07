@@ -133,7 +133,7 @@ export const site = {
     },
   },
   footer: {
-    microcopy: "Made by Esther, with AI, tomatoes, and too many open tabs.",
+    microcopy: "Made by Esther, with AI and too many open tabs.",
     links: footerLinks,
     lastUpdatedLabel: "Last updated:",
     copyright: "© 2026 Esther · estherbuilds.com",
