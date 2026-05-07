@@ -14,6 +14,7 @@ export const links = {
   subscribe: "/#subscribe",
   manifesto: "/#manifesto",
   about: "/about",
+  buildLog: "/build-log",
   email: `mailto:${contactEmail}`,
   x: "https://x.com/tomatoteacher_",
   linkedIn: null,
@@ -22,12 +23,14 @@ export const links = {
 
 export const headerLinks = [
   { label: "The Lab", href: links.lab },
+  { label: "Build Log", href: links.buildLog },
   { label: "Manifesto", href: links.manifesto },
   { label: "About", href: links.about },
   { label: "Subscribe", href: links.subscribe },
 ] satisfies NamedLink[];
 
 export const footerLinks = [
+  { label: "Build Log", href: links.buildLog },
   { label: "X", href: links.x, isExternal: true },
   { label: "LinkedIn", href: links.linkedIn, isExternal: true },
   { label: "Email", href: links.email },

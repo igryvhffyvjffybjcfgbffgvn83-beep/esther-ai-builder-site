@@ -76,6 +76,28 @@ export const labItems: LabItem[] = [
     screenshot: "/images/lab/justphoto.png",
   },
   {
+    id: "auto-promo-recorder",
+    title: "Auto Promo Recorder",
+    tagline: "Automatic promo videos from raw app recordings.",
+    status: "Developer Prototype",
+    statusLabel: "Developer Prototype",
+    domainLabel: "Video Automation",
+    group: "DEMO",
+    type: "Demo",
+    category: "Video Automation",
+    problem:
+      "Product builders have app recordings, but turning them into usable promo videos takes too much editing.",
+    tool:
+      "A Codex + HyperFrames workflow that turns raw recordings into structured short-form demo videos.",
+    description:
+      "A compact workflow demo for turning rough recordings into edit-ready promo videos.",
+    href: "/lab/auto-promo-recorder",
+    ctaLabel: "View the demo →",
+    isFeatured: false,
+    isExternal: false,
+    screenshot: null,
+  },
+  {
     id: "exact-transit",
     title: "Exact Transit",
     tagline: "A transparent transit timeline for self-reflection.",

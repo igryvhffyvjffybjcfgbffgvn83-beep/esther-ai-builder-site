@@ -3,7 +3,7 @@ import { contactEmail, footerLinks, headerLinks, links } from "./links";
 export const site = {
   name: "Esther",
   domain: "estherbuilds.com",
-  lastUpdated: "2026-05-03",
+  lastUpdated: "2026-05-07",
   links,
   header: {
     links: headerLinks,
@@ -17,7 +17,7 @@ export const site = {
       "Photos I couldn't pose for → a photography app.",
       "User feedback I couldn't get → a simulation plugin.",
     ],
-    proof: "Five products. Different domains. Same method.",
+    proof: "Six products. Different domains. Same method.",
     builderLines: [
       "I'm a non-coder learning by shipping —",
       "building in public, occasionally panicking,",
@@ -42,18 +42,16 @@ export const site = {
   },
   currentlyBuilding: {
     title: "Currently Building",
-    week: "Week of 2026-05-03",
-    intro: "This week:",
-    items: [
-      "→ Shipping the web demo for Just Photo.",
-      "→ Refining TailorCV's match score after first user feedback.",
-      "→ Writing the first essay for this site.",
-    ],
-    ongoing: "Ongoing: turning every real friction into a small public tool.",
+    eyebrow: "Latest builder log",
+    intro: "A lightweight running log of what I shipped, tested, and learned.",
+    cta: {
+      label: "View full build log →",
+      href: links.buildLog,
+    },
     stats: [
-      { value: "5", label: "Products" },
+      { value: "6", label: "Products" },
       { value: "1", label: "Live" },
-      { value: "3", label: "Demos" },
+      { value: "4", label: "Demos" },
       { value: "Public", label: "Build mode" },
     ],
   },
