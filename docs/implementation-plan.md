@@ -34,7 +34,7 @@ Next.js + TypeScript + Tailwind CSS
 ## 三、建议项目目录
 
 ```bash
-/Users/fanqie/Projects/esther-ai-builder-site
+<project-root>
 ```
 
 ```bash
@@ -94,7 +94,7 @@ Do not create additional product data files in v0.1.
 本地地址：
 
 ```bash
-/Users/fanqie/Projects/personalized-resume-generator/user_testing/frontend_demo/index.html
+<local-tailorcv-demo>/index.html
 ```
 
 网站中状态：`Functional Prototype`
@@ -110,7 +110,7 @@ Do not create additional product data files in v0.1.
 本地地址：
 
 ```bash
-/Users/fanqie/Projects/占星/exact-transit-demo.html
+<local-exact-transit-demo>/index.html
 ```
 
 网站中状态：`Experiment`
@@ -126,7 +126,7 @@ Do not create additional product data files in v0.1.
 本地地址：
 
 ```bash
-/Users/fanqie/Projects/自动化工作流插件/demo/index.html
+<local-workflow-demo>/index.html
 ```
 
 网站中状态：`Developer Prototype`
@@ -1258,7 +1258,7 @@ Implement v0.1 in this order:
 ## 三十六、Codex 第一条执行指令
 
 ```text
-请在 /Users/fanqie/Projects/esther-ai-builder-site 新建一个 Next.js + TypeScript + Tailwind CSS 个人网站项目。
+请在 <project-root> 新建一个 Next.js + TypeScript + Tailwind CSS 个人网站项目。
 
 目标是搭建一个 Personal Brand Hub + Demo Lab，主题是：
 "I just turn the problems I run into into tools."
@@ -1268,15 +1268,15 @@ Implement v0.1 in this order:
 需要接入的本地 demo 文件：
 
 1. SimUser Loop
-   /Users/fanqie/Projects/personalized-resume-generator/user_testing/frontend_demo/index.html
+   <local-tailorcv-demo>/index.html
    →  public/demos/simuser-loop/index.html
 
 2. Exact Transit
-   /Users/fanqie/Projects/占星/exact-transit-demo.html
+   <local-exact-transit-demo>/index.html
    →  public/demos/exact-transit/index.html
 
 3. Orchestrator + Telemetry Bridge
-   /Users/fanqie/Projects/自动化工作流插件/demo/index.html
+   <local-workflow-demo>/index.html
    →  public/demos/orchestrator-telemetry/index.html
 
 如果这些 demo 有 CSS、JS、图片等相对路径依赖，请一起复制相关资源，保持 demo 能独立打开。
