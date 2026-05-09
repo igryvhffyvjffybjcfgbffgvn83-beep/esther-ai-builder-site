@@ -296,6 +296,88 @@ body::after{content:'';position:fixed;bottom:-20%;right:-10%;width:50%;height:50
 .ho-tag.test{background:rgba(52,211,153,0.1);color:var(--green)}
 .ho-tag.train{background:rgba(167,139,250,0.1);color:var(--purple)}
 
+/* ===== CRM PLATFORM VIEWS ===== */
+.crm-tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:0}
+.crm-tab{padding:10px 18px;font-size:0.78rem;font-weight:600;color:var(--text-dim);border-bottom:2px solid transparent;transition:var(--transition);margin-bottom:-1px}
+.crm-tab:hover{color:var(--text)}
+.crm-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.crm-view{display:none}
+.crm-view.active{display:block}
+.crm-disclaimer{font-size:0.68rem;color:var(--text-muted);text-align:center;margin-top:16px;font-style:italic;padding:8px;border-top:1px solid var(--border)}
+
+/* Table View (Airtable-style) */
+.crm-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);background:rgba(0,0,0,0.2)}
+.crm-table{width:100%;border-collapse:collapse;min-width:800px}
+.crm-table thead{background:rgba(255,255,255,0.03)}
+.crm-table th{text-align:left;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-dim);padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0}
+.crm-table td{font-size:0.78rem;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);vertical-align:middle}
+.crm-table tr:hover td{background:rgba(255,255,255,0.02)}
+.crm-table .cell-id{color:var(--text-muted);font-family:monospace;font-size:0.7rem}
+.crm-table .cell-addr{font-weight:600}
+.crm-table .cell-price{font-weight:600;font-variant-numeric:tabular-nums}
+.crm-table .cell-agent{display:flex;align-items:center;gap:6px}
+.crm-table .agent-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;flex-shrink:0}
+.agent-dot.s{background:rgba(80,200,220,0.2);color:var(--accent)}
+.agent-dot.m{background:rgba(251,191,36,0.2);color:var(--yellow)}
+.agent-dot.j{background:rgba(251,146,60,0.2);color:var(--orange)}
+.agent-dot.e{background:rgba(167,139,250,0.2);color:var(--purple)}
+.crm-table .cell-channels{font-size:0.72rem;color:var(--text-dim)}
+.crm-table .cell-updated{font-size:0.72rem;color:var(--text-muted)}
+
+/* Status pills (shared) */
+.status-pill{display:inline-block;font-size:0.65rem;font-weight:600;padding:3px 10px;border-radius:10px;white-space:nowrap}
+.status-pill.draft{background:rgba(74,79,94,0.25);color:#8a8f9e}
+.status-pill.validating,.status-pill.publishing{background:rgba(80,200,220,0.12);color:var(--accent)}
+.status-pill.incomplete{background:rgba(251,146,60,0.12);color:var(--orange)}
+.status-pill.under-review{background:rgba(251,191,36,0.12);color:var(--yellow)}
+.status-pill.approved{background:rgba(52,211,153,0.12);color:var(--green)}
+.status-pill.live{background:rgba(52,211,153,0.2);color:var(--green)}
+.status-pill.sold{background:rgba(167,139,250,0.12);color:var(--purple)}
+.status-pill.archived{background:rgba(58,63,78,0.3);color:#6a6f7e}
+
+/* Kanban Board */
+.kanban-board{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px}
+.kanban-col{min-width:200px;flex:1;display:flex;flex-direction:column;gap:8px}
+.kanban-col-header{font-size:0.72rem;font-weight:700;padding:8px 12px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:space-between}
+.kanban-col-header .kc-count{font-size:0.65rem;font-weight:600;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.08)}
+.kanban-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;transition:var(--transition)}
+.kanban-card:hover{border-color:rgba(255,255,255,0.15);transform:translateY(-1px)}
+.kanban-card .kc-addr{font-size:0.78rem;font-weight:600;margin-bottom:4px}
+.kanban-card .kc-suburb{font-size:0.68rem;color:var(--text-dim);margin-bottom:8px}
+.kanban-card .kc-price{font-size:0.85rem;font-weight:700;margin-bottom:8px}
+.kanban-card .kc-meta{display:flex;justify-content:space-between;align-items:center;font-size:0.65rem;color:var(--text-muted)}
+.kanban-card .kc-agent{display:flex;align-items:center;gap:4px}
+
+/* Tasks Board */
+.tasks-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);background:rgba(0,0,0,0.2)}
+.tasks-table{width:100%;border-collapse:collapse;min-width:700px}
+.tasks-table thead{background:rgba(255,255,255,0.03)}
+.tasks-table th{text-align:left;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-dim);padding:10px 14px;border-bottom:1px solid var(--border)}
+.tasks-table td{font-size:0.78rem;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03)}
+.tasks-table tr:hover td{background:rgba(255,255,255,0.02)}
+.priority-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.priority-dot.high{background:var(--red)}
+.priority-dot.medium{background:var(--yellow)}
+.priority-dot.low{background:var(--green)}
+.task-status{font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:8px}
+.task-status.open{background:rgba(80,200,220,0.1);color:var(--accent)}
+.task-status.done{background:rgba(52,211,153,0.1);color:var(--green)}
+.task-type-badge{font-size:0.62rem;padding:2px 7px;border-radius:6px;background:rgba(255,255,255,0.05);color:var(--text-dim)}
+
+/* Automation Log */
+.auto-log-wrap{border:1px solid var(--border);border-radius:var(--radius);background:rgba(0,0,0,0.2);overflow:hidden}
+.auto-log-row{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.03);transition:var(--transition)}
+.auto-log-row:last-child{border-bottom:none}
+.auto-log-row:hover{background:rgba(255,255,255,0.02)}
+.al-time{font-size:0.7rem;color:var(--text-muted);width:60px;flex-shrink:0;font-family:monospace}
+.al-rule{font-size:0.75rem;font-weight:600;width:160px;flex-shrink:0}
+.al-trigger{font-size:0.75rem;color:var(--text-dim);width:150px;flex-shrink:0}
+.al-result{font-size:0.7rem;font-weight:600;width:90px;flex-shrink:0}
+.al-result.success{color:var(--green)}
+.al-result.warning{color:var(--yellow)}
+.al-result.error{color:var(--orange)}
+.al-detail{font-size:0.72rem;color:var(--text-dim);flex:1}
+
 /* ===== FOOTER ===== */
 .footer{padding:16px 28px;border-top:1px solid var(--border);text-align:center;font-size:0.72rem;color:var(--text-muted);background:rgba(7,8,14,0.5)}
 .footer-sub{margin-top:4px;color:var(--text-dim);font-style:italic}

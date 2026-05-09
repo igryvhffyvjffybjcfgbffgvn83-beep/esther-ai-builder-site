@@ -306,48 +306,87 @@ function renderOverview() {
   `).join('');
 }
 
-// ===== 4b. PLATFORM MAPPING =====
+// ===== 4b. PLATFORM VIEWS (CRM-STYLE) =====
 function renderPlatformMapping() {
-  document.getElementById('platform-grid').innerHTML = `
-    <div class="platform-col">
-      <div class="plat-header">
-        <span class="plat-logo">📊</span>
-        <div><div class="plat-name">Airtable Base</div><div class="plat-sub">Relational data tables</div></div>
-      </div>
-      <div class="plat-items">
-        ${AIRTABLE_TABLES.map(t => `
-          <div class="plat-item">
-            <span class="pi-icon">${t.icon}</span>
-            <span class="pi-name">${t.name}</span>
-            <span class="pi-map">${t.map}</span>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-    <div class="platform-col">
-      <div class="plat-header">
-        <span class="plat-logo">📋</span>
-        <div><div class="plat-name">Monday.com Boards</div><div class="plat-sub">Visual workflow boards</div></div>
-      </div>
-      <div class="plat-items">
-        ${MONDAY_BOARDS.map(b => `
-          <div class="plat-item">
-            <span class="pi-icon">${b.icon}</span>
-            <span class="pi-name">${b.name}</span>
-            <span class="pi-map">${b.map}</span>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `;
+  // Tab switching
+  document.querySelectorAll('.crm-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.crm-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.crm-view').forEach(v => v.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('crm-view-' + tab.dataset.view).classList.add('active');
+    });
+  });
 
-  document.getElementById('automation-examples').innerHTML = PLATFORM_AUTOMATIONS.map(a => `
-    <div class="auto-example">
-      <span class="ae-trigger">${a.trigger}</span>
-      <span class="ae-arrow">→</span>
-      <span class="ae-action">${a.action}</span>
-    </div>
-  `).join('');
+  const statusCls = s => s.toLowerCase().replace(/ /g, '-');
+  const agentInit = a => a.charAt(0).toLowerCase();
+
+  // 1. Properties Table (Airtable-style)
+  document.getElementById('crm-view-table').innerHTML = `
+    <div class="crm-table-wrap"><table class="crm-table">
+      <thead><tr><th>ID</th><th>Address</th><th>Suburb</th><th>Price</th><th>Beds</th><th>Baths</th><th>Status</th><th>Agent</th><th>Channels</th><th>Updated</th></tr></thead>
+      <tbody>${CRM_PROPERTIES.map(p => `<tr>
+        <td class="cell-id">${p.id}</td>
+        <td class="cell-addr">${p.address}</td>
+        <td>${p.suburb}</td>
+        <td class="cell-price">${p.price}</td>
+        <td>${p.beds}</td><td>${p.baths}</td>
+        <td><span class="status-pill ${statusCls(p.status)}">${p.status}</span></td>
+        <td class="cell-agent"><span class="agent-dot ${agentInit(p.agent)}">${p.agent.charAt(0)}</span>${p.agent}</td>
+        <td class="cell-channels">${p.channels}</td>
+        <td class="cell-updated">${p.updated}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
+
+  // 2. Kanban Board
+  const kanbanStatuses = ['Draft','Under Review','Approved','Live','Sold'];
+  const kanbanColors = {'Draft':'rgba(74,79,94,0.15)','Under Review':'rgba(251,191,36,0.1)','Approved':'rgba(52,211,153,0.08)','Live':'rgba(52,211,153,0.15)','Sold':'rgba(167,139,250,0.1)'};
+  document.getElementById('crm-view-kanban').innerHTML = `
+    <div class="kanban-board">${kanbanStatuses.map(st => {
+      const cards = CRM_PROPERTIES.filter(p => p.status === st);
+      return `<div class="kanban-col">
+        <div class="kanban-col-header" style="background:${kanbanColors[st]}">
+          <span>${st}</span><span class="kc-count">${cards.length}</span>
+        </div>
+        ${cards.map(c => `<div class="kanban-card">
+          <div class="kc-addr">${c.address}</div>
+          <div class="kc-suburb">${c.suburb}</div>
+          <div class="kc-price">${c.price}</div>
+          <div class="kc-meta">
+            <span class="kc-agent"><span class="agent-dot ${agentInit(c.agent)}">${c.agent.charAt(0)}</span>${c.agent}</span>
+            <span>${c.updated}</span>
+          </div>
+        </div>`).join('')}
+        ${cards.length === 0 ? '<div style="padding:16px;text-align:center;color:var(--text-muted);font-size:0.72rem">No listings</div>' : ''}
+      </div>`;
+    }).join('')}</div>`;
+
+  // 3. Tasks Board
+  document.getElementById('crm-view-tasks').innerHTML = `
+    <div class="tasks-table-wrap"><table class="tasks-table">
+      <thead><tr><th>ID</th><th>Task</th><th>Type</th><th>Status</th><th>Priority</th><th>Assignee</th><th>Due</th></tr></thead>
+      <tbody>${CRM_TASKS.map(t => `<tr>
+        <td class="cell-id">${t.id}</td>
+        <td style="font-weight:600">${t.task}</td>
+        <td><span class="task-type-badge">${t.type}</span></td>
+        <td><span class="task-status ${t.status.toLowerCase()}">${t.status}</span></td>
+        <td><span class="priority-dot ${t.priority.toLowerCase()}"></span>${t.priority}</td>
+        <td class="cell-agent"><span class="agent-dot ${agentInit(t.assignee)}">${t.assignee.charAt(0)}</span>${t.assignee}</td>
+        <td>${t.due}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
+
+  // 4. Automation Log
+  document.getElementById('crm-view-auto-log').innerHTML = `
+    <div class="auto-log-wrap">${CRM_AUTO_LOG.map(a => `
+      <div class="auto-log-row">
+        <span class="al-time">${a.time}</span>
+        <span class="al-rule">${a.rule}</span>
+        <span class="al-trigger">${a.trigger}</span>
+        <span class="al-result ${a.type}">${a.result}</span>
+        <span class="al-detail">${a.detail}</span>
+      </div>
+    `).join('')}</div>`;
 }
 
 // ===== 6. HANDOVER NOTES =====

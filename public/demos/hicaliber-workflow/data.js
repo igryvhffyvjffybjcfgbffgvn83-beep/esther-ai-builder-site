@@ -269,3 +269,35 @@ const HANDOVER_SECTIONS = [
    items:['Agents only need to learn the listing creation form — validation is automatic','Managers receive email/Slack notifications when reviews are needed','The dashboard shows real-time bottleneck analysis — check it weekly','If a channel shows "Error" status, contact admin — do not re-publish manually','Price changes on live listings will pause publication until re-approved','The system auto-archives sold listings after 30 days — no manual cleanup needed'],
    tags:[{text:'Training',cls:'train'}]}
 ];
+
+// ===== CRM MOCK DATA =====
+const CRM_PROPERTIES = [
+  {id:'P-001',address:'42 Coral Ave',suburb:'Surfers Paradise',price:'$1,250,000',beds:4,baths:2,status:'Live',agent:'Sarah K.',channels:'REA, Domain',updated:'2h ago'},
+  {id:'P-002',address:'7 Beach Rd',suburb:'Broadbeach',price:'$850,000',beds:3,baths:2,status:'Under Review',agent:'Mike T.',channels:'REA',updated:'5h ago'},
+  {id:'P-003',address:'15 Palm St',suburb:'Burleigh Heads',price:'$1,680,000',beds:5,baths:3,status:'Approved',agent:'Sarah K.',channels:'REA, Domain, Web',updated:'1d ago'},
+  {id:'P-004',address:'88 Riverside Dr',suburb:'Robina',price:'$720,000',beds:3,baths:1,status:'Draft',agent:'Jake L.',channels:'—',updated:'3h ago'},
+  {id:'P-005',address:'3/21 Marine Pde',suburb:'Coolangatta',price:'$595,000',beds:2,baths:1,status:'Live',agent:'Emma W.',channels:'REA, Domain',updated:'3d ago'},
+  {id:'P-006',address:'9 Harbour View',suburb:'Main Beach',price:'$2,100,000',beds:5,baths:4,status:'Sold',agent:'Sarah K.',channels:'—',updated:'1w ago'},
+  {id:'P-007',address:'45 Hinterland Way',suburb:'Mudgeeraba',price:'$980,000',beds:4,baths:2,status:'Incomplete',agent:'Mike T.',channels:'—',updated:'6h ago'},
+  {id:'P-008',address:'12 Ocean Blvd',suburb:'Mermaid Beach',price:'$1,450,000',beds:4,baths:3,status:'Publishing',agent:'Emma W.',channels:'REA (syncing)',updated:'10m ago'}
+];
+
+const CRM_TASKS = [
+  {id:'T-001',task:'Review listing: 7 Beach Rd',status:'Open',priority:'High',assignee:'Tom D.',due:'Today',type:'Review'},
+  {id:'T-002',task:'Complete listing: 45 Hinterland Way',status:'Open',priority:'Medium',assignee:'Mike T.',due:'Today',type:'Fix'},
+  {id:'T-003',task:'Re-approve price: 42 Coral Ave',status:'Done',priority:'High',assignee:'Tom D.',due:'Yesterday',type:'Review'},
+  {id:'T-004',task:'Post-sale follow-up: 9 Harbour View',status:'Open',priority:'Low',assignee:'Sarah K.',due:'In 5 days',type:'Follow-up'},
+  {id:'T-005',task:'Verify duplicate: 12 Ocean Blvd',status:'Open',priority:'High',assignee:'Emma W.',due:'Today',type:'Verify'},
+  {id:'T-006',task:'Review listing: 15 Palm St',status:'Done',priority:'Medium',assignee:'Tom D.',due:'2 days ago',type:'Review'},
+  {id:'T-007',task:'Upload photos: 88 Riverside Dr',status:'Open',priority:'Medium',assignee:'Jake L.',due:'Tomorrow',type:'Fix'}
+];
+
+const CRM_AUTO_LOG = [
+  {time:'09:42',rule:'Auto-Validate',trigger:'P-008 submitted',result:'✓ Pass',detail:'All fields valid → moved to Publishing',type:'success'},
+  {time:'09:38',rule:'Price Change Re-Approval',trigger:'P-001 price updated',result:'⚠ Triggered',detail:'$1.4M → $1.25M (−10.7%) → sent to review',type:'warning'},
+  {time:'09:15',rule:'Auto-Validate',trigger:'P-007 submitted',result:'✗ Fail',detail:'Missing: images (0), price empty',type:'error'},
+  {time:'08:50',rule:'Auto Multi-Channel Publish',trigger:'P-003 approved',result:'✓ Syncing',detail:'REA ✓ Domain ✓ Website ⏳',type:'success'},
+  {time:'08:30',rule:'Approval Timeout',trigger:'P-002 pending 26h',result:'⚠ Escalated',detail:'Escalated from Tom to Senior Manager Diana',type:'warning'},
+  {time:'Yesterday',rule:'Sold Archive',trigger:'P-006 marked sold',result:'✓ Processed',detail:'Removed from channels, report generated',type:'success'},
+  {time:'Yesterday',rule:'Duplicate Detection',trigger:'P-008 created',result:'✓ Clear',detail:'No duplicate found at 12 Ocean Blvd',type:'success'}
+];

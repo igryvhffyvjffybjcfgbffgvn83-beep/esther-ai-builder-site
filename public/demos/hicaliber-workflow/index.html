@@ -126,14 +126,20 @@
       <!-- Panel 4: Platform Mapping -->
       <section class="panel" id="panel-platform-mapping">
         <div class="panel-header">
-          <h2>Platform Mapping</h2>
-          <p class="panel-tagline">"A good workflow design should map cleanly into the tools a team already uses."</p>
+          <h2>Platform Views</h2>
+          <p class="panel-tagline">"Airtable / Monday.com–style workflow prototype — CRM-ready data and board layouts."</p>
         </div>
-        <div class="platform-grid" id="platform-grid"></div>
-        <div class="platform-automations glass-card" id="platform-automations">
-          <h4>Cross-Platform Automation Examples</h4>
-          <div id="automation-examples"></div>
+        <div class="crm-tabs">
+          <button class="crm-tab active" data-view="table">📊 Properties Table</button>
+          <button class="crm-tab" data-view="kanban">📋 Kanban Board</button>
+          <button class="crm-tab" data-view="tasks">✅ Tasks Board</button>
+          <button class="crm-tab" data-view="auto-log">⚡ Automation Log</button>
         </div>
+        <div class="crm-view active" id="crm-view-table"></div>
+        <div class="crm-view" id="crm-view-kanban"></div>
+        <div class="crm-view" id="crm-view-tasks"></div>
+        <div class="crm-view" id="crm-view-auto-log"></div>
+        <div class="crm-disclaimer">This is an Airtable / Monday.com–style prototype. No live CRM platform is connected.</div>
       </section>
 
       <!-- Panel 5: Simulation -->
