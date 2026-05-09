@@ -194,6 +194,16 @@ export const en = {
     relatedDemoLabel: "Open related demo",
     entries: [
       {
+        id: "2026-05-09-auto-promo-current-cut-review",
+        date: "2026-05-09",
+        label: "Today",
+        title: "Reframed the promo video pipeline demo as a current cut review workflow.",
+        summary:
+          "Updated the demo to show how a generated 45-second cut moves through review, QA frames, and editorial iteration. A useful automation demo should show what the system produced and what still needs human judgment.",
+        tags: ["Video Automation", "Review Workflow", "HyperFrames"],
+        href: "/demos/auto-promo-recorder/index.html",
+      },
+      {
         id: "2026-05-09-real-estate-workflow-demo",
         date: "2026-05-09",
         label: "Today",
@@ -286,21 +296,21 @@ export const en = {
       {
         id: "auto-promo-recorder",
         title: "Promo Video Pipeline",
-        tagline: "Reproducible promo videos from real app recordings.",
-        status: "Developer Prototype",
-        statusLabel: "Developer Prototype",
-        domainLabel: "Video Automation",
+        tagline: "A current-cut review workflow for generated product videos.",
+        status: "Current Cut Review",
+        statusLabel: "Current Cut Review",
+        domainLabel: "Video Review",
         group: "DEMO",
         type: "Demo",
         category: "Video Automation",
         problem:
-          "Product builders have app recordings, but turning them into usable promo videos takes too much editing.",
+          "Generated product videos still need a clear review surface before they are ready to publish.",
         tool:
-          "A Codex + HyperFrames workflow that turns raw recordings into structured short-form demo videos.",
+          "A review-ready workflow that shows the 45-second cut, QA frames, generated scene notes, and remaining editorial issues.",
         description:
-          "A compact plugin workflow demo for turning real product recordings into rendered launch videos.",
-        href: "/lab/auto-promo-recorder",
-        ctaLabel: "View the demo →",
+          "Reframed from a final-output showcase into a current cut review: what was generated, what is inspectable, and what still needs judgment.",
+        href: "/demos/auto-promo-recorder/index.html",
+        ctaLabel: "Review the cut →",
         isFeatured: false,
         isExternal: false,
         screenshot: null,

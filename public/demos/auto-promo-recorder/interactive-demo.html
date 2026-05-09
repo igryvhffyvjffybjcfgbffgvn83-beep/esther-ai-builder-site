@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automated Software Promotion - Current Cut Review</title>
+  <meta name="description" content="A governed video workflow demo that turns real product recordings into review-ready promo cuts with inspectable scene notes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="interactive-demo.css">
+</head>
+<body>
+
+<!-- ═══════ Ambient Background ═══════ -->
+<div class="ambient" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grain"></div>
+</div>
+
+<!-- ═══════ Nav ═══════ -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="#">
+      <span class="nav-logo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      </span>
+      AutoPromo
+    </a>
+    <div class="nav-links">
+      <a href="#capabilities">Capabilities</a>
+      <a href="#how-it-works">Workflow</a>
+      <a href="#live-demo">Cut Review</a>
+      <a href="#architecture">Architecture</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════ HERO ═══════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="hero-chip">
+        <span class="chip-dot"></span>
+        Current Cut · Review-Ready · Governance-First
+      </div>
+      <h1 class="hero-title">
+        <span class="title-line">From Real App Recording</span>
+        <span class="title-line title-gradient">To Review-Ready Cut</span>
+        <span class="title-line">With Every Beat Inspectable.</span>
+      </h1>
+      <p class="hero-desc">A current 45s automated promo cut generated from real product UI. The point is not that v1.1 is finished; it is that every scene, claim, source range, and review note is inspectable before the next edit.</p>
+      <div class="hero-cta">
+        <a href="#current-cut" class="btn-hero">
+          <span class="btn-glow"></span>
+          Play Current Cut
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a href="#live-demo" class="btn-ghost">Inspect Breakdown</a>
+      </div>
+
+      <!-- Hero Metrics -->
+      <div class="hero-metrics">
+        <div class="metric" data-count="45">
+          <span class="metric-num">0</span><span class="metric-unit">sec</span>
+          <span class="metric-label">Current Draft</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric" data-count="6">
+          <span class="metric-num">0</span><span class="metric-unit">scenes</span>
+          <span class="metric-label">Modular Cut</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric" data-count="10">
+          <span class="metric-num">0</span><span class="metric-unit">files</span>
+          <span class="metric-label">Planning Pack</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric" data-count="3">
+          <span class="metric-num">0</span><span class="metric-unit">targets</span>
+          <span class="metric-label">Platform Formats</span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="cut-preview-card" id="current-cut" aria-label="Current cut preview">
+      <div class="cut-card-head">
+        <div>
+          <span class="cut-kicker">Current Cut</span>
+          <h2>TailorCV PM Resume Strategy</h2>
+        </div>
+        <span class="review-pill">Needs editorial polish</span>
+      </div>
+      <div class="phone-video-shell">
+        <video class="cut-video" controls preload="metadata" poster="../projects/tailorcv-pm-resume-strategy-45s/hyperframes/qa-frames/v1.1-final/t_1s.png">
+          <source src="../projects/tailorcv-pm-resume-strategy-45s/hyperframes/renders/tailorcv-pm-resume-strategy-45s-final.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="cut-meta-grid" aria-label="Current cut metadata">
+        <span><strong>45s</strong><small>duration</small></span>
+        <span><strong>1080x1920</strong><small>canvas</small></span>
+        <span><strong>30fps</strong><small>render</small></span>
+      </div>
+      <div class="review-strip">
+        <span>Review focus</span>
+        <strong>pacing · hook clarity · caption density</strong>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ═══════ CAPABILITIES ═══════ -->
+<section class="section" id="capabilities">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="section-chip">Core Capabilities</span>
+      <h2>Generate A Cut.<br>Keep The Review Surface Open.</h2>
+    </div>
+
+    <div class="cap-grid">
+      <div class="cap-card cap-featured" data-reveal>
+        <div class="cap-visual">
+          <div class="cap-screen">
+            <div class="screen-bar"><span></span><span></span><span></span></div>
+            <div class="screen-body">
+              <div class="fake-recording">
+                <div class="rec-phone">
+                  <div class="phone-notch"></div>
+                  <div class="phone-line w80"></div>
+                  <div class="phone-line w60"></div>
+                  <div class="phone-block"></div>
+                  <div class="phone-line w90"></div>
+                  <div class="phone-line w40"></div>
+                </div>
+                <div class="rec-arrow">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </div>
+                <div class="rec-output">
+                  <div class="out-frame f1"></div>
+                  <div class="out-frame f2"></div>
+                  <div class="out-frame f3"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cap-text">
+          <div class="cap-badge">Flagship</div>
+          <h3>Review-Oriented Composition Engine</h3>
+          <p>Captures real product recordings and turns them into multi-scene, GSAP-animated video drafts with overlay text, fixture-backed claims, and inspectable timing.</p>
+        </div>
+      </div>
+
+      <div class="cap-card" data-reveal>
+        <div class="cap-icon ci-1">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        </div>
+        <h3>Content Governance</h3>
+        <p>Claims are mapped to source evidence. Prohibited phrases are scanned across compositions, captions, and cover art before a draft moves forward.</p>
+      </div>
+
+      <div class="cap-card" data-reveal>
+        <div class="cap-icon ci-2">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Real UI Recording</h3>
+        <p>The product flow is captured from XCUITest automation running against the actual app, so review starts from real UI instead of static design mocks.</p>
+      </div>
+
+      <div class="cap-card" data-reveal>
+        <div class="cap-icon ci-3">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>Frame-Accurate Timeline</h3>
+        <p>Shot plans define exact source ranges. Every video segment maps to a confirmed source frame boundary with acceptance criteria.</p>
+      </div>
+
+      <div class="cap-card" data-reveal>
+        <div class="cap-icon ci-4">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <h3>Multi-Platform Output</h3>
+        <p>One reviewed source can be prepared for TikTok, Instagram Reels, and YouTube Shorts with platform-specific captions and distribution notes.</p>
+      </div>
+
+      <div class="cap-card" data-reveal>
+        <div class="cap-icon ci-5">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <h3>Validation Gate</h3>
+        <p>The planning-pack validator checks required files, timing constraints, and governance rules before composition work proceeds.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ HOW IT WORKS ═══════ -->
+<section class="section section-alt" id="how-it-works">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="section-chip chip-purple">Pipeline</span>
+      <h2>Five Steps. Built For Iteration.</h2>
+    </div>
+
+    <div class="pipeline" id="pipeline-anim">
+      <div class="pipe-track">
+        <div class="pipe-progress" id="pipe-progress"></div>
+      </div>
+
+      <div class="pipe-step active" data-pipe="0">
+        <div class="pipe-dot"><span>01</span></div>
+        <div class="pipe-content">
+          <h3>Capture</h3>
+          <p>Real product UI recorded via automated XCUITest flow — real screens, real data, real interactions.</p>
+          <div class="pipe-tags">
+            <span>iOS Simulator</span><span>XCUITest</span><span>Raw .mov</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe-step" data-pipe="1">
+        <div class="pipe-dot"><span>02</span></div>
+        <div class="pipe-content">
+          <h3>Plan & Govern</h3>
+          <p>AI generates a planning pack with script, shot plan, asset map, and governance rules, then validates it before composition.</p>
+          <div class="pipe-tags">
+            <span>10 Required Files</span><span>Auto-Validated</span><span>Evidence-Backed</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe-step" data-pipe="2">
+        <div class="pipe-dot"><span>03</span></div>
+        <div class="pipe-content">
+          <h3>Compose</h3>
+          <p>HyperFrames engine builds the video as modular HTML compositions with GSAP-powered motion design and precise timing.</p>
+          <div class="pipe-tags">
+            <span>HyperFrames</span><span>GSAP 3</span><span>Modular</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe-step" data-pipe="3">
+        <div class="pipe-dot"><span>04</span></div>
+        <div class="pipe-content">
+          <h3>Review & Validate</h3>
+          <p>Automated QA generates contact sheets. Governance scanner checks all compositions against prohibited claims.</p>
+          <div class="pipe-tags">
+            <span>QA Frames</span><span>Claim Scanner</span><span>Auto-Review</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe-step" data-pipe="4">
+        <div class="pipe-dot"><span>05</span></div>
+        <div class="pipe-content">
+          <h3>Render Draft</h3>
+          <p>The 9:16 cut renders with governed captions, platform notes, and QA frames so the next editorial pass has concrete evidence.</p>
+          <div class="pipe-tags">
+            <span>TikTok</span><span>Reels</span><span>Shorts</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CUT REVIEW — Before/After Transform ═══════ -->
+<section class="section" id="live-demo">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="section-chip chip-green">Cut Review</span>
+      <h2>Break Down The Current Cut</h2>
+      <p class="section-sub">Inspect what the viewer sees, what the pipeline generated, and what still needs editorial review.</p>
+    </div>
+
+    <!-- Interactive Timeline Player -->
+    <div class="demo-player">
+      <div class="player-screen" id="player-screen">
+        <div class="player-scene" id="scene-display">
+          <!-- JS renders scenes here -->
+        </div>
+        <div class="player-badge" id="player-badge">S01 · Hook</div>
+      </div>
+
+      <div class="player-controls">
+        <button class="play-btn" id="play-btn" aria-label="Play">
+          <svg class="icon-play" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <svg class="icon-pause" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        </button>
+        <div class="progress-bar" id="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+          <div class="progress-markers" id="progress-markers"></div>
+        </div>
+        <span class="time-display" id="time-display">0:00 / 0:45</span>
+      </div>
+
+      <div class="scene-cards" id="scene-cards">
+        <!-- JS renders -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ ARCHITECTURE — System Diagram ═══════ -->
+<section class="section section-alt" id="architecture">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="section-chip chip-amber">System</span>
+      <h2>Architecture Overview</h2>
+    </div>
+
+    <div class="arch-diagram">
+      <div class="arch-col">
+        <div class="arch-label">Input</div>
+        <div class="arch-node an-input" data-reveal>
+          <div class="an-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+          <span>App Recording</span>
+          <small>.mov · XCUITest</small>
+        </div>
+        <div class="arch-node an-input" data-reveal>
+          <div class="an-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
+          <span>Data Fixtures</span>
+          <small>JSON · Evidence</small>
+        </div>
+        <div class="arch-node an-input" data-reveal>
+          <div class="an-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <span>Target JD</span>
+          <small>Role Requirements</small>
+        </div>
+      </div>
+
+      <div class="arch-arrows">
+        <div class="arch-arrow-line"></div>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+
+      <div class="arch-col">
+        <div class="arch-label">Engine</div>
+        <div class="arch-node an-engine" data-reveal>
+          <div class="an-icon an-icon-engine"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg></div>
+          <span>Planning Engine</span>
+          <small>AI + Governance</small>
+        </div>
+        <div class="arch-node an-engine" data-reveal>
+          <div class="an-icon an-icon-engine"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+          <span>HyperFrames</span>
+          <small>Composition</small>
+        </div>
+        <div class="arch-node an-engine" data-reveal>
+          <div class="an-icon an-icon-engine"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <span>Claim Scanner</span>
+          <small>Auto-Validation</small>
+        </div>
+      </div>
+
+      <div class="arch-arrows">
+        <div class="arch-arrow-line"></div>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+
+      <div class="arch-col">
+        <div class="arch-label">Output</div>
+        <div class="arch-node an-output" data-reveal>
+          <div class="an-icon an-icon-out"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.35 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg></div>
+          <span>TikTok</span>
+          <small>9:16 · 45s</small>
+        </div>
+        <div class="arch-node an-output" data-reveal>
+          <div class="an-icon an-icon-out"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="18" cy="6" r="1.5" fill="currentColor"/></svg></div>
+          <span>Instagram Reels</span>
+          <small>9:16 · 45s</small>
+        </div>
+        <div class="arch-node an-output" data-reveal>
+          <div class="an-icon an-icon-out"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.35 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg></div>
+          <span>YouTube Shorts</span>
+          <small>9:16 · 45s</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Terminal Validator -->
+    <div class="terminal" id="terminal">
+      <div class="term-bar">
+        <div class="term-dots"><span></span><span></span><span></span></div>
+        <span class="term-title">Review Validator</span>
+        <button class="term-run" id="term-run">▶ Run</button>
+      </div>
+      <div class="term-body" id="term-body">
+        <div class="term-prompt">$ validate_planning_pack <span class="t-dim">--project tailorcv-pm-resume-strategy-45s</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      <strong>AutoPromo</strong>
+    </div>
+    <p>Automated Software Promotion Plugin — Planning-First Video Pipeline</p>
+    <p class="footer-dim">Built with Codex · HyperFrames · GSAP · Governance-First Architecture</p>
+  </div>
+</footer>
+
+<script src="interactive-demo.js"></script>
+</body>
+</html>
