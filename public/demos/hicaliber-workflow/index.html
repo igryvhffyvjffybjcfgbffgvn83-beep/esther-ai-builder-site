@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Estate Listing Workflow Automation</title>
+<meta name="description" content="Interactive systems design demo — workflow automation for real estate listing lifecycle management.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-mark">⬡</div>
+      <div>
+        <h1>Real Estate Listing Workflow Automation</h1>
+        <p class="subtitle">Systems Design Demo — Esther Chen</p>
+      </div>
+    </div>
+    <div class="header-badge">Interactive Prototype</div>
+  </header>
+
+  <div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+      <button class="nav-btn active" data-panel="overview">
+        <span class="nav-icon">◉</span>
+        <span class="nav-label">Overview</span>
+        <span class="nav-hint">What this demo covers</span>
+      </button>
+      <button class="nav-btn" data-panel="data-model">
+        <span class="nav-icon">◈</span>
+        <span class="nav-label">Data Model</span>
+        <span class="nav-hint">Relational structure</span>
+      </button>
+      <button class="nav-btn" data-panel="state-machine">
+        <span class="nav-icon">◎</span>
+        <span class="nav-label">State Machine</span>
+        <span class="nav-hint">Lifecycle states</span>
+      </button>
+      <button class="nav-btn" data-panel="rules-engine">
+        <span class="nav-icon">⚡</span>
+        <span class="nav-label">Rules Engine</span>
+        <span class="nav-hint">Triggers &amp; actions</span>
+      </button>
+      <button class="nav-btn" data-panel="platform-mapping">
+        <span class="nav-icon">⬔</span>
+        <span class="nav-label">Platform Mapping</span>
+        <span class="nav-hint">Airtable / Monday</span>
+      </button>
+      <button class="nav-btn" data-panel="simulation">
+        <span class="nav-icon">▶</span>
+        <span class="nav-label">Simulation</span>
+        <span class="nav-hint">Run scenarios</span>
+      </button>
+      <button class="nav-btn" data-panel="handover">
+        <span class="nav-icon">📄</span>
+        <span class="nav-label">Handover Notes</span>
+        <span class="nav-hint">Client-ready docs</span>
+      </button>
+      <button class="nav-btn" data-panel="dashboard">
+        <span class="nav-icon">▦</span>
+        <span class="nav-label">Dashboard</span>
+        <span class="nav-hint">Operational view</span>
+      </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="content">
+
+      <!-- Panel 0: Overview -->
+      <section class="panel active" id="panel-overview">
+        <div class="panel-header">
+          <h2>Overview</h2>
+          <p class="panel-tagline">From messy listing operations to structured workflow systems.</p>
+        </div>
+        <div class="overview-intro glass-card">
+          <p>This demo turns a messy real estate listing operation into a structured workflow system: relational data, lifecycle states, automation rules, platform mapping, scenario simulation, and handover-ready documentation.</p>
+          <p class="overview-sub">Built as a systems design exercise for a CRM &amp; Workflow Automation Specialist role focused on Airtable and Monday.com.</p>
+        </div>
+        <div class="overview-capabilities" id="overview-caps">
+          <!-- Rendered by JS -->
+        </div>
+        <div class="overview-walk glass-card">
+          <h4>How to use this demo</h4>
+          <p>Use the sidebar to navigate each layer of the system design. Start with <strong>Data Model</strong> to see the relational structure, then follow the flow through <strong>State Machine → Rules Engine → Platform Mapping → Simulation → Handover Notes → Dashboard</strong>.</p>
+        </div>
+      </section>
+
+      <!-- Panel 1: Data Model -->
+      <section class="panel" id="panel-data-model">
+        <div class="panel-header">
+          <h2>Data Model</h2>
+          <p class="panel-tagline">"Every workflow starts with the right data structure."</p>
+        </div>
+        <div class="er-diagram" id="er-diagram"></div>
+        <div class="entity-detail glass-card" id="entity-detail">
+          <p class="detail-placeholder">Click an entity to inspect its fields and relationships.</p>
+        </div>
+      </section>
+
+      <!-- Panel 2: State Machine -->
+      <section class="panel" id="panel-state-machine">
+        <div class="panel-header">
+          <h2>State Machine</h2>
+          <p class="panel-tagline">"A listing has a lifecycle. Each state has clear entry and exit conditions."</p>
+        </div>
+        <div class="sm-canvas" id="sm-canvas"></div>
+        <div class="state-detail glass-card" id="state-detail">
+          <p class="detail-placeholder">Click a state node to see entry/exit conditions and triggered actions.</p>
+        </div>
+      </section>
+
+      <!-- Panel 3: Rules Engine -->
+      <section class="panel" id="panel-rules-engine">
+        <div class="panel-header">
+          <h2>Rules Engine</h2>
+          <p class="panel-tagline">"Automation is just structured logic: when X happens, if Y is true, do Z."</p>
+        </div>
+        <div class="rules-list" id="rules-list"></div>
+      </section>
+
+      <!-- Panel 4: Platform Mapping -->
+      <section class="panel" id="panel-platform-mapping">
+        <div class="panel-header">
+          <h2>Platform Mapping</h2>
+          <p class="panel-tagline">"A good workflow design should map cleanly into the tools a team already uses."</p>
+        </div>
+        <div class="platform-grid" id="platform-grid"></div>
+        <div class="platform-automations glass-card" id="platform-automations">
+          <h4>Cross-Platform Automation Examples</h4>
+          <div id="automation-examples"></div>
+        </div>
+      </section>
+
+      <!-- Panel 5: Simulation -->
+      <section class="panel" id="panel-simulation">
+        <div class="panel-header">
+          <h2>Simulation</h2>
+          <p class="panel-tagline">"The real test of any workflow: does it handle the messy cases?"</p>
+        </div>
+        <div class="sim-layout">
+          <div class="sim-scenarios" id="sim-scenarios"></div>
+          <div class="sim-flow" id="sim-flow">
+            <div class="sim-state-track" id="sim-state-track"></div>
+          </div>
+          <div class="sim-console glass-card" id="sim-console">
+            <div class="console-header">
+              <span>System Console</span>
+              <button class="btn-clear" id="btn-clear-console">Clear</button>
+            </div>
+            <div class="console-body" id="console-body">
+              <p class="console-idle">Select a scenario and press Run to begin.</p>
+            </div>
+          </div>
+          <div class="sim-artifacts">
+            <div class="glass-card sim-tasks" id="sim-tasks">
+              <h4>Generated Tasks</h4>
+              <div class="artifact-list" id="task-list"></div>
+            </div>
+            <div class="glass-card sim-notifs" id="sim-notifs">
+              <h4>Notifications Sent</h4>
+              <div class="artifact-list" id="notif-list"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 6: Handover Notes -->
+      <section class="panel" id="panel-handover">
+        <div class="panel-header">
+          <h2>Handover Notes</h2>
+          <p class="panel-tagline">"A workflow is only useful if the client team can understand, operate, and maintain it."</p>
+        </div>
+        <div class="handover-sections" id="handover-sections"></div>
+      </section>
+
+      <!-- Panel 7: Dashboard -->
+      <section class="panel" id="panel-dashboard">
+        <div class="panel-header">
+          <h2>Dashboard</h2>
+          <p class="panel-tagline">"If you can't see it, you can't improve it."</p>
+        </div>
+        <div class="dash-kpis" id="dash-kpis"></div>
+        <div class="dash-charts">
+          <div class="glass-card dash-chart" id="chart-status">
+            <h4>Listings by Status</h4>
+            <div class="bar-chart" id="bar-chart-status"></div>
+          </div>
+          <div class="glass-card dash-chart" id="chart-bottleneck">
+            <h4>Bottleneck Analysis</h4>
+            <div class="bottleneck-list" id="bottleneck-list"></div>
+          </div>
+        </div>
+        <div class="glass-card dash-chart" id="chart-channels">
+          <h4>Channel Sync Status</h4>
+          <div class="channel-grid" id="channel-grid"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Built to demonstrate systems thinking for workflow automation roles</p>
+    <p class="footer-sub">Focused on Airtable / Monday.com style workflow automation, documentation, and client handover.</p>
+    <p class="footer-contact">Esther Chen · hello@estherbuilds.com · estherbuilds.com</p>
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

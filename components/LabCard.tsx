@@ -1,10 +1,12 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import Image from "next/image";
-import type { LabItem } from "@/data/lab";
+import type { LabItem } from "@/data/i18n";
+import { localizeHref, type Locale } from "@/lib/i18n";
 
 type LabCardProps = {
   item: LabItem;
+  locale: Locale;
 };
 
 function hasLocalScreenshot(screenshot: string | null) {
@@ -15,7 +17,7 @@ function hasLocalScreenshot(screenshot: string | null) {
   return existsSync(join(process.cwd(), "public", screenshot.replace(/^\//, "")));
 }
 
-export default function LabCard({ item }: LabCardProps) {
+export default function LabCard({ item, locale }: LabCardProps) {
   const shouldRenderScreenshot = hasLocalScreenshot(item.screenshot);
 
   return (
@@ -55,7 +57,7 @@ export default function LabCard({ item }: LabCardProps) {
       <div className="mt-auto pt-6">
         {item.href ? (
           <a
-            href={item.href}
+            href={localizeHref(locale, item.href) ?? undefined}
             target={item.isExternal ? "_blank" : undefined}
             rel={item.isExternal ? "noreferrer" : undefined}
             className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#191714] px-4 py-2 text-sm font-semibold text-[#FFFDF8] transition-colors hover:bg-[#C84B31]"

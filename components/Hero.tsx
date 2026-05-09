@@ -1,8 +1,12 @@
-import { site } from "@/data/site";
+import type { HomeDictionary } from "@/data/i18n";
+import { localizeHref, type Locale } from "@/lib/i18n";
 
-export default function Hero() {
-  const { hero } = site;
+type HeroProps = {
+  content: HomeDictionary["hero"];
+  locale: Locale;
+};
 
+export default function Hero({ content: hero, locale }: HeroProps) {
   return (
     <section className="relative px-0 pt-12 pb-12 sm:pt-20 sm:pb-18">
       <div className="shell grid gap-10 lg:grid-cols-2 lg:items-end">
@@ -32,13 +36,13 @@ export default function Hero() {
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
-              href={hero.primaryCta.href}
+              href={localizeHref(locale, hero.primaryCta.href) ?? undefined}
               className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#C84B31] px-5 py-3 text-sm font-semibold text-[#FFFDF8] transition-colors hover:bg-[#A93D27]"
             >
               {hero.primaryCta.label}
             </a>
             <a
-              href={hero.secondaryCta.href}
+              href={localizeHref(locale, hero.secondaryCta.href) ?? undefined}
               className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#E4D9CB] px-5 py-3 text-sm font-semibold text-[#191714] transition-colors hover:border-[#C84B31] hover:text-[#C84B31]"
             >
               {hero.secondaryCta.label}
@@ -47,7 +51,7 @@ export default function Hero() {
           <p className="mt-7 text-sm leading-6 text-[#686057]">
             {hero.contactLine}{" "}
             <a
-              href={hero.contactCta.href}
+              href={localizeHref(locale, hero.contactCta.href) ?? undefined}
               className="font-medium text-[#C84B31] underline decoration-[#F4D8C0] underline-offset-4 hover:decoration-[#C84B31]"
             >
               → {hero.contactCta.label}

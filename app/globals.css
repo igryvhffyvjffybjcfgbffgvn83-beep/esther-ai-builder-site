@@ -39,6 +39,16 @@ body {
   overflow-x: hidden;
 }
 
+:lang(zh-CN) {
+  font-family: var(--font-inter), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Noto Sans CJK SC", Arial, Helvetica, sans-serif;
+}
+
+:lang(zh-CN) .font-serif {
+  font-family: var(--font-inter), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Noto Sans CJK SC", Arial, Helvetica, sans-serif;
+}
+
 a {
   text-underline-offset: 4px;
 }

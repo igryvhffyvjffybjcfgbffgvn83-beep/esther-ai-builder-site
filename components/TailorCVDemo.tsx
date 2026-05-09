@@ -1,53 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import type { Dictionary } from "@/data/i18n";
 
-const steps = [
-  {
-    id: "upload",
-    label: "Upload",
-    kicker: "Step 01",
-    title: "Bring the messy source material together.",
-    body: "The user starts with an existing resume, work notes, and the target job description instead of rewriting from a blank page.",
-    input: "Old resume + notes + target JD",
-    output: "A clean source bank",
-    bullets: ["Resume parser", "Work history cards", "JD requirements"],
-  },
-  {
-    id: "bank",
-    label: "Extract",
-    kicker: "Step 02",
-    title: "Turn raw experience into reusable cards.",
-    body: "TailorCV separates projects, responsibilities, skills, and measurable outcomes so the same real experience can be reused for different roles.",
-    input: "Unstructured resume text",
-    output: "Reusable experience cards",
-    bullets: ["Project scope", "Role ownership", "Evidence phrases"],
-  },
-  {
-    id: "match",
-    label: "Match",
-    kicker: "Step 03",
-    title: "Compare the job against real experience.",
-    body: "The product looks for the overlap between what the role asks for and what the candidate can honestly support.",
-    input: "Target role requirements",
-    output: "Role-specific emphasis",
-    bullets: ["Skills alignment", "Keyword coverage", "Missing proof"],
-  },
-  {
-    id: "draft",
-    label: "Draft",
-    kicker: "Step 04",
-    title: "Generate a focused resume draft.",
-    body: "The final draft reshapes the same background around the target role, while keeping the candidate's experience grounded in real material.",
-    input: "Selected evidence",
-    output: "Tailored resume preview",
-    bullets: ["Summary rewrite", "Bullet selection", "Live preview"],
-  },
-];
+type TailorCVDemoProps = {
+  content: Dictionary["tailorcvDemo"];
+};
 
-export default function TailorCVDemo() {
-  const [activeStepId, setActiveStepId] = useState(steps[0].id);
-  const activeStep = steps.find((step) => step.id === activeStepId) ?? steps[0];
+export default function TailorCVDemo({ content }: TailorCVDemoProps) {
+  const [activeStepId, setActiveStepId] =
+    useState<Dictionary["tailorcvDemo"]["steps"][number]["id"]>(content.steps[0].id);
+  const activeStep = content.steps.find((step) => step.id === activeStepId) ?? content.steps[0];
 
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-center">
@@ -69,7 +32,7 @@ export default function TailorCVDemo() {
 
       <section className="min-w-0 rounded-lg border border-[#D8E2D8] bg-[#F7F8F5] p-4 shadow-[0_18px_45px_rgb(24_34_30_/_8%)] sm:p-6">
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-          {steps.map((step) => {
+          {content.steps.map((step) => {
             const isActive = step.id === activeStep.id;
 
             return (
@@ -104,13 +67,13 @@ export default function TailorCVDemo() {
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             <div className="rounded-md border border-[#D8E2D8] bg-[#F7F8F5] p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#617068]">
-                Input
+                {content.inputLabel}
               </p>
               <p className="mt-2 text-sm font-semibold text-[#18221E]">{activeStep.input}</p>
             </div>
             <div className="rounded-md border border-[#B9D8CA] bg-[#EEF7F2] p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#1F7A5C]">
-                Output
+                {content.outputLabel}
               </p>
               <p className="mt-2 text-sm font-semibold text-[#18221E]">{activeStep.output}</p>
             </div>
@@ -118,7 +81,7 @@ export default function TailorCVDemo() {
 
           <div className="mt-5 rounded-md border border-[#E6D7BF] bg-[#FFF9ED] p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#9A5A16]">
-              Resume signals
+              {content.signalsLabel}
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               {activeStep.bullets.map((bullet) => (

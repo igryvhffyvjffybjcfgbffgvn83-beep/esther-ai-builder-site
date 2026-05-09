@@ -1,14 +1,18 @@
-import { labItems } from "@/data/lab";
-import { site } from "@/data/site";
+import type { HomeDictionary, LabItem } from "@/data/i18n";
 
-const productItems = labItems.filter((item) => item.id !== "next");
+type ProductMapProps = {
+  content: HomeDictionary["productMap"];
+  items: readonly LabItem[];
+};
 
-export default function ProductMap() {
+export default function ProductMap({ content, items }: ProductMapProps) {
+  const productItems = items.filter((item) => item.id !== "next");
+
   return (
     <section className="px-0 py-12 sm:py-18">
       <div className="shell">
         <h2 className="max-w-2xl text-balance font-serif text-3xl font-semibold text-[#191714] sm:text-5xl">
-          {site.productMap.title}
+          {content.title}
         </h2>
         <div className="mt-8 grid gap-3 md:grid-cols-2">
           {productItems.map((item) => (
@@ -26,11 +30,11 @@ export default function ProductMap() {
               </div>
               <div className="mt-4 space-y-2.5 text-sm leading-6 text-[#3B3630]">
                 <p>
-                  <span className="font-semibold text-[#191714]">Problem → </span>
+                  <span className="font-semibold text-[#191714]">{content.problemLabel} → </span>
                   {item.problem}
                 </p>
                 <p>
-                  <span className="font-semibold text-[#191714]">Tool → </span>
+                  <span className="font-semibold text-[#191714]">{content.toolLabel} → </span>
                   {item.tool}
                 </p>
               </div>

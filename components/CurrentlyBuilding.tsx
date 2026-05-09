@@ -1,10 +1,18 @@
 import Link from "next/link";
-import { latestBuildLogEntries } from "@/data/build-log";
-import { site } from "@/data/site";
+import type { BuildLogEntry, HomeDictionary } from "@/data/i18n";
+import { localizeHref, type Locale } from "@/lib/i18n";
 
-export default function CurrentlyBuilding() {
-  const { currentlyBuilding } = site;
+type CurrentlyBuildingProps = {
+  content: HomeDictionary["currentlyBuilding"];
+  entries: readonly BuildLogEntry[];
+  locale: Locale;
+};
 
+export default function CurrentlyBuilding({
+  content: currentlyBuilding,
+  entries,
+  locale,
+}: CurrentlyBuildingProps) {
   return (
     <section className="px-0 py-12 sm:py-18">
       <div className="shell border-y border-[#E4D9CB] py-10 sm:py-12">
@@ -25,7 +33,7 @@ export default function CurrentlyBuilding() {
             </div>
 
             <div className="mt-7 space-y-3">
-              {latestBuildLogEntries.map((entry) => (
+              {entries.slice(0, 3).map((entry) => (
                 <article
                   key={entry.id}
                   className="rounded-lg border border-[#E4D9CB] bg-[#FFFDF8]/75 p-4"
@@ -44,16 +52,16 @@ export default function CurrentlyBuilding() {
                   <p className="mt-2 text-sm leading-6 text-[#3B3630]">{entry.summary}</p>
                   {entry.href ? (
                     <Link
-                      href={entry.href}
+                      href={localizeHref(locale, entry.href) ?? "#"}
                       className="mt-3 inline-flex text-sm font-semibold text-[#C84B31] transition-colors hover:text-[#A93D27]"
                     >
-                      Open related demo →
+                      {currentlyBuilding.relatedDemoLabel}
                     </Link>
                   ) : null}
                 </article>
               ))}
               <Link
-                href={currentlyBuilding.cta.href}
+                href={localizeHref(locale, currentlyBuilding.cta.href) ?? "#"}
                 className="inline-flex min-h-11 items-center rounded-full border border-[#E4D9CB] px-4 text-sm font-semibold text-[#191714] transition-colors hover:border-[#C84B31] hover:text-[#C84B31]"
               >
                 {currentlyBuilding.cta.label}
