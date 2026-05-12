@@ -47,7 +47,7 @@ export const zh = {
         "拍照不会摆 → 做了个拍照指导 App",
         "产品没用户反馈 → 做了个用户模拟器",
       ],
-      proof: "八个项目，不同方向，同一个逻辑。",
+      proof: "九个项目，不同方向，同一个逻辑。",
       builderLines: [
         "没有计算机背景的文科生，",
         "用 AI 把方案落地，",
@@ -82,9 +82,9 @@ export const zh = {
         href: links.buildLog,
       },
       stats: [
-        { value: "8", label: "项目" },
+        { value: "9", label: "项目" },
         { value: "1", label: "已上线" },
-        { value: "6", label: "Demo" },
+        { value: "7", label: "Demo" },
         { value: "开放合作", label: "怎么做" },
       ],
     },
@@ -189,6 +189,16 @@ export const zh = {
     intro: "每天在做什么、试了什么、学到什么。",
     relatedDemoLabel: "看 demo",
     entries: [
+      {
+        id: "2026-05-12-process-improvement-tracker-demo",
+        date: "2026-05-12",
+        label: "今天",
+        title: "接入了闭环流程改进 tracker 案例。",
+        summary:
+          "把 Business Process Improvement Tracker demo 接到网站，并按 BA 作品集方式包装：问题 intake、优先级评分、stage-gate 治理、As-Is / To-Be 流程、交付证据、收益验证和 PIR。",
+        tags: ["业务分析", "流程改进", "Stage-Gate 治理"],
+        href: "/lab/process-improvement-tracker",
+      },
       {
         id: "2026-05-12-employment-dashboard-demo",
         date: "2026-05-12",
@@ -354,6 +364,25 @@ export const zh = {
         screenshot: null,
       },
       {
+        id: "process-improvement-tracker",
+        title: "Business Process Improvement Tracker",
+        tagline: "一个面向流程改进的闭环 BA 工作流 demo。",
+        status: "BA Process Demo",
+        statusLabel: "BA Demo",
+        domainLabel: "流程改进",
+        group: "DEMO",
+        type: "Demo",
+        category: "业务分析 / 流程改进",
+        problem: "运营改进请求散在邮件、会议记录和 Slack 里，没有统一 owner、阶段和收益验证。",
+        tool: "一个 stage-gate tracker，把问题捕捉、评分、治理、文档、交付、度量和复盘串起来。",
+        description: "用来展示 BA 如何把运营摩擦变成有优先级、有度量、有复盘的改进项目。",
+        href: "/lab/process-improvement-tracker",
+        ctaLabel: "查看案例 →",
+        isFeatured: false,
+        isExternal: false,
+        screenshot: null,
+      },
+      {
         id: "exact-transit",
         title: "Exact Transit",
         tagline: "看得懂算法的星象行运时间线。",
@@ -500,12 +529,134 @@ export const zh = {
         body: "路线图、UAT 场景、验收标准和 before-after 指标补齐完整 BA 生命周期。",
       },
     ],
+    companionEyebrow: "配套 BA 项目",
+    companionTitle: "和流程改进 tracker 一起看。",
+    companionBody:
+      "这个 dashboard 展示 Data → Decision。配套项目展示 Problem → Governed Change：问题 intake、优先级、stage gates、实施证据、收益追踪和 PIR。",
+    companionCtaLabel: "打开配套案例",
     demoEyebrow: "可运行原型",
     demoTitle: "下面可以直接操作 dashboard。",
     demoBody:
       "嵌入的是原始 BI 原型。你可以直接使用筛选器、侧边导航、漏斗阶段、区域地图和报告预览。",
     openDemoLabel: "打开完整 demo",
     iframeTitle: "就业服务成果 Dashboard 交互 demo",
+  },
+  processImprovementPage: {
+    metadata: {
+      title: "Business Process Improvement Tracker Demo — Esther AI 产品实验室",
+      description:
+        "一个可运行的 BA 流程改进 demo，覆盖问题 intake、优先级、stage-gate 治理、流程图、BA 交付物、收益验证和 PIR。",
+    },
+    backLabel: "返回实验室",
+    eyebrow: "业务分析 / 流程改进",
+    title: "Business Process Improvement Tracker",
+    description: "一个用于捕捉、排序、交付和验证运营流程改进的闭环 BA 工作流。",
+    noteTitle: "为什么放在实验室",
+    noteBody:
+      "它把 BA 方法做成了可操作界面：散落的改进想法会变成有评分的 initiative、有治理的阶段流转、有签收的交付物、有度量的收益和可复用的复盘。",
+    summary: [
+      {
+        label: "之前",
+        body: "改进请求散在邮件、会议记录和 Slack 里，owner 不稳定，也没有可靠的收益验证。",
+      },
+      {
+        label: "过程",
+        body: "捕捉问题，评估业务价值，通过 stage gates 推进，记录变更，测试交付，再复盘结果。",
+      },
+      {
+        label: "之后",
+        body: "一个有 owner、决策、BA 证据、交付风险、收益和 PIR follow-up 的治理型改进 portfolio。",
+      },
+    ],
+    contextEyebrow: "项目背景",
+    contextTitle: "从散落想法，变成被治理的改进交付。",
+    contextBody:
+      "这个 tracker 按 CoAct 类运营场景设计：多个区域同时管理多条核心流程，需要持续处理改进请求。它展示的是 BA 如何从问题 intake 和优先级开始，经过 As-Is / To-Be 流程分析、受控实施、UAT，再到 PIR 和收益验证。",
+    tags: [
+      "业务分析",
+      "流程改进",
+      "Stage-Gate 治理",
+      "需求文档",
+      "流程图",
+      "收益实现",
+      "利益相关者管理",
+      "UAT 规划",
+      "持续改进",
+      "PIR",
+    ],
+    demonstrates: [
+      {
+        title: "结构化问题 Intake",
+        body: "用量化评分模型平衡 impact、urgency、risk 和 effort，再决定是否进入交付。",
+      },
+      {
+        title: "Stage-Gate 治理",
+        body: "Initiative 按 Identify、Analyse、Design、Implement、Complete、Review 推进，每一步都有清楚的决策点。",
+      },
+      {
+        title: "流程分析",
+        body: "交互式 As-Is / To-Be 流程图、步骤详情和变更类型标签，让运营变化可见。",
+      },
+      {
+        title: "BA 交付物库",
+        body: "Problem Statement、BRD、流程图、UAT 计划、方案说明和 PIR 文档都和阶段 readiness 绑定。",
+      },
+      {
+        title: "收益验证",
+        body: "Target-vs-actual 追踪能看到改进是否真的带来省时、质量提升或风险降低。",
+      },
+      {
+        title: "实施后复盘",
+        body: "PIR 面板记录用户反馈、follow-up、签收状态和可复用的改进模式。",
+      },
+    ],
+    methodEyebrow: "BA 方法",
+    methodTitle: "不是任务列表，而是闭环。",
+    methodBody:
+      "这个工作流围绕证据和决策质量设计。每个 initiative 都有清楚入口、优先级理由、受控交付路径，以及在真正完成前必须经过的复盘步骤。",
+    stages: [
+      {
+        label: "01",
+        title: "捕捉和排序",
+        body: "标准化 intake，量化问题，再决定哪些请求值得投入 BA 交付时间。",
+      },
+      {
+        label: "02",
+        title: "分析和设计",
+        body: "梳理当前流程痛点，定义需求，比较未来状态方案，并准备 change case。",
+      },
+      {
+        label: "03",
+        title: "交付和复盘",
+        body: "追踪 gates、UAT、收益验证、PIR 结论、经验教训和可复用模式。",
+      },
+    ],
+    portfolioEyebrow: "作品集组合",
+    portfolioTitle: "两个 BA 项目，合成一条完整生命周期。",
+    portfolioBody:
+      "就业服务 dashboard 和这个流程 tracker 本来就应该放在一起看。一个展示 Data → Decision，另一个展示 Problem → Governed Change。",
+    portfolioItems: [
+      {
+        label: "项目 1",
+        title: "Employment Services Outcomes Dashboard",
+        body: "展示 BA 工作里的分析和治理侧：KPI 定义、利益相关者需求、数据质量、报告 readiness 和 UAT。",
+        href: "/lab/employment-dashboard",
+        ctaLabel: "打开 dashboard 案例",
+      },
+      {
+        label: "项目 2",
+        title: "Business Process Improvement Tracker",
+        body: "展示持续改进侧：intake、优先级、stage-gate 交付、流程图、收益验证和 PIR。",
+        href: null,
+        ctaLabel: null,
+      },
+    ],
+    demoEyebrow: "可运行原型",
+    demoTitle: "下面可以直接操作 tracker。",
+    demoBody:
+      "嵌入的是原始闭环 BA 原型。你可以直接使用 overview、stage-gate board、methodology、benefits tracker、document centre 和 PIR controls。",
+    openDemoLabel: "打开完整 demo",
+    iframeTitle: "Business Process Improvement Tracker 交互 demo",
   },
   tailorcvPage: {
     metadata: {

@@ -6,33 +6,33 @@ import { getDictionary } from "@/data/i18n";
 import { localizeHref, type Locale } from "@/lib/i18n";
 import { createLocalizedMetadata } from "@/lib/metadata";
 
-type EmploymentDashboardPageProps = {
+type ProcessImprovementTrackerPageProps = {
   params: Promise<{
     lang: Locale;
   }>;
 };
 
-const demoHref = "/demos/employment-dashboard/index.html";
+const demoHref = "/demos/process-improvement-tracker/index.html";
 
 export async function generateMetadata({
   params,
-}: EmploymentDashboardPageProps): Promise<Metadata> {
+}: ProcessImprovementTrackerPageProps): Promise<Metadata> {
   const { lang } = await params;
   const dictionary = getDictionary(lang);
 
   return createLocalizedMetadata(
     lang,
-    "/lab/employment-dashboard",
-    dictionary.employmentDashboardPage.metadata,
+    "/lab/process-improvement-tracker",
+    dictionary.processImprovementPage.metadata,
   );
 }
 
-export default async function EmploymentDashboardPage({
+export default async function ProcessImprovementTrackerPage({
   params,
-}: EmploymentDashboardPageProps) {
+}: ProcessImprovementTrackerPageProps) {
   const { lang } = await params;
   const dictionary = getDictionary(lang);
-  const { employmentDashboardPage } = dictionary;
+  const { processImprovementPage } = dictionary;
 
   return (
     <>
@@ -44,28 +44,28 @@ export default async function EmploymentDashboardPage({
               href={localizeHref(lang, "/#lab") ?? "#"}
               className="inline-flex min-h-10 items-center rounded-full border border-[#E4D9CB] px-4 text-sm font-semibold text-[#686057] transition-colors hover:border-[#C84B31] hover:text-[#C84B31]"
             >
-              {employmentDashboardPage.backLabel}
+              {processImprovementPage.backLabel}
             </Link>
 
             <div className="mt-8 grid min-w-0 gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(18rem,0.45fr)] lg:items-end">
               <div className="min-w-0 max-w-3xl">
                 <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#1F7A5C]">
-                  {employmentDashboardPage.eyebrow}
+                  {processImprovementPage.eyebrow}
                 </p>
                 <h1 className="mt-4 text-balance font-serif text-5xl font-semibold leading-none text-[#191714] sm:text-7xl">
-                  {employmentDashboardPage.title}
+                  {processImprovementPage.title}
                 </h1>
                 <p className="mt-5 max-w-2xl text-pretty text-lg leading-8 text-[#3B3630]">
-                  {employmentDashboardPage.description}
+                  {processImprovementPage.description}
                 </p>
               </div>
 
               <div className="min-w-0 rounded-lg border border-[#B9D8CA] bg-[#EEF7F2] p-4">
                 <p className="text-sm font-semibold text-[#18221E]">
-                  {employmentDashboardPage.noteTitle}
+                  {processImprovementPage.noteTitle}
                 </p>
                 <p className="mt-2 text-sm leading-6 text-[#3F4A43]">
-                  {employmentDashboardPage.noteBody}
+                  {processImprovementPage.noteBody}
                 </p>
               </div>
             </div>
@@ -74,7 +74,7 @@ export default async function EmploymentDashboardPage({
 
         <section className="border-y border-[#E4D9CB] bg-[#FFFDF8] px-0 py-10 sm:py-12">
           <div className="shell grid gap-6 md:grid-cols-3">
-            {employmentDashboardPage.summary.map((item, index) => (
+            {processImprovementPage.summary.map((item, index) => (
               <div key={item.label}>
                 <p
                   className={`font-mono text-xs font-semibold uppercase tracking-[0.16em] ${
@@ -95,16 +95,16 @@ export default async function EmploymentDashboardPage({
           <div className="shell grid gap-8 lg:grid-cols-[minmax(0,0.65fr)_minmax(0,1fr)]">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#C84B31]">
-                {employmentDashboardPage.contextEyebrow}
+                {processImprovementPage.contextEyebrow}
               </p>
               <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight text-[#191714]">
-                {employmentDashboardPage.contextTitle}
+                {processImprovementPage.contextTitle}
               </h2>
               <p className="mt-4 text-base leading-7 text-[#3B3630]">
-                {employmentDashboardPage.contextBody}
+                {processImprovementPage.contextBody}
               </p>
               <div className="mt-6 flex flex-wrap gap-2">
-                {employmentDashboardPage.tags.map((tag) => (
+                {processImprovementPage.tags.map((tag) => (
                   <span
                     key={tag}
                     className="rounded-full border border-[#E4D9CB] bg-[#FFFDF8] px-3 py-1 text-xs font-semibold text-[#686057]"
@@ -116,7 +116,7 @@ export default async function EmploymentDashboardPage({
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
-              {employmentDashboardPage.demonstrates.map((item) => (
+              {processImprovementPage.demonstrates.map((item) => (
                 <article key={item.title} className="warm-card rounded-lg p-4">
                   <h3 className="text-lg font-semibold leading-6 text-[#191714]">
                     {item.title}
@@ -128,25 +128,71 @@ export default async function EmploymentDashboardPage({
           </div>
         </section>
 
-        <section className="border-y border-[#E4D9CB] bg-[#FFFDF8] px-0 py-10 sm:py-12">
-          <div className="shell grid gap-6 lg:grid-cols-[minmax(0,0.75fr)_auto] lg:items-center">
-            <div>
+        <section className="border-y border-[#E4D9CB] bg-[#FFFDF8] px-0 py-12 sm:py-16">
+          <div className="shell">
+            <div className="max-w-3xl">
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#1F7A5C]">
-                {employmentDashboardPage.companionEyebrow}
+                {processImprovementPage.methodEyebrow}
               </p>
-              <h2 className="mt-3 font-serif text-3xl font-semibold leading-tight text-[#191714]">
-                {employmentDashboardPage.companionTitle}
+              <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight text-[#191714]">
+                {processImprovementPage.methodTitle}
               </h2>
-              <p className="mt-3 max-w-3xl text-sm leading-6 text-[#686057]">
-                {employmentDashboardPage.companionBody}
+              <p className="mt-4 text-base leading-7 text-[#3B3630]">
+                {processImprovementPage.methodBody}
               </p>
             </div>
-            <Link
-              href={localizeHref(lang, "/lab/process-improvement-tracker") ?? "#"}
-              className="inline-flex min-h-11 w-fit items-center justify-center rounded-full bg-[#191714] px-4 py-2 text-sm font-semibold text-[#FFFDF8] transition-colors hover:bg-[#C84B31]"
-            >
-              {employmentDashboardPage.companionCtaLabel}
-            </Link>
+
+            <div className="mt-8 grid gap-3 md:grid-cols-3">
+              {processImprovementPage.stages.map((stage) => (
+                <article key={stage.label} className="rounded-lg border border-[#E4D9CB] bg-white p-4">
+                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-[#C84B31]">
+                    {stage.label}
+                  </p>
+                  <h3 className="mt-3 text-lg font-semibold leading-6 text-[#191714]">
+                    {stage.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-[#686057]">{stage.body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="px-0 py-12 sm:py-18">
+          <div className="shell grid gap-8 lg:grid-cols-[minmax(0,0.65fr)_minmax(0,1fr)] lg:items-start">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#C84B31]">
+                {processImprovementPage.portfolioEyebrow}
+              </p>
+              <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight text-[#191714]">
+                {processImprovementPage.portfolioTitle}
+              </h2>
+              <p className="mt-4 text-base leading-7 text-[#3B3630]">
+                {processImprovementPage.portfolioBody}
+              </p>
+            </div>
+
+            <div className="grid gap-3">
+              {processImprovementPage.portfolioItems.map((item) => (
+                <article key={item.title} className="warm-card rounded-lg p-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#1F7A5C]">
+                    {item.label}
+                  </p>
+                  <h3 className="mt-3 text-xl font-semibold leading-7 text-[#191714]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-[#686057]">{item.body}</p>
+                  {item.href ? (
+                    <Link
+                      href={localizeHref(lang, item.href) ?? item.href}
+                      className="mt-4 inline-flex min-h-10 items-center rounded-full border border-[#E4D9CB] px-4 text-sm font-semibold text-[#191714] transition-colors hover:border-[#C84B31] hover:text-[#C84B31]"
+                    >
+                      {item.ctaLabel}
+                    </Link>
+                  ) : null}
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -155,13 +201,13 @@ export default async function EmploymentDashboardPage({
             <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#C84B31]">
-                  {employmentDashboardPage.demoEyebrow}
+                  {processImprovementPage.demoEyebrow}
                 </p>
                 <h2 className="mt-3 font-serif text-4xl font-semibold text-[#191714]">
-                  {employmentDashboardPage.demoTitle}
+                  {processImprovementPage.demoTitle}
                 </h2>
                 <p className="mt-3 max-w-2xl text-sm leading-6 text-[#686057]">
-                  {employmentDashboardPage.demoBody}
+                  {processImprovementPage.demoBody}
                 </p>
               </div>
               <a
@@ -170,14 +216,14 @@ export default async function EmploymentDashboardPage({
                 rel="noreferrer"
                 className="inline-flex min-h-11 w-fit items-center justify-center rounded-full bg-[#191714] px-4 py-2 text-sm font-semibold text-[#FFFDF8] transition-colors hover:bg-[#C84B31]"
               >
-                {employmentDashboardPage.openDemoLabel}
+                {processImprovementPage.openDemoLabel}
               </a>
             </div>
 
             <div className="overflow-hidden rounded-lg border border-[#E4D9CB] bg-[#FFFDF8] shadow-[0_18px_45px_rgb(82_53_34_/_8%)]">
               <iframe
                 src={demoHref}
-                title={employmentDashboardPage.iframeTitle}
+                title={processImprovementPage.iframeTitle}
                 className="h-[780px] w-full bg-white sm:h-[840px]"
               />
             </div>

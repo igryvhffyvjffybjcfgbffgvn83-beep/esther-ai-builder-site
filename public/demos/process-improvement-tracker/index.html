@@ -1,0 +1,3252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business Process Improvement Tracker | Closed-loop BA Demo</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ECharts -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+  <style>
+	    :root {
+	      --sidebar: #172033;
+	      --ink: #172033;
+	      --muted: #64748b;
+	      --line: #dde5ef;
+	      --surface: #ffffff;
+	      --canvas: #eef2f6;
+	      --primary: #2563eb;
+	      --success: #16a34a;
+	      --warning: #b45309;
+	      --danger: #dc2626;
+	    }
+
+	    body {
+	      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	      background: var(--canvas);
+	      color: var(--ink);
+	    }
+
+	    .panel {
+	      background: var(--surface);
+	      border: 1px solid var(--line);
+	      border-radius: 0.5rem;
+	      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.035);
+	    }
+
+	    .metric-card {
+	      background: var(--surface);
+	      border: 1px solid var(--line);
+	      border-radius: 0.5rem;
+	      padding: 1.25rem;
+	      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.035);
+	    }
+
+	    .context-strip {
+	      background: var(--surface);
+	      border: 1px solid #dbe4ef;
+	      border-left: 4px solid var(--primary);
+	      border-radius: 0.5rem;
+	      padding: 1rem 1.25rem;
+	      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.035);
+	    }
+
+	    .context-chip,
+	    .tag {
+	      display: inline-flex;
+	      align-items: center;
+	      gap: 0.4rem;
+	      border: 1px solid #dbe4ef;
+	      border-radius: 999px;
+	      background: #f8fafc;
+	      color: #334155;
+	      padding: 0.35rem 0.7rem;
+	      font-size: 0.78rem;
+	      font-weight: 700;
+	      white-space: nowrap;
+	    }
+
+	    .section-kicker {
+	      font-size: 0.72rem;
+	      font-weight: 800;
+	      letter-spacing: 0.12em;
+	      text-transform: uppercase;
+	      color: var(--primary);
+	    }
+
+	    .filter-control {
+	      border: 1px solid #cbd5e1;
+	      border-radius: 0.375rem;
+	      background: #f8fafc;
+	      padding: 0.5rem 0.75rem;
+	      font-size: 0.875rem;
+	      outline: none;
+	    }
+
+	    .filter-control:focus {
+	      border-color: var(--primary);
+	      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.16);
+	    }
+
+	    .nav-btn:focus-visible,
+	    button:focus-visible {
+	      outline: 2px solid rgba(37, 99, 235, 0.4);
+	      outline-offset: 2px;
+	    }
+
+	    .mobile-page-nav {
+	      display: none;
+	    }
+
+	    .chart-fallback {
+	      min-height: 260px;
+	      display: grid;
+	      place-items: center;
+	      border: 1px dashed #cbd5e1;
+	      border-radius: 0.5rem;
+	      background: #f8fafc;
+	      color: #475569;
+	      text-align: center;
+	      padding: 1.5rem;
+	    }
+
+    .fade-in {
+      animation: fadeIn 0.24s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .kanban-col {
+      min-height: 560px;
+    }
+
+    .drag-over {
+      background: #e0e7ff !important;
+      border: 2px dashed #818cf8 !important;
+    }
+
+    .stage-line {
+      position: relative;
+    }
+
+    .stage-line::after {
+      content: "";
+      position: absolute;
+      left: 23px;
+      top: 46px;
+      bottom: -24px;
+      width: 2px;
+      background: #e2e8f0;
+    }
+
+    .stage-line:last-child::after {
+      display: none;
+    }
+
+    .process-arrow::after {
+      content: "↓";
+      display: block;
+      text-align: center;
+      color: #94a3b8;
+      font-weight: 700;
+      margin: 8px 0;
+    }
+
+    .process-arrow:last-child::after {
+      display: none;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(12px);
+    }
+
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+
+	    ::-webkit-scrollbar-thumb {
+	      background: #cbd5e1;
+	      border-radius: 999px;
+	    }
+
+	    @media (max-width: 900px) {
+	      body {
+	        height: auto !important;
+	        min-height: 100vh;
+	        overflow: auto !important;
+	      }
+
+	      .app-shell {
+	        height: auto !important;
+	        min-height: 100vh;
+	        display: block !important;
+	      }
+
+	      .app-sidebar {
+	        display: none !important;
+	      }
+
+	      .app-main {
+	        min-height: 100vh;
+	      }
+
+	      .app-header {
+	        height: auto !important;
+	        align-items: flex-start !important;
+	        padding: 1rem !important;
+	      }
+
+	      .filter-bar {
+	        width: 100%;
+	        display: grid !important;
+	        grid-template-columns: minmax(0, 1fr);
+	      }
+
+	      .filter-bar select,
+	      .filter-bar button {
+	        width: 100%;
+	      }
+
+	      .mobile-page-nav {
+	        display: flex;
+	        gap: 0.5rem;
+	        overflow-x: auto;
+	        width: 100%;
+	        padding-bottom: 0.25rem;
+	      }
+
+	      .mobile-page-nav .nav-btn {
+	        flex: 0 0 auto;
+	        color: #334155;
+	        background: #f8fafc;
+	        border: 1px solid #dbe4ef;
+	        padding: 0.55rem 0.75rem;
+	        font-size: 0.82rem;
+	      }
+
+	      #kanban-board {
+	        min-width: 0 !important;
+	        grid-template-columns: minmax(0, 1fr) !important;
+	      }
+
+	      #page-kanban select {
+	        width: 100%;
+	      }
+
+	      #page-documents .xl\:col-span-2 {
+	        min-height: auto !important;
+	      }
+
+	      #case-drawer,
+	      #new-drawer,
+	      #process-step-drawer {
+	        max-width: 100% !important;
+	      }
+	    }
+
+	    @media (prefers-reduced-motion: reduce) {
+	      *,
+	      *::before,
+	      *::after {
+	        animation-duration: 0.01ms !important;
+	        animation-iteration-count: 1 !important;
+	        scroll-behavior: auto !important;
+	        transition-duration: 0.01ms !important;
+	      }
+	    }
+	  </style>
+</head>
+
+<body class="h-screen overflow-hidden text-slate-800">
+
+<div class="app-shell h-screen flex">
+
+  <!-- Sidebar -->
+  <aside class="app-sidebar w-72 bg-[#172033] text-white flex flex-col shadow-xl z-20">
+    <div class="p-6 border-b border-slate-800">
+		          <div class="flex flex-wrap items-center gap-3">
+        <div class="w-11 h-11 rounded-md bg-blue-600 flex items-center justify-center shadow-sm">
+          <i class="fa-solid fa-diagram-project text-xl"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg tracking-tight">BPI Tracker</h1>
+          <p class="text-[11px] text-slate-400 uppercase tracking-[0.18em]">Closed-loop BA Demo</p>
+        </div>
+      </div>
+      <div class="mt-5 rounded-md bg-white/5 border border-white/10 p-4">
+        <p class="text-xs text-slate-400 mb-2">Portfolio storyline</p>
+        <p class="text-sm leading-relaxed text-slate-200">
+          Capture pain points, prioritise initiatives, deliver BA work, measure benefits and standardise lessons learned.
+        </p>
+      </div>
+    </div>
+
+    <nav class="flex-1 px-4 py-5 space-y-1 overflow-y-auto">
+	      <p class="text-[11px] uppercase tracking-[0.2em] text-slate-500 px-3 mb-3">Case Study</p>
+
+	      <button data-tab="overview" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-md text-left transition bg-blue-600 text-white shadow-sm">
+	        <i class="fa-solid fa-table-columns w-5"></i>
+		        Project Overview
+	      </button>
+
+	      <button data-tab="ba-process" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-md text-left transition text-slate-400 hover:bg-slate-900 hover:text-white">
+	        <i class="fa-solid fa-route w-5"></i>
+	        BA Process
+	      </button>
+
+	      <button data-tab="methodology" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-md text-left transition text-slate-400 hover:bg-slate-900 hover:text-white">
+	        <i class="fa-solid fa-compass-drafting w-5"></i>
+	        Methodology
+	      </button>
+
+	      <p class="text-[11px] uppercase tracking-[0.2em] text-slate-500 px-3 mt-5 mb-3">Demo Workspace</p>
+
+      <button data-tab="intake" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-md text-left transition text-slate-400 hover:bg-slate-900 hover:text-white">
+        <i class="fa-solid fa-inbox w-5"></i>
+	        Intake Scoring
+      </button>
+
+      <button data-tab="kanban" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-md text-left transition text-slate-400 hover:bg-slate-900 hover:text-white">
+        <i class="fa-solid fa-layer-group w-5"></i>
+	        Stage-Gate Board
+      </button>
+
+      <button data-tab="process" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-md text-left transition text-slate-400 hover:bg-slate-900 hover:text-white">
+        <i class="fa-solid fa-code-branch w-5"></i>
+        Process Mapping
+      </button>
+
+      <button data-tab="impact" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-md text-left transition text-slate-400 hover:bg-slate-900 hover:text-white">
+        <i class="fa-solid fa-chart-line w-5"></i>
+	        Benefits Realisation
+      </button>
+
+      <button data-tab="documents" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-md text-left transition text-slate-400 hover:bg-slate-900 hover:text-white">
+        <i class="fa-solid fa-folder-open w-5"></i>
+        BA Toolkit
+      </button>
+
+      <button data-tab="review" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-md text-left transition text-slate-400 hover:bg-slate-900 hover:text-white">
+        <i class="fa-solid fa-rotate-right w-5"></i>
+        Review Loop
+      </button>
+    </nav>
+
+    <div class="p-4">
+      <div class="panel bg-white/5 border-white/10 p-4 text-white">
+        <p class="text-xs text-slate-300 mb-1">Operating snapshot</p>
+        <div class="flex items-end gap-2">
+          <span class="text-3xl font-black" id="sidebar-hours">1,240</span>
+          <span class="text-xs text-slate-300 pb-1">hrs saved YTD</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-2">Validated benefits from completed and reviewed initiatives.</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="app-main flex-1 flex flex-col min-w-0">
+
+    <!-- Header -->
+    <header class="app-header min-h-16 bg-white/95 backdrop-blur border-b border-slate-200 flex flex-wrap items-center justify-between gap-4 px-7 py-3 shrink-0">
+      <div>
+		        <h2 id="page-title" class="text-xl font-bold text-slate-900">Project Overview</h2>
+		        <p id="page-subtitle" class="text-xs text-slate-500 mt-0.5">Portfolio case summary and operating dashboard.</p>
+      </div>
+
+      <div class="filter-bar flex flex-wrap items-center gap-3">
+        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider" for="period-filter">Period</label>
+        <select id="period-filter" class="filter-control">
+          <option value="ytd">Year to Date</option>
+          <option value="quarter">This Quarter</option>
+          <option value="month">This Month</option>
+        </select>
+
+        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider" for="global-department-filter">Department</label>
+        <select id="global-department-filter" class="filter-control">
+          <option value="all">All departments</option>
+          <option value="Operations">Operations</option>
+          <option value="Training">Training</option>
+          <option value="Employer Services">Employer Services</option>
+          <option value="Case Management">Case Management</option>
+          <option value="Administration">Administration</option>
+          <option value="HR / Training">HR / Training</option>
+          <option value="Front Desk">Front Desk</option>
+        </select>
+
+	        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider" for="owner-filter">Owner</label>
+	        <select id="owner-filter" class="filter-control">
+	          <option value="all">All owners</option>
+	          <option value="Esther">Esther</option>
+	          <option value="BA Team">BA Team</option>
+          <option value="Workflow Analyst">Workflow Analyst</option>
+          <option value="Data Analyst">Data Analyst</option>
+	          <option value="CRM Owner">CRM Owner</option>
+	        </select>
+
+	        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider" for="global-priority-filter">Priority</label>
+	        <select id="global-priority-filter" class="filter-control">
+	          <option value="all">All priorities</option>
+	          <option value="Critical">Critical</option>
+	          <option value="High">High</option>
+	          <option value="Medium">Medium</option>
+	        </select>
+
+	        <label class="text-xs font-bold text-slate-500 uppercase tracking-wider" for="status-filter">Benefit</label>
+        <select id="status-filter" class="filter-control">
+          <option value="all">All statuses</option>
+          <option value="validated">Validated</option>
+          <option value="pending">Pending validation</option>
+          <option value="not-measured">Not measured</option>
+        </select>
+
+	        <button onclick="openNewInitiativePanel()" class="px-4 py-2 rounded-md bg-blue-600 text-white text-sm font-semibold shadow-sm hover:bg-blue-700 transition flex items-center justify-center gap-2">
+	          <i class="fa-solid fa-plus"></i>
+	          New Improvement
+	        </button>
+	      </div>
+	      <nav class="mobile-page-nav" aria-label="Case and demo navigation">
+	        <button data-tab="overview" class="nav-btn rounded-md text-left transition bg-blue-600 text-white shadow-sm"><i class="fa-solid fa-table-columns"></i> Project</button>
+	        <button data-tab="ba-process" class="nav-btn rounded-md text-left transition"><i class="fa-solid fa-route"></i> BA Process</button>
+	        <button data-tab="methodology" class="nav-btn rounded-md text-left transition"><i class="fa-solid fa-compass-drafting"></i> Method</button>
+	        <button data-tab="intake" class="nav-btn rounded-md text-left transition"><i class="fa-solid fa-inbox"></i> Intake</button>
+	        <button data-tab="kanban" class="nav-btn rounded-md text-left transition"><i class="fa-solid fa-layer-group"></i> Board</button>
+	        <button data-tab="process" class="nav-btn rounded-md text-left transition"><i class="fa-solid fa-code-branch"></i> Process</button>
+	        <button data-tab="impact" class="nav-btn rounded-md text-left transition"><i class="fa-solid fa-chart-line"></i> Benefits</button>
+	        <button data-tab="documents" class="nav-btn rounded-md text-left transition"><i class="fa-solid fa-folder-open"></i> Toolkit</button>
+	        <button data-tab="review" class="nav-btn rounded-md text-left transition"><i class="fa-solid fa-rotate-right"></i> Review</button>
+	      </nav>
+	    </header>
+
+    <!-- Pages -->
+    <section class="flex-1 overflow-auto p-6">
+
+	      <!-- OVERVIEW -->
+	      <div id="page-overview" class="page fade-in space-y-6">
+	        <div class="panel p-6">
+	          <div class="grid grid-cols-1 xl:grid-cols-[1.25fr_0.75fr] gap-6 items-start">
+	            <div>
+	              <p class="section-kicker">Portfolio Project 2 · Process Improvement · Business Analyst Demo</p>
+	              <h1 class="text-3xl font-bold tracking-tight text-slate-950 mt-2">Business Process Improvement Tracker</h1>
+	              <p class="text-slate-600 text-base leading-relaxed max-w-4xl mt-3">
+	                Closed-loop BA workflow for CoAct operational process improvements: capture scattered pain points,
+	                prioritise by business value, manage stage gates, compare As-Is and To-Be workflows, and validate benefits after implementation.
+	              </p>
+	              <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+	                <div class="rounded-md border border-slate-200 bg-slate-50 p-3">
+	                  <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Role</p>
+	                  <p class="font-bold text-slate-900 mt-1">Business Analyst / Process Improvement Designer</p>
+	                </div>
+	                <div class="rounded-md border border-slate-200 bg-slate-50 p-3">
+	                  <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Scope</p>
+	                  <p class="font-bold text-slate-900 mt-1">15+ core operational processes</p>
+	                </div>
+	                <div class="rounded-md border border-slate-200 bg-slate-50 p-3">
+	                  <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Methods</p>
+	                  <p class="font-bold text-slate-900 mt-1">Stakeholders, BRD, process maps, UAT, PIR</p>
+	                </div>
+	              </div>
+	              <div class="mt-5 flex flex-wrap gap-3">
+	                <button onclick="switchTab('kanban')" class="px-4 py-2 rounded-md bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition">
+	                  Open Interactive Demo
+	                </button>
+		                <button onclick="switchTab('ba-process')" class="px-4 py-2 rounded-md bg-white border border-slate-300 text-slate-700 text-sm font-bold hover:bg-slate-50 transition">
+		                  View BA Process
+	                </button>
+	                <button onclick="openCaseFile('IMP-204')" class="px-4 py-2 rounded-md bg-slate-900 text-white text-sm font-bold hover:bg-slate-700 transition">
+	                  Open Featured Case
+	                </button>
+	              </div>
+	            </div>
+	            <div class="grid grid-cols-2 gap-3">
+	              <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
+	                <p class="text-xs text-slate-500 font-bold uppercase">Core processes</p>
+	                <p class="text-3xl font-black text-slate-950 mt-1">15+</p>
+	              </div>
+	              <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
+	                <p class="text-xs text-slate-500 font-bold uppercase">BA stages</p>
+	                <p class="text-3xl font-black text-slate-950 mt-1">6</p>
+	              </div>
+	              <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
+	                <p class="text-xs text-slate-500 font-bold uppercase">Validated saving</p>
+	                <p class="text-3xl font-black text-emerald-700 mt-1">286</p>
+	                <p class="text-xs text-slate-500">hrs / month from IMP-204</p>
+	              </div>
+	              <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
+	                <p class="text-xs text-slate-500 font-bold uppercase">Toolkit</p>
+	                <p class="text-3xl font-black text-blue-700 mt-1">6</p>
+	                <p class="text-xs text-slate-500">templates embedded</p>
+	              </div>
+	            </div>
+	          </div>
+	        </div>
+
+	        <div class="grid grid-cols-1 xl:grid-cols-[1.15fr_0.85fr] gap-6">
+	          <div class="panel p-6">
+	            <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-5">
+	              <div>
+	                <p class="section-kicker">Case Study Readout</p>
+	                <h3 class="text-xl font-bold text-slate-900 mt-1">From scattered improvement ideas to governed delivery</h3>
+	                <p class="text-sm text-slate-600 mt-2 max-w-3xl">
+	                  The portfolio narrative is structured around one BA question: how do operations teams turn informal pain points into prioritised, documented, measured improvements?
+	                </p>
+	              </div>
+	              <span class="tag bg-slate-50 text-slate-700 border-slate-200">6-8 week simulated delivery</span>
+	            </div>
+
+	            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+	              <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
+	                <p class="text-xs font-bold uppercase tracking-widest text-rose-600">Problem</p>
+	                <p class="text-sm text-slate-700 mt-2 leading-relaxed">Improvement requests were split across email, meetings and Slack, with limited visibility of ownership, priority or realised value.</p>
+	              </div>
+	              <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
+	                <p class="text-xs font-bold uppercase tracking-widest text-blue-600">Approach</p>
+	                <p class="text-sm text-slate-700 mt-2 leading-relaxed">Define a stage-gate BA workflow, standardise deliverables and connect process maps, approvals, UAT and benefits tracking.</p>
+	              </div>
+	              <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
+	                <p class="text-xs font-bold uppercase tracking-widest text-emerald-600">Outcome</p>
+	                <p class="text-sm text-slate-700 mt-2 leading-relaxed">A closed-loop tracker that shows what is in progress, what changed, what value was delivered and what can be reused.</p>
+	              </div>
+	            </div>
+	          </div>
+
+	          <div class="panel p-6">
+	            <p class="section-kicker">My BA Contribution</p>
+	            <h3 class="text-lg font-bold text-slate-900 mt-1">What this portfolio piece demonstrates</h3>
+	            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+	              <div class="rounded-md border border-slate-200 p-3"><p class="text-sm font-bold text-slate-900">Stakeholder analysis</p><p class="text-xs text-slate-500 mt-1">Needs mapped to system capabilities.</p></div>
+	              <div class="rounded-md border border-slate-200 p-3"><p class="text-sm font-bold text-slate-900">Requirements definition</p><p class="text-xs text-slate-500 mt-1">BRD, rules and acceptance criteria.</p></div>
+	              <div class="rounded-md border border-slate-200 p-3"><p class="text-sm font-bold text-slate-900">Process analysis</p><p class="text-xs text-slate-500 mt-1">As-Is, To-Be and change impact.</p></div>
+	              <div class="rounded-md border border-slate-200 p-3"><p class="text-sm font-bold text-slate-900">Benefits realisation</p><p class="text-xs text-slate-500 mt-1">Before/after metrics and PIR loop.</p></div>
+	            </div>
+	          </div>
+	        </div>
+
+	        <div class="context-strip">
+	          <div class="flex flex-wrap items-start justify-between gap-3">
+	            <div>
+	              <p class="section-kicker">Current Operating View</p>
+	              <h3 class="text-lg font-bold text-slate-900 mt-1" id="context-title">Viewing: Year to Date / All departments / All owners</h3>
+	              <p class="text-sm text-slate-600 mt-1" id="context-meta">Stage-gate portfolio health, benefit validation and delivery risk.</p>
+	            </div>
+	            <div class="flex flex-wrap gap-2" id="context-chips"></div>
+	          </div>
+	        </div>
+
+	        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5" id="overview-kpis"></div>
+
+	        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+	          <div class="panel p-5">
+	            <div class="flex justify-between items-start gap-4 mb-2">
+	              <div>
+	                <h3 class="font-bold text-slate-900">Stage Distribution</h3>
+	                <p class="text-sm text-slate-500">Current BA stage-gate load across the filtered portfolio.</p>
+	              </div>
+	              <span class="tag bg-blue-50 text-blue-700 border-blue-100">FR-01</span>
+	            </div>
+	            <div id="overview-stage-chart" class="h-[300px]"></div>
+	          </div>
+
+	          <div class="panel p-5">
+	            <div class="flex justify-between items-start gap-4 mb-2">
+	              <div>
+	                <h3 class="font-bold text-slate-900">Benefits Target vs Actual</h3>
+	                <p class="text-sm text-slate-500">Compares expected and validated monthly hours saved.</p>
+	              </div>
+	              <span class="tag bg-emerald-50 text-emerald-700 border-emerald-100">FR-06</span>
+	            </div>
+	            <div id="overview-benefit-chart" class="h-[300px]"></div>
+	          </div>
+
+	          <div class="panel p-5">
+	            <div class="flex justify-between items-start gap-4 mb-2">
+	              <div>
+	                <h3 class="font-bold text-slate-900">Pipeline Aging</h3>
+	                <p class="text-sm text-slate-500">Average days in stage, with a 30-day review threshold.</p>
+	              </div>
+	              <span class="tag bg-amber-50 text-amber-700 border-amber-100">Gate risk</span>
+	            </div>
+	            <div id="overview-aging-chart" class="h-[300px]"></div>
+	          </div>
+
+	          <div class="panel p-5">
+	            <div class="flex justify-between items-start gap-4 mb-2">
+	              <div>
+	                <h3 class="font-bold text-slate-900">Priority / Effort Matrix</h3>
+	                <p class="text-sm text-slate-500">Intake scoring view for BA prioritisation decisions.</p>
+	              </div>
+	              <span class="tag bg-slate-50 text-slate-700 border-slate-200">FR-10</span>
+	            </div>
+	            <div id="overview-priority-chart" class="h-[300px]"></div>
+	          </div>
+	        </div>
+
+	        <div class="grid grid-cols-1 xl:grid-cols-[1fr_1.25fr] gap-6">
+	          <div class="panel p-5">
+	            <h3 class="font-bold text-slate-900 mb-4">Alert-to-Action Register</h3>
+	            <div class="space-y-3" id="overview-action-register"></div>
+	          </div>
+	          <div class="panel p-5">
+	            <h3 class="font-bold text-slate-900 mb-4">Executive Decision Log</h3>
+	            <div class="overflow-x-auto">
+	              <table class="w-full text-sm">
+	                <thead>
+	                  <tr class="text-left border-b border-slate-200 text-slate-500">
+	                    <th class="py-3 pr-4 font-bold">Trigger</th>
+	                    <th class="py-3 pr-4 font-bold">Decision</th>
+	                    <th class="py-3 pr-4 font-bold">Owner</th>
+	                    <th class="py-3 font-bold">Status</th>
+	                  </tr>
+	                </thead>
+	                <tbody id="overview-decision-log"></tbody>
+	              </table>
+	            </div>
+	          </div>
+	        </div>
+
+	        <div class="panel p-6">
+	          <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-5">
+	            <div>
+	              <h3 class="text-lg font-bold text-slate-900">Stakeholder Needs → System Capabilities</h3>
+	              <p class="text-sm text-slate-500">Shows the BA traceability from stakeholder concern to system design.</p>
+	            </div>
+	            <button onclick="switchTab('documents')" class="text-sm font-bold text-blue-600 hover:text-blue-800">View BA Toolkit →</button>
+	          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-left border-b border-slate-200 text-slate-500">
+                  <th class="py-3 pr-4 font-bold">Stakeholder</th>
+                  <th class="py-3 pr-4 font-bold">Role</th>
+                  <th class="py-3 pr-4 font-bold">Concern</th>
+                  <th class="py-3 pr-4 font-bold">System Need</th>
+                  <th class="py-3 font-bold">Engagement</th>
+                </tr>
+              </thead>
+              <tbody id="stakeholder-table"></tbody>
+            </table>
+          </div>
+        </div>
+	      </div>
+
+	      <!-- BA PROCESS -->
+	      <div id="page-ba-process" class="page hidden fade-in space-y-6">
+	        <div class="panel p-6">
+	          <p class="section-kicker">BA Process Evidence</p>
+	          <h3 class="text-2xl font-bold text-slate-950 mt-2">From scattered pain points to controlled operational change</h3>
+	          <p class="text-sm text-slate-600 mt-2 max-w-4xl">
+	            This section explains the analysis path behind the demo: stakeholder needs, problem framing, stage-gate governance,
+	            process mapping, UAT readiness and benefit validation.
+	          </p>
+	        </div>
+
+	        <div class="grid grid-cols-1 xl:grid-cols-5 gap-4">
+	          <div class="panel p-5">
+	            <span class="tag bg-slate-50 text-slate-700 border-slate-200">1 · Identify</span>
+	            <h4 class="font-bold text-slate-900 mt-4">Problem intake</h4>
+	            <p class="text-sm text-slate-500 mt-2">Capture ideas from email, meetings and Slack into a single triage queue with a one-page problem statement.</p>
+	          </div>
+	          <div class="panel p-5">
+	            <span class="tag bg-blue-50 text-blue-700 border-blue-100">2 · Analyse</span>
+	            <h4 class="font-bold text-slate-900 mt-4">Current state analysis</h4>
+	            <p class="text-sm text-slate-500 mt-2">Interview stakeholders, confirm root cause, map As-Is handoffs and quantify operational delay.</p>
+	          </div>
+	          <div class="panel p-5">
+	            <span class="tag bg-purple-50 text-purple-700 border-purple-100">3 · Design</span>
+	            <h4 class="font-bold text-slate-900 mt-4">To-Be solution design</h4>
+	            <p class="text-sm text-slate-500 mt-2">Define business rules, exception handling, controls and acceptance criteria before implementation.</p>
+	          </div>
+	          <div class="panel p-5">
+	            <span class="tag bg-amber-50 text-amber-700 border-amber-100">4 · Implement</span>
+	            <h4 class="font-bold text-slate-900 mt-4">UAT and rollout</h4>
+	            <p class="text-sm text-slate-500 mt-2">Prepare test scenarios, confirm sign-off and document training or change-management needs.</p>
+	          </div>
+	          <div class="panel p-5">
+	            <span class="tag bg-emerald-50 text-emerald-700 border-emerald-100">5 · Review</span>
+	            <h4 class="font-bold text-slate-900 mt-4">Benefits realisation</h4>
+	            <p class="text-sm text-slate-500 mt-2">Measure actual hours saved, capture lessons learned and identify reusable improvement patterns.</p>
+	          </div>
+	        </div>
+
+	        <div class="grid grid-cols-1 xl:grid-cols-[1fr_1.2fr] gap-6">
+	          <div class="panel p-6">
+	            <h3 class="font-bold text-slate-900 mb-4">Traceability Thread</h3>
+	            <div class="space-y-3">
+	              <div class="rounded-md border border-slate-200 bg-slate-50 p-4"><p class="font-bold text-sm">Stakeholder concern</p><p class="text-sm text-slate-600 mt-1">Regional managers manually assign new client cases and miss CRM updates.</p></div>
+	              <div class="rounded-md border border-slate-200 bg-slate-50 p-4"><p class="font-bold text-sm">Requirement</p><p class="text-sm text-slate-600 mt-1">System must support rules-based assignment using workload, expertise and location.</p></div>
+	              <div class="rounded-md border border-slate-200 bg-slate-50 p-4"><p class="font-bold text-sm">Design control</p><p class="text-sm text-slate-600 mt-1">Assignment reason is logged and exception cases route to manual review.</p></div>
+	              <div class="rounded-md border border-slate-200 bg-slate-50 p-4"><p class="font-bold text-sm">Measured outcome</p><p class="text-sm text-slate-600 mt-1">Average allocation time reduced from 4.2 hours to approximately 5 minutes.</p></div>
+	            </div>
+	          </div>
+	          <div class="panel p-6">
+	            <h3 class="font-bold text-slate-900 mb-4">BA Artefacts Produced</h3>
+		            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+		              <button onclick="openTemplateFromCase('Problem Statement')" class="text-left rounded-md border border-slate-200 bg-slate-50 p-4 hover:bg-blue-50 hover:border-blue-100 transition"><i class="fa-solid fa-file-lines text-blue-600"></i><p class="font-bold text-sm text-slate-900 mt-2">Problem Statement</p></button>
+		              <button onclick="openTemplateFromCase('Business Requirements Document')" class="text-left rounded-md border border-slate-200 bg-slate-50 p-4 hover:bg-blue-50 hover:border-blue-100 transition"><i class="fa-solid fa-file-lines text-blue-600"></i><p class="font-bold text-sm text-slate-900 mt-2">Business Requirements Document</p></button>
+		              <button onclick="openTemplateFromCase('As-Is / To-Be Process Map')" class="text-left rounded-md border border-slate-200 bg-slate-50 p-4 hover:bg-blue-50 hover:border-blue-100 transition"><i class="fa-solid fa-file-lines text-blue-600"></i><p class="font-bold text-sm text-slate-900 mt-2">As-Is / To-Be Process Map</p></button>
+		              <button onclick="openTemplateFromCase('Solution Design Document')" class="text-left rounded-md border border-slate-200 bg-slate-50 p-4 hover:bg-blue-50 hover:border-blue-100 transition"><i class="fa-solid fa-file-lines text-blue-600"></i><p class="font-bold text-sm text-slate-900 mt-2">Solution Design Document</p></button>
+		              <button onclick="openTemplateFromCase('UAT Test Plan')" class="text-left rounded-md border border-slate-200 bg-slate-50 p-4 hover:bg-blue-50 hover:border-blue-100 transition"><i class="fa-solid fa-file-lines text-blue-600"></i><p class="font-bold text-sm text-slate-900 mt-2">UAT Test Plan</p></button>
+		              <button onclick="openTemplateFromCase('Post-Implementation Review')" class="text-left rounded-md border border-slate-200 bg-slate-50 p-4 hover:bg-blue-50 hover:border-blue-100 transition"><i class="fa-solid fa-file-lines text-blue-600"></i><p class="font-bold text-sm text-slate-900 mt-2">Post-Implementation Review</p></button>
+		            </div>
+	          </div>
+	        </div>
+	      </div>
+
+	      <!-- METHODOLOGY -->
+	      <div id="page-methodology" class="page hidden fade-in space-y-6">
+	        <div class="panel p-6">
+	          <p class="section-kicker">Methodology</p>
+	          <h3 class="text-2xl font-bold text-slate-950 mt-2">BA governance model used in the demo</h3>
+	          <p class="text-sm text-slate-600 mt-2 max-w-4xl">
+	            The demo combines stage-gate governance, impact-effort scoring, process analysis, controlled delivery and PIR-based benefit validation.
+	          </p>
+	        </div>
+
+	        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+	          <div class="panel p-6">
+	            <h3 class="font-bold text-slate-900 mb-4">Framework Components</h3>
+	            <div class="space-y-3">
+	              <div class="rounded-md border border-slate-200 bg-slate-50 p-4"><p class="font-bold">Stage-gate workflow</p><p class="text-sm text-slate-600 mt-1">Each initiative must pass an explicit decision point before moving to the next delivery stage.</p></div>
+	              <div class="rounded-md border border-slate-200 bg-slate-50 p-4"><p class="font-bold">Impact / effort scoring</p><p class="text-sm text-slate-600 mt-1">Requests are prioritised by business impact, frequency, compliance risk, staff pain, effort and data readiness.</p></div>
+	              <div class="rounded-md border border-slate-200 bg-slate-50 p-4"><p class="font-bold">Benefits realisation</p><p class="text-sm text-slate-600 mt-1">Target savings and actual savings are tracked separately to avoid overstating projected value.</p></div>
+	            </div>
+	          </div>
+	          <div class="panel p-6">
+	            <h3 class="font-bold text-slate-900 mb-4">Portfolio Architecture</h3>
+	            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+	              <div class="rounded-md bg-slate-50 border border-slate-200 p-4"><p class="text-xs font-bold uppercase text-slate-500">Data layer</p><p class="font-bold mt-1">Initiatives, requests, gates, benefits, documents</p></div>
+	              <div class="rounded-md bg-slate-50 border border-slate-200 p-4"><p class="text-xs font-bold uppercase text-slate-500">Workflow layer</p><p class="font-bold mt-1">Intake, stage movement, approval checks, timeline</p></div>
+	              <div class="rounded-md bg-slate-50 border border-slate-200 p-4"><p class="text-xs font-bold uppercase text-slate-500">Reporting layer</p><p class="font-bold mt-1">KPI summary, charts, risk register, benefit table</p></div>
+	              <div class="rounded-md bg-slate-50 border border-slate-200 p-4"><p class="text-xs font-bold uppercase text-slate-500">Evidence layer</p><p class="font-bold mt-1">BRD, process map, UAT, PIR, lessons learned</p></div>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+
+	      <!-- INTAKE -->
+      <div id="page-intake" class="page hidden fade-in space-y-6">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div class="xl:col-span-2 bg-white rounded-lg border border-slate-200 shadow-sm p-6">
+            <div class="flex items-start justify-between mb-5">
+              <div>
+                <h3 class="text-lg font-bold text-slate-900">Improvement Intake Queue</h3>
+                <p class="text-sm text-slate-500">Before initiatives enter delivery, BA team assesses value, effort, risk and sponsorship.</p>
+              </div>
+	              <span id="intake-count" class="text-xs px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100 font-bold">3 pending assessment</span>
+            </div>
+
+            <div id="intake-list" class="space-y-4"></div>
+          </div>
+
+          <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-6 sticky top-0 h-fit">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-11 h-11 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                <i class="fa-solid fa-scale-balanced"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-slate-900">Assessment Model</h3>
+                <p class="text-xs text-slate-500">Impact + urgency + risk - effort.</p>
+              </div>
+            </div>
+
+            <div id="assessment-panel" class="space-y-4"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KANBAN -->
+      <div id="page-kanban" class="page hidden fade-in">
+	        <div class="flex flex-wrap items-center justify-between gap-4 mb-5">
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">Improvement Delivery Board</h3>
+            <p class="text-sm text-slate-500">Stage-gate delivery lifecycle: Identified → Analysing → Designing → Implementing → Completed → Reviewing.</p>
+          </div>
+
+	          <div class="flex items-center gap-3">
+	            <select id="department-filter" class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="all">All departments</option>
+              <option value="Operations">Operations</option>
+              <option value="Training">Training</option>
+              <option value="Employer Services">Employer Services</option>
+              <option value="Case Management">Case Management</option>
+              <option value="Administration">Administration</option>
+              <option value="HR / Training">HR / Training</option>
+              <option value="Front Desk">Front Desk</option>
+            </select>
+
+            <select id="priority-filter" class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="all">All priorities</option>
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+	              <option value="Medium">Medium</option>
+	            </select>
+
+	            <select id="kanban-stage-filter" class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+	              <option value="all">All stages</option>
+	              <option value="Identified">Identified</option>
+	              <option value="Analysing">Analysing</option>
+	              <option value="Designing">Designing</option>
+	              <option value="Implementing">Implementing</option>
+	              <option value="Completed">Completed</option>
+	              <option value="Reviewing">Reviewing</option>
+	            </select>
+
+	            <select id="kanban-sort" class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+	              <option value="priority">Sort by priority</option>
+	              <option value="due">Sort by due date</option>
+	              <option value="age">Sort by stage age</option>
+	              <option value="saving">Sort by saving</option>
+	            </select>
+	          </div>
+	        </div>
+
+        <div id="kanban-board" class="grid grid-cols-6 gap-4 min-w-[1500px]"></div>
+      </div>
+
+      <!-- PROCESS MAP -->
+      <div id="page-process" class="page hidden fade-in space-y-6">
+        <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
+          <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-6">
+            <div>
+              <div class="flex flex-wrap items-center gap-2 mb-2">
+                <span class="text-xs font-bold bg-blue-50 text-blue-700 border border-blue-100 rounded-full px-3 py-1">Featured Initiative</span>
+                <span class="text-xs font-mono bg-slate-100 text-slate-600 rounded-full px-3 py-1">IMP-204</span>
+              </div>
+              <h3 class="text-2xl font-black text-slate-900">Client Case Allocation Automation</h3>
+              <p class="text-sm text-slate-500 mt-1">As-Is / To-Be mapping with removed manual steps, automation logic, business rules and exception handling.</p>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 min-w-[420px]">
+              <div class="p-4 bg-rose-50 rounded-lg border border-rose-100">
+                <p class="text-[11px] text-rose-600 font-bold uppercase">Before</p>
+                <p class="text-2xl font-black text-rose-700">4.2h</p>
+                <p class="text-xs text-rose-600">avg allocation</p>
+              </div>
+              <div class="p-4 bg-emerald-50 rounded-lg border border-emerald-100">
+                <p class="text-[11px] text-emerald-600 font-bold uppercase">After</p>
+                <p class="text-2xl font-black text-emerald-700">5m</p>
+                <p class="text-xs text-emerald-600">target cycle</p>
+              </div>
+              <div class="p-4 bg-blue-50 rounded-lg border border-blue-100">
+                <p class="text-[11px] text-blue-600 font-bold uppercase">Reduction</p>
+                <p class="text-2xl font-black text-blue-700">98%</p>
+                <p class="text-xs text-blue-600">time saved</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 xl:grid-cols-5 gap-5">
+            <div class="xl:col-span-2 rounded-lg bg-rose-50/60 border border-rose-100 p-5">
+              <div class="flex items-center justify-between mb-4">
+                <h4 class="font-bold text-rose-900">Current State · As-Is</h4>
+                <span class="text-xs font-bold px-2 py-1 rounded bg-white border border-rose-100 text-rose-600">Manual / fragmented</span>
+              </div>
+              <div id="as-is-map" class="space-y-0"></div>
+            </div>
+
+            <div class="rounded-lg bg-slate-50 border border-slate-200 p-5">
+              <h4 class="font-bold text-slate-900 mb-4">Change Impact</h4>
+              <div class="space-y-3" id="change-impact"></div>
+
+              <div class="mt-5 p-4 rounded-lg bg-white border border-slate-200">
+                <p class="text-xs font-bold text-slate-500 uppercase mb-2">Improvement Notes</p>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                  Manual decision points are replaced with rule-based allocation. CRM becomes the single source of truth, while exception cases are escalated instead of silently failing.
+                </p>
+              </div>
+            </div>
+
+            <div class="xl:col-span-2 rounded-lg bg-emerald-50/70 border border-emerald-100 p-5">
+              <div class="flex items-center justify-between mb-4">
+                <h4 class="font-bold text-emerald-900">Future State · To-Be</h4>
+                <span class="text-xs font-bold px-2 py-1 rounded bg-white border border-emerald-100 text-emerald-600">Automated / governed</span>
+              </div>
+              <div id="to-be-map" class="space-y-0"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
+            <h3 class="font-bold text-slate-900 mb-4">Business Rules</h3>
+            <div id="business-rules" class="space-y-3"></div>
+          </div>
+
+          <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
+            <h3 class="font-bold text-slate-900 mb-4">Exception Handling</h3>
+            <div id="exception-rules" class="space-y-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IMPACT -->
+      <div id="page-impact" class="page hidden fade-in space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4" id="impact-kpis"></div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
+            <h3 class="font-bold text-slate-900">Before vs After by Initiative</h3>
+            <p class="text-sm text-slate-500 mb-4">Average process time reduction after improvement implementation.</p>
+            <div id="chart-before-after" class="h-[360px]"></div>
+          </div>
+
+          <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
+            <h3 class="font-bold text-slate-900">Monthly Cumulative Hours Saved</h3>
+            <p class="text-sm text-slate-500 mb-4">Benefits realisation across completed and reviewed initiatives.</p>
+            <div id="chart-cumulative" class="h-[360px]"></div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div class="xl:col-span-2 bg-white rounded-lg border border-slate-200 shadow-sm p-6">
+            <h3 class="font-bold text-slate-900 mb-4">Benefits Validation Table</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="text-left border-b border-slate-200 text-slate-500">
+                    <th class="py-3 pr-4">Initiative</th>
+                    <th class="py-3 pr-4">Target Saving</th>
+                    <th class="py-3 pr-4">Actual Saving</th>
+                    <th class="py-3 pr-4">Benefit Status</th>
+                    <th class="py-3">Owner</th>
+                  </tr>
+                </thead>
+                <tbody id="benefit-table"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
+            <h3 class="font-bold text-slate-900">ROI Calculator</h3>
+            <p class="text-sm text-slate-500 mb-5">Simulated cost-benefit calculation for BA initiatives.</p>
+
+            <div class="space-y-4">
+              <label class="block">
+                <span class="text-xs font-bold text-slate-500 uppercase">Implementation hours</span>
+                <input id="roi-implementation-hours" type="number" value="120" class="mt-1 w-full rounded-md border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500">
+              </label>
+
+              <label class="block">
+                <span class="text-xs font-bold text-slate-500 uppercase">Hourly cost ($)</span>
+                <input id="roi-hourly-cost" type="number" value="45" class="mt-1 w-full rounded-md border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500">
+              </label>
+
+              <label class="block">
+                <span class="text-xs font-bold text-slate-500 uppercase">Monthly hours saved</span>
+                <input id="roi-monthly-hours" type="number" value="286" class="mt-1 w-full rounded-md border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500">
+              </label>
+
+              <button onclick="calculateROI()" class="w-full py-3 rounded-md bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition">
+                Calculate ROI
+              </button>
+
+              <div id="roi-output" class="rounded-lg bg-slate-50 border border-slate-200 p-4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOCUMENTS -->
+      <div id="page-documents" class="page hidden fade-in">
+        <div class="context-strip mb-6">
+          <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div>
+              <p class="section-kicker">BA Deliverables Library</p>
+              <h3 class="text-lg font-bold text-slate-900 mt-1">Templates mapped to stage gates and case evidence</h3>
+              <p class="text-sm text-slate-600 mt-1">Each deliverable shows ownership, completion status, required inputs and example content generated from IMP-204.</p>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-center">
+              <div class="rounded-md bg-white border border-slate-200 px-4 py-3">
+                <p class="text-xl font-black text-slate-900">6</p>
+                <p class="text-[11px] uppercase tracking-widest text-slate-500 font-bold">Templates</p>
+              </div>
+              <div class="rounded-md bg-white border border-slate-200 px-4 py-3">
+                <p class="text-xl font-black text-emerald-700">5</p>
+                <p class="text-[11px] uppercase tracking-widest text-slate-500 font-bold">Gate assets</p>
+              </div>
+              <div class="rounded-md bg-white border border-slate-200 px-4 py-3">
+                <p class="text-xl font-black text-blue-700">MD</p>
+                <p class="text-[11px] uppercase tracking-widest text-slate-500 font-bold">Export</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
+            <div class="mb-5">
+              <h3 class="text-lg font-bold text-slate-900">Deliverable Catalogue</h3>
+              <p class="text-sm text-slate-500 mt-1">Select a document to preview its role in the BA workflow.</p>
+            </div>
+
+            <div id="template-list" class="space-y-3"></div>
+          </div>
+
+          <div class="xl:col-span-2 bg-white rounded-lg border border-slate-200 shadow-sm p-6 min-h-[640px]">
+            <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-5">
+              <div>
+                <h3 id="template-title" class="text-xl font-bold text-slate-900">Business Requirements Document</h3>
+                <p id="template-purpose" class="text-sm text-slate-500 mt-1">Standard BRD format for process improvement initiatives.</p>
+              </div>
+              <button onclick="downloadTemplatePreview()" class="px-4 py-2 rounded-md bg-slate-900 text-white text-sm font-bold hover:bg-slate-700 transition flex items-center gap-2">
+                <i class="fa-solid fa-download"></i>
+                Download Markdown
+              </button>
+            </div>
+
+            <div class="rounded-lg bg-slate-50 border border-slate-200 p-5">
+              <div class="flex flex-wrap items-center gap-2 mb-5">
+                <span class="text-xs font-mono bg-blue-50 text-blue-700 border border-blue-100 rounded-full px-3 py-1">Generated from IMP-204</span>
+                <span id="template-stage" class="text-xs font-bold bg-white text-slate-600 border border-slate-200 rounded-full px-3 py-1">Analyse / Design</span>
+                <span id="template-status" class="text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-full px-3 py-1">Ready</span>
+              </div>
+
+              <div id="template-preview" class="space-y-4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REVIEW -->
+      <div id="page-review" class="page hidden fade-in space-y-6">
+        <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
+          <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-6">
+            <div>
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-xs font-mono bg-blue-50 text-blue-700 border border-blue-100 rounded-full px-3 py-1">IMP-204</span>
+                <span class="text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-full px-3 py-1">Benefits Validated</span>
+              </div>
+              <h3 class="text-2xl font-black text-slate-900">Post-Implementation Review Control Panel</h3>
+              <p class="text-sm text-slate-500 mt-1">The final loop: validate target vs actual, capture user feedback, assign follow-up actions and log reusable patterns.</p>
+            </div>
+
+            <button onclick="switchTab('documents')" class="px-4 py-2 rounded-md bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition">
+              View PIR Template
+            </button>
+          </div>
+
+          <div id="pir-status-timeline" class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-6"></div>
+
+          <div id="pir-summary-cards" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6"></div>
+
+          <div class="grid grid-cols-1 xl:grid-cols-[1.2fr_0.8fr] gap-6">
+            <div class="rounded-lg bg-slate-50 border border-slate-200 p-6">
+              <div class="flex items-center justify-between gap-3 mb-4">
+                <h4 class="font-bold text-slate-900">Target vs Actual Validation</h4>
+                <span class="tag bg-emerald-50 text-emerald-700 border-emerald-100">4-week data collected</span>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="text-left border-b border-slate-200 text-slate-500">
+                      <th class="py-3 pr-4 font-bold">Metric</th>
+                      <th class="py-3 pr-4 font-bold">Baseline</th>
+                      <th class="py-3 pr-4 font-bold">Target</th>
+                      <th class="py-3 pr-4 font-bold">Actual</th>
+                      <th class="py-3 font-bold">Variance</th>
+                    </tr>
+                  </thead>
+                  <tbody id="pir-metrics-table"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="rounded-lg bg-slate-50 border border-slate-200 p-6">
+              <h4 class="font-bold text-slate-900 mb-4">Sign-off Evidence</h4>
+              <div id="pir-signoff" class="space-y-3"></div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6">
+            <div class="rounded-lg bg-slate-50 border border-slate-200 p-6">
+              <h4 class="font-bold text-slate-900 mb-4">User Feedback Themes</h4>
+              <div id="pir-feedback-themes" class="space-y-3"></div>
+            </div>
+
+            <div class="rounded-lg bg-slate-50 border border-slate-200 p-6">
+              <h4 class="font-bold text-slate-900 mb-4">Follow-up Action Register</h4>
+              <div id="pir-actions" class="space-y-3"></div>
+            </div>
+
+            <div class="rounded-lg bg-slate-50 border border-slate-200 p-6">
+              <h4 class="font-bold text-slate-900 mb-4">Lessons Learned</h4>
+              <div id="lessons-list" class="space-y-3"></div>
+            </div>
+          </div>
+
+          <div class="rounded-lg bg-slate-50 border border-slate-200 p-6 mt-6">
+            <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+              <div>
+                <h4 class="font-bold text-slate-900">Reusable Improvement Pattern</h4>
+                <p class="text-sm text-slate-600 leading-relaxed mt-2 max-w-3xl">
+                  The allocation-rule pattern can be reused wherever teams manually match people, cases, training seats or employers based on capacity, location and specialist capability.
+                </p>
+              </div>
+              <span class="tag bg-amber-50 text-amber-700 border-amber-100">3 candidate workflows</span>
+            </div>
+            <div id="reusable-patterns" class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-5"></div>
+          </div>
+        </div>
+
+        <div class="bg-slate-950 rounded-lg p-6 text-white shadow-xl">
+          <h3 class="text-xl font-black mb-2">Portfolio takeaway</h3>
+          <p class="text-slate-300 leading-relaxed max-w-4xl">
+            This project demonstrates stakeholder analysis, requirements definition, stage-gate governance,
+            As-Is / To-Be process analysis, business rules design, UAT planning, benefit measurement and post-implementation review —
+            not just a generic dashboard UI.
+          </p>
+        </div>
+      </div>
+
+    </section>
+  </main>
+</div>
+
+<!-- Case File Drawer -->
+<div id="case-overlay" class="fixed inset-0 bg-slate-950/50 z-40 hidden" onclick="closeCaseFile()"></div>
+
+<aside id="case-drawer" class="fixed right-0 top-0 h-screen w-full max-w-3xl bg-white z-50 shadow-2xl translate-x-full transition-transform duration-300 flex flex-col" role="dialog" aria-modal="true" aria-labelledby="case-title">
+  <div class="px-6 py-5 border-b border-slate-200 flex items-start justify-between gap-4">
+    <div>
+      <div class="flex flex-wrap items-center gap-2 mb-2">
+        <span id="case-id" class="text-xs font-mono bg-blue-50 text-blue-700 border border-blue-100 rounded-full px-3 py-1">IMP-204</span>
+        <span id="case-stage" class="text-xs font-bold rounded-full px-3 py-1">Implementing</span>
+        <span id="case-priority" class="text-xs font-bold rounded-full px-3 py-1">Critical</span>
+      </div>
+      <h2 id="case-title" class="text-2xl font-black text-slate-900"></h2>
+      <p id="case-meta" class="text-sm text-slate-500 mt-1"></p>
+    </div>
+
+    <button onclick="closeCaseFile()" aria-label="Close case file" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="flex-1 overflow-y-auto p-6 space-y-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="case-metrics"></div>
+
+    <section class="rounded-lg bg-slate-50 border border-slate-200 p-5">
+      <h3 class="font-bold text-slate-900 mb-2 flex items-center gap-2">
+        <i class="fa-solid fa-bullseye text-blue-500"></i>
+        Problem Statement
+      </h3>
+      <p id="case-problem" class="text-sm text-slate-600 leading-relaxed"></p>
+    </section>
+
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="rounded-lg bg-white border border-slate-200 p-5">
+        <h3 class="font-bold text-slate-900 mb-3">Stakeholders</h3>
+        <div id="case-stakeholders" class="space-y-2"></div>
+      </div>
+
+      <div class="rounded-lg bg-white border border-slate-200 p-5">
+        <h3 class="font-bold text-slate-900 mb-3">Stage Gate Checklist</h3>
+        <div id="case-gates" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <section class="rounded-lg bg-white border border-slate-200 p-5">
+      <h3 class="font-bold text-slate-900 mb-3">Linked BA Documents</h3>
+      <div id="case-docs" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+    </section>
+
+    <section class="rounded-lg bg-white border border-slate-200 p-5">
+      <h3 class="font-bold text-slate-900 mb-3">Timeline / Audit Trail</h3>
+      <div id="case-timeline" class="space-y-4"></div>
+    </section>
+  </div>
+
+  <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-between gap-3">
+    <button onclick="switchTab('process'); closeCaseFile();" class="px-4 py-2 rounded-md bg-white border border-slate-200 text-sm font-bold text-slate-700 hover:bg-slate-100">
+      View Process Map
+    </button>
+    <button onclick="switchTab('impact'); closeCaseFile();" class="px-4 py-2 rounded-md bg-blue-600 text-white text-sm font-bold hover:bg-blue-700">
+      View Benefits
+    </button>
+  </div>
+</aside>
+
+<!-- New Initiative Panel -->
+<div id="new-panel" class="fixed inset-0 bg-slate-950/50 z-40 hidden" onclick="closeNewInitiativePanel()"></div>
+<div id="new-drawer" class="fixed right-0 top-0 h-screen w-full max-w-lg bg-white z-50 shadow-2xl translate-x-full transition-transform duration-300 flex flex-col" role="dialog" aria-modal="true" aria-labelledby="new-drawer-title">
+  <div class="p-6 border-b border-slate-200 flex justify-between items-start gap-4">
+    <div>
+      <h2 id="new-drawer-title" class="text-xl font-black text-slate-900">New Improvement Request</h2>
+      <p class="text-sm text-slate-500 mt-1">Simulated intake form for business process pain points.</p>
+    </div>
+    <button onclick="closeNewInitiativePanel()" aria-label="Close new improvement request panel" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <div class="p-6 space-y-4 flex-1 overflow-y-auto">
+    <label class="block">
+      <span class="text-xs font-bold text-slate-500 uppercase">Process / workflow</span>
+	      <input id="new-process-name" value="Training attendance reconciliation" class="mt-1 w-full rounded-md border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500">
+    </label>
+
+    <label class="block">
+      <span class="text-xs font-bold text-slate-500 uppercase">Problem summary</span>
+	      <textarea id="new-problem-summary" class="mt-1 w-full rounded-md border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 h-28">Attendance records are manually reconciled across spreadsheets, email confirmations and LMS exports.</textarea>
+    </label>
+
+    <label class="block">
+      <span class="text-xs font-bold text-slate-500 uppercase">Affected department</span>
+	      <select id="new-department" class="mt-1 w-full rounded-md border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500">
+        <option>Training</option>
+        <option>Operations</option>
+        <option>Employer Services</option>
+      </select>
+    </label>
+
+    <div class="rounded-lg bg-blue-50 border border-blue-100 p-4">
+      <p class="text-sm font-bold text-blue-900">What happens next?</p>
+      <p class="text-xs text-blue-700 mt-1">The request enters Intake, receives an impact-effort score, and requires sponsor approval before entering the BA delivery board.</p>
+    </div>
+  </div>
+
+  <div class="p-6 border-t border-slate-200 bg-slate-50">
+    <button onclick="submitNewRequest()" class="w-full py-3 rounded-md bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition">
+      Submit to Intake Queue
+    </button>
+  </div>
+</div>
+
+<!-- Process Step Detail Drawer -->
+<div id="process-step-overlay" class="fixed inset-0 bg-slate-950/40 z-40 hidden" onclick="closeProcessStepDetail()"></div>
+<aside id="process-step-drawer" class="fixed right-0 top-0 h-screen w-full max-w-lg bg-white z-50 shadow-2xl translate-x-full transition-transform duration-300 flex flex-col" role="dialog" aria-modal="true" aria-labelledby="process-step-title">
+  <div class="p-6 border-b border-slate-200 flex justify-between items-start gap-4">
+    <div>
+      <p id="process-step-type" class="text-xs uppercase tracking-widest text-blue-700 font-bold">Process step</p>
+      <h2 id="process-step-title" class="text-xl font-black text-slate-900 mt-1"></h2>
+      <p id="process-step-summary" class="text-sm text-slate-500 mt-1"></p>
+    </div>
+    <button onclick="closeProcessStepDetail()" aria-label="Close process step detail" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="p-6 space-y-4 flex-1 overflow-y-auto" id="process-step-body"></div>
+</aside>
+
+<!-- Toast -->
+<div id="toast" class="fixed right-6 bottom-6 translate-y-24 opacity-0 transition-all duration-300 bg-slate-950 text-white rounded-lg shadow-2xl px-5 py-4 z-[80] border border-slate-800">
+  <div class="flex items-start gap-3">
+    <i class="fa-solid fa-circle-check text-emerald-400 mt-0.5"></i>
+    <div>
+      <p class="font-bold text-sm">Updated</p>
+      <p id="toast-text" class="text-xs text-slate-300 mt-0.5">Action completed.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const stageMeta = {
+    "Identified": { color: "slate", label: "Problem captured" },
+    "Analysing": { color: "blue", label: "Root cause analysis" },
+    "Designing": { color: "purple", label: "Solution design" },
+    "Implementing": { color: "amber", label: "Build / UAT" },
+    "Completed": { color: "emerald", label: "Implemented" },
+    "Reviewing": { color: "cyan", label: "Benefits review" }
+  };
+
+  const stageOrder = ["Identified", "Analysing", "Designing", "Implementing", "Completed", "Reviewing"];
+
+  let initiatives = [
+    {
+      id: "IMP-204",
+      title: "Client Case Allocation Automation",
+      department: "Operations",
+      processName: "Client case allocation",
+	      stage: "Reviewing",
+      priority: "Critical",
+      owner: "Esther",
+      sponsor: "COO",
+      dueDate: "15 Nov 2026",
+      problemSummary: "Regional managers spend around 2 hours daily checking consultant workloads in external spreadsheets to assign new CRM cases. This causes delayed client contact, uneven caseloads and missed CRM updates.",
+      businessImpact: "High operational delay, uneven consultant utilisation and inconsistent client response time.",
+      estimatedHoursSaved: 250,
+      actualHoursSaved: 286,
+      riskLevel: "Medium",
+      approvalStatus: "Sponsor approved",
+      targetSaving: 250,
+      beforeHours: 4.2,
+      afterHours: 0.08,
+      monthlyVolume: 68,
+      hourlyCost: 45,
+      stakeholders: ["COO", "Regional Managers", "Frontline Admin", "Consultants", "CRM Owner"],
+      metrics: {
+        allocationTimeBefore: "4.2 hrs",
+        allocationTimeAfter: "5 mins",
+        missedBefore: "~8 / month",
+        missedAfter: "0",
+        managerTimeBefore: "6 hrs / week",
+        managerTimeAfter: "0.5 hrs / week"
+      },
+      gates: [
+        ["Problem Statement approved", true],
+        ["As-Is workflow mapped", true],
+        ["Root cause confirmed", true],
+        ["To-Be solution approved", true],
+	        ["UAT execution passed", true],
+	        ["Benefits validated", true]
+      ],
+      documents: ["Problem Statement", "BRD", "As-Is / To-Be Process Map", "Solution Design", "UAT Test Plan"],
+      timeline: [
+        ["02 Sep", "Improvement request submitted by Operations Manager"],
+        ["06 Sep", "BA completed stakeholder interviews and As-Is mapping"],
+        ["12 Sep", "Solution design approved by COO"],
+        ["25 Sep", "UAT scripts prepared for CRM assignment rules"],
+        ["03 Oct", "Pilot started with two regional teams"]
+      ],
+      lessonsLearned: [
+        "Workload data needs to be refreshed daily to maintain allocation accuracy.",
+        "Exception handling should be visible to managers instead of hidden in CRM logs.",
+        "Frontline admin teams need a clear fallback path when auto-assignment fails."
+      ]
+    },
+    {
+      id: "IMP-101",
+      title: "Training Schedule Coordination",
+      department: "Training",
+      processName: "Training session scheduling",
+      stage: "Analysing",
+      priority: "High",
+      owner: "BA Team",
+      sponsor: "Training Head",
+      dueDate: "30 Nov 2026",
+      problemSummary: "Training schedules are coordinated through email and spreadsheets, resulting in duplicated bookings and late changes.",
+      businessImpact: "Staff time loss and poor learner communication.",
+      estimatedHoursSaved: 96,
+      actualHoursSaved: 0,
+      riskLevel: "Low",
+      approvalStatus: "Under analysis",
+      targetSaving: 96,
+      beforeHours: 3.0,
+      afterHours: 0.5,
+      monthlyVolume: 40,
+      hourlyCost: 42,
+      stakeholders: ["Training Head", "Trainers", "Frontline Staff"],
+      metrics: {},
+      gates: [["Problem Statement approved", true], ["As-Is workflow mapped", true], ["Root cause confirmed", false]],
+      documents: ["Problem Statement", "Current State Analysis"],
+      timeline: [["12 Sep", "Request submitted"], ["20 Sep", "Interviews scheduled"]],
+      lessonsLearned: []
+    },
+    {
+      id: "IMP-118",
+      title: "Employer Matching Intake Form",
+      department: "Employer Services",
+      processName: "Employer matching",
+      stage: "Designing",
+      priority: "High",
+      owner: "Esther",
+      sponsor: "Employer Services Manager",
+      dueDate: "08 Dec 2026",
+      problemSummary: "Employer matching requests lack consistent data fields, causing manual clarification loops.",
+      businessImpact: "Delayed matching and duplicated communication.",
+      estimatedHoursSaved: 120,
+      actualHoursSaved: 0,
+      riskLevel: "Medium",
+      approvalStatus: "Solution options drafted",
+      targetSaving: 120,
+      beforeHours: 2.8,
+      afterHours: 0.7,
+      monthlyVolume: 56,
+      hourlyCost: 45,
+      stakeholders: ["Employer Services", "Case Managers", "Employers"],
+      metrics: {},
+      gates: [["Problem Statement approved", true], ["Root cause confirmed", true], ["To-Be solution approved", false]],
+      documents: ["BRD", "Solution Design"],
+      timeline: [["04 Sep", "Data quality issue logged"], ["18 Sep", "To-Be intake form drafted"]],
+      lessonsLearned: []
+    },
+    {
+      id: "IMP-126",
+      title: "Client Registration Data Quality",
+      department: "Front Desk",
+      processName: "Client registration",
+      stage: "Identified",
+      priority: "Medium",
+      owner: "BA Team",
+      sponsor: "Operations Lead",
+      dueDate: "18 Dec 2026",
+      problemSummary: "Client registration records often miss required fields, creating downstream rework.",
+      businessImpact: "Incomplete records and increased follow-up workload.",
+      estimatedHoursSaved: 60,
+      actualHoursSaved: 0,
+      riskLevel: "Low",
+      approvalStatus: "Pending assessment",
+      targetSaving: 60,
+      beforeHours: 1.4,
+      afterHours: 0.5,
+      monthlyVolume: 80,
+      hourlyCost: 38,
+      stakeholders: ["Front Desk", "Case Managers"],
+      metrics: {},
+      gates: [["Problem Statement approved", false]],
+      documents: ["Problem Statement"],
+      timeline: [["09 Oct", "Issue captured from weekly ops meeting"]],
+      lessonsLearned: []
+    },
+    {
+      id: "IMP-143",
+      title: "Placement Follow-up Reminder Workflow",
+      department: "Case Management",
+      processName: "Placement follow-up",
+      stage: "Implementing",
+      priority: "High",
+      owner: "Workflow Analyst",
+      sponsor: "Case Management Head",
+      dueDate: "22 Nov 2026",
+      problemSummary: "Follow-up reminders are manually tracked by case managers, causing inconsistent contact intervals.",
+      businessImpact: "Missed follow-up obligations and lower placement quality.",
+      estimatedHoursSaved: 140,
+      actualHoursSaved: 0,
+      riskLevel: "Medium",
+      approvalStatus: "UAT in progress",
+      targetSaving: 140,
+      beforeHours: 2.2,
+      afterHours: 0.3,
+      monthlyVolume: 90,
+      hourlyCost: 45,
+      stakeholders: ["Case Managers", "Clients", "Department Head"],
+      metrics: {},
+      gates: [["Solution approved", true], ["Build completed", true], ["UAT passed", false]],
+      documents: ["Solution Design", "UAT Test Plan"],
+      timeline: [["11 Sep", "Solution approved"], ["02 Oct", "UAT started"]],
+      lessonsLearned: []
+    },
+    {
+      id: "IMP-155",
+      title: "Monthly Compliance Report Automation",
+      department: "Operations",
+      processName: "Compliance reporting",
+      stage: "Completed",
+      priority: "Medium",
+      owner: "Data Analyst",
+      sponsor: "COO",
+      dueDate: "30 Sep 2026",
+      problemSummary: "Monthly compliance reporting requires manual copy-paste across multiple spreadsheets.",
+      businessImpact: "High admin effort and reporting errors.",
+      estimatedHoursSaved: 80,
+      actualHoursSaved: 72,
+      riskLevel: "Low",
+      approvalStatus: "Completed",
+      targetSaving: 80,
+      beforeHours: 5.0,
+      afterHours: 0.4,
+      monthlyVolume: 16,
+      hourlyCost: 48,
+      stakeholders: ["Operations", "Compliance", "COO"],
+      metrics: {},
+      gates: [["UAT passed", true], ["Implemented", true], ["Benefits validated", true]],
+      documents: ["BRD", "UAT Test Plan", "Post-Implementation Review"],
+      timeline: [["01 Aug", "Automation scoped"], ["15 Sep", "UAT passed"], ["30 Sep", "Released"]],
+      lessonsLearned: ["Use standard report field dictionary before automation starts."]
+    },
+    {
+      id: "IMP-177",
+      title: "Staff Onboarding Checklist Digitisation",
+      department: "HR / Training",
+      processName: "Staff onboarding",
+      stage: "Reviewing",
+      priority: "Medium",
+      owner: "BA Team",
+      sponsor: "HR Lead",
+      dueDate: "12 Oct 2026",
+      problemSummary: "Onboarding tasks are tracked manually, making handoffs unclear.",
+      businessImpact: "Inconsistent onboarding experience and missed setup tasks.",
+      estimatedHoursSaved: 50,
+      actualHoursSaved: 45,
+      riskLevel: "Low",
+      approvalStatus: "Under benefits review",
+      targetSaving: 50,
+      beforeHours: 2.1,
+      afterHours: 0.6,
+      monthlyVolume: 24,
+      hourlyCost: 40,
+      stakeholders: ["HR", "Training", "New Staff"],
+      metrics: {},
+      gates: [["Implemented", true], ["4-week data collected", true], ["PIR completed", false]],
+      documents: ["Problem Statement", "Solution Design", "Post-Implementation Review"],
+      timeline: [["03 Sep", "Checklist digitised"], ["07 Oct", "Review data collected"]],
+      lessonsLearned: ["New staff need a single onboarding owner, not only a checklist."]
+    },
+    {
+      id: "IMP-189",
+      title: "Duplicate Client Record Prevention",
+      department: "Administration",
+      processName: "Client record management",
+      stage: "Completed",
+      priority: "High",
+      owner: "CRM Owner",
+      sponsor: "Administration Lead",
+      dueDate: "01 Oct 2026",
+      problemSummary: "Duplicate client records are created when intake data differs slightly across channels.",
+      businessImpact: "Reporting errors and wasted case manager time.",
+      estimatedHoursSaved: 110,
+      actualHoursSaved: 98,
+      riskLevel: "Medium",
+      approvalStatus: "Completed",
+      targetSaving: 110,
+      beforeHours: 1.8,
+      afterHours: 0.2,
+      monthlyVolume: 70,
+      hourlyCost: 44,
+      stakeholders: ["Front Desk", "CRM Owner", "Case Managers"],
+      metrics: {},
+      gates: [["UAT passed", true], ["Implemented", true], ["Benefits validated", true]],
+      documents: ["BRD", "Process Map", "PIR Report"],
+      timeline: [["05 Aug", "Duplicate pattern analysed"], ["10 Sep", "Validation rules deployed"], ["01 Oct", "Benefits confirmed"]],
+      lessonsLearned: ["Duplicate detection rules should be reviewed monthly as intake channels change."]
+    }
+  ];
+
+  const intakeRequests = [
+    {
+      id: "REQ-301",
+      title: "Training Attendance Reconciliation",
+      department: "Training",
+      submittedBy: "Training Coordinator",
+      summary: "Attendance records are reconciled manually across LMS exports, email confirmations and class spreadsheets.",
+      impact: 4,
+      frequency: 5,
+      risk: 2,
+      pain: 4,
+      effort: 2,
+      data: 4,
+      recommendation: "Approve for BA analysis"
+    },
+    {
+      id: "REQ-302",
+      title: "Employer Contact Update Process",
+      department: "Employer Services",
+      submittedBy: "Employer Services Officer",
+      summary: "Employer contact updates are sent through Slack and often not reflected in CRM.",
+      impact: 3,
+      frequency: 3,
+      risk: 3,
+      pain: 3,
+      effort: 2,
+      data: 3,
+      recommendation: "Approve with medium priority"
+    },
+    {
+      id: "REQ-303",
+      title: "Manual Placement Evidence Upload",
+      department: "Case Management",
+      submittedBy: "Case Manager",
+      summary: "Placement evidence is stored in email attachments before being manually uploaded to the shared drive.",
+      impact: 5,
+      frequency: 4,
+      risk: 4,
+      pain: 5,
+      effort: 4,
+      data: 3,
+      recommendation: "Sponsor review required"
+    }
+  ];
+
+  const stakeholders = [
+    ["COO", "Project sponsor", "Overall operational efficiency", "Executive dashboard and benefits tracking", "High"],
+    ["Process Owners ×8", "Improvement requesters", "Their pain points are solved", "Clear intake, ownership and status visibility", "High"],
+    ["BA Team ×3", "Delivery team", "Standard workflow and templates", "Stage gates, BA toolkit and case file structure", "High"],
+    ["Department Heads", "Approvers", "Resource allocation and priority", "Impact scoring and sponsor approval workflow", "Medium"],
+    ["Frontline Staff", "End users", "New process is easy to use", "To-Be process, training support and feedback loop", "Medium"]
+  ];
+
+  const templates = [
+    {
+      name: "Problem Statement Template",
+      stage: "Identify",
+      purpose: "One-page summary of the business problem, evidence, affected users and recommended next step.",
+      owner: "Process Owner + BA",
+      status: "Ready",
+      lastUpdated: "12 May 2026",
+      requiredForGate: "Worth analysing?",
+      format: "Markdown / PDF",
+      icon: "fa-bullseye",
+      inputs: ["Submitted request", "Process owner interview", "Initial evidence sample"],
+      sections: ["Problem Summary", "Current Process", "Business Impact", "Affected Stakeholders", "Evidence / Data", "Initial Hypothesis", "Recommended Next Step"],
+      exampleFields: {
+        "Problem Summary": "Regional managers manually assign new client cases through email, creating delays and uneven consultant workload.",
+        "Evidence / Data": "Average allocation time is 4.2 hours; missed assignments occur approximately 8 times per month.",
+        "Recommended Next Step": "Approve for root-cause analysis and As-Is process mapping."
+      }
+    },
+    {
+      name: "Business Requirements Document",
+      stage: "Analyse / Design",
+      purpose: "Standard BRD format for translating process pain points into business and functional requirements.",
+      owner: "BA Team",
+      status: "Generated",
+      lastUpdated: "12 May 2026",
+      requiredForGate: "Root cause clear?",
+      format: "Markdown / PDF",
+      icon: "fa-file-signature",
+      inputs: ["Problem statement", "Stakeholder interviews", "Current state analysis"],
+      sections: ["Business Background", "Scope", "Stakeholders", "Functional Requirements", "Non-functional Requirements", "Business Rules", "Acceptance Criteria", "Risks and Dependencies"],
+      exampleFields: {
+        "Functional Requirements": "System must assign cases using workload, expertise and location rules, update CRM automatically and notify consultants instantly.",
+        "Business Rules": "Exclude consultants above active caseload threshold; escalate when no valid match is available.",
+        "Acceptance Criteria": "Case owner is assigned within 10 minutes, CRM is updated and exception cases are visible to managers."
+      }
+    },
+    {
+      name: "Process Map Template",
+      stage: "Analyse / Design",
+      purpose: "As-Is / To-Be comparison format to show removed, changed and automated workflow steps.",
+      owner: "BA Team + Process Owner",
+      status: "Ready",
+      lastUpdated: "12 May 2026",
+      requiredForGate: "Solution approved?",
+      format: "HTML / PDF",
+      icon: "fa-code-branch",
+      inputs: ["As-Is observation", "Pain point register", "Business rules"],
+      sections: ["As-Is Process", "Pain Points", "Root Cause", "To-Be Process", "Removed Steps", "Automated Steps", "Control Points", "Change Impact"],
+      exampleFields: {
+        "As-Is Process": "Client registered -> email manager -> spreadsheet check -> email reply -> manual CRM update -> consultant notification.",
+        "To-Be Process": "Client registered -> rules engine -> auto assignment -> CRM auto update -> instant notification.",
+        "Change Impact": "Manager allocation effort drops from 6 hours/week to 0.5 hours/week."
+      }
+    },
+    {
+      name: "Solution Design Document",
+      stage: "Design",
+      purpose: "Solution description including automation logic, data sources, feasibility, controls and implementation risks.",
+      owner: "BA Team + CRM Owner",
+      status: "Generated",
+      lastUpdated: "12 May 2026",
+      requiredForGate: "Solution approved?",
+      format: "Markdown / PDF",
+      icon: "fa-sitemap",
+      inputs: ["BRD", "To-Be process", "Data source assessment"],
+      sections: ["Solution Overview", "Design Principles", "Business Rules", "Data Requirements", "Exception Handling", "Risks", "Implementation Approach"],
+      exampleFields: {
+        "Solution Overview": "Introduce a CRM assignment rule set that scores consultants by capacity, expertise and geography.",
+        "Exception Handling": "Route unmatched cases to a regional manager queue with reason codes.",
+        "Implementation Approach": "Pilot with two regional teams, validate outcomes, then roll out to all regions."
+      }
+    },
+    {
+      name: "UAT Test Plan",
+      stage: "Implement",
+      purpose: "User acceptance testing scenarios, expected results, owners and sign-off criteria.",
+      owner: "BA Team + Frontline Users",
+      status: "Ready",
+      lastUpdated: "12 May 2026",
+      requiredForGate: "UAT passed?",
+      format: "Markdown / CSV",
+      icon: "fa-vial-circle-check",
+      inputs: ["Approved design", "Test data", "User roles"],
+      sections: ["Test Scope", "Test Scenarios", "Test Data", "Expected Results", "Actual Results", "Defects", "Sign-off"],
+      exampleFields: {
+        "Test Scenarios": "New client with specialist need; consultant above workload threshold; no valid consultant match.",
+        "Expected Results": "CRM assigns eligible consultant or sends exception to manager review queue.",
+        "Sign-off": "Process owner and frontline representative approve before release."
+      }
+    },
+    {
+      name: "Post-Implementation Review",
+      stage: "Review",
+      purpose: "Benefits validation, user feedback, operational issues, lessons learned and reusable patterns.",
+      owner: "BA Team + Sponsor",
+      status: "Generated",
+      lastUpdated: "12 May 2026",
+      requiredForGate: "Benefits validated?",
+      format: "Markdown / PDF",
+      icon: "fa-rotate-right",
+      inputs: ["4-week post-go-live data", "User feedback", "Benefit baseline"],
+      sections: ["Original Target", "Actual Result", "Variance", "User Feedback", "Issues After Go-Live", "Lessons Learned", "Reusable Pattern", "Next Opportunities"],
+      exampleFields: {
+        "Original Target": "Reduce average case allocation time from 4.2 hours to under 10 minutes.",
+        "Actual Result": "Allocation now completes in approximately 5 minutes with zero missed assignments in the review period.",
+        "Reusable Pattern": "Rules-based matching can be reused for employer matching, training seats and placement follow-up assignment."
+      }
+    }
+  ];
+
+  const pirData = {
+    initiativeId: "IMP-204",
+    statusSteps: [
+      ["Implemented", "03 Oct", true],
+      ["4-week data collected", "31 Oct", true],
+      ["Benefits validated", "04 Nov", true],
+      ["Lessons logged", "06 Nov", true],
+      ["Reusable pattern identified", "08 Nov", true]
+    ],
+    summaryCards: [
+      ["<10m", "Target allocation cycle", "blue", "Original approval threshold"],
+      ["5m", "Actual allocation cycle", "emerald", "Target exceeded"],
+      ["0", "Missed assignments", "slate", "From approximately 8 / month"],
+      ["3", "Reusable patterns", "amber", "Candidate future workflows"]
+    ],
+    metrics: [
+      ["Average allocation time", "4.2 hrs", "<10 mins", "5 mins", "-98%"],
+      ["Missed assignments", "~8 / month", "0-1 / month", "0", "-100%"],
+      ["Consultant load balance", "Std dev 12.3", "Std dev <4", "Std dev 2.1", "-83%"],
+      ["Manager allocation effort", "6 hrs / week", "<1 hr / week", "0.5 hrs / week", "-92%"]
+    ],
+    feedbackThemes: [
+      ["Consultant satisfaction", "Consultants receive the client profile and assignment reason immediately.", "Positive"],
+      ["Manager workload", "Managers only handle exception cases instead of every allocation.", "Validated"],
+      ["CRM data quality", "Auto update removes missed owner-field updates.", "Improved"],
+      ["Exception visibility", "Managers requested a clearer queue view for unmatched cases.", "Follow-up"]
+    ],
+    actions: [
+      ["Create exception queue dashboard", "CRM Owner", "22 Nov", "Open"],
+      ["Add daily workload data refresh check", "Data Analyst", "18 Nov", "In progress"],
+      ["Document reusable matching pattern", "BA Team", "15 Nov", "Done"]
+    ],
+    signoffs: [
+      ["COO", "Sponsor", "Approved benefits and pattern reuse"],
+      ["Operations Manager", "Process Owner", "Confirmed zero missed allocations"],
+      ["BA Lead", "Delivery Owner", "Closed PIR and lessons log"]
+    ],
+    reusablePatterns: [
+      ["Employer matching workflow", "fa-briefcase"],
+      ["Training seat allocation", "fa-chalkboard-user"],
+      ["Placement follow-up assignment", "fa-user-check"]
+    ]
+  };
+
+  const asIsSteps = [
+    ["Client Registered", "Front desk creates a new client record in CRM.", "Low"],
+    ["Email Regional Manager", "Admin sends case details manually by email.", "Medium"],
+    ["Manager Checks Spreadsheet", "Manager opens external workload spreadsheet to choose consultant.", "High"],
+    ["Manager Replies with Consultant", "Assignment is communicated by email reply.", "High"],
+    ["Admin Updates CRM", "Front desk manually updates CRM owner field.", "Medium"],
+    ["Consultant Receives Notification", "Consultant receives email or CRM notification.", "Low"]
+  ];
+
+  const toBeSteps = [
+    ["Client Registered", "Front desk creates a new client record in CRM.", "Low"],
+    ["Rules Engine Checks Workload + Expertise + Location", "System checks location proximity, caseload threshold and specialist capability.", "Control"],
+    ["Auto Assignment", "CRM automatically assigns the best-fit consultant.", "Automated"],
+    ["CRM Auto Update", "Assignment reason and owner field are logged automatically.", "Automated"],
+    ["Consultant Receives Instant Notification", "Consultant receives client profile and assignment reason immediately.", "Low"]
+  ];
+
+  const businessRules = [
+    "Match consultant by location proximity where possible.",
+    "Exclude consultants with active caseload above 50.",
+    "Prioritise specialist expertise where required by client profile.",
+    "Log assignment reason automatically in CRM.",
+    "Escalate to Regional Manager if no consultant meets all conditions."
+  ];
+
+  const exceptionRules = [
+    "If consultant workload data is stale, route to manual review queue.",
+    "If specialist match is unavailable, apply location-first fallback.",
+    "If CRM update fails, notify admin and keep assignment in pending state.",
+    "If two consultants score equally, choose the lower current caseload."
+  ];
+
+	  let selectedTemplate = templates[1];
+	  let chartsInitialised = false;
+	  let overviewChartsInitialised = false;
+	  let overviewCharts = {};
+
+		  const filters = {
+		    period: "ytd",
+		    department: "all",
+		    owner: "all",
+		    priority: "all",
+		    status: "all",
+		    kanbanStage: "all",
+		    kanbanSort: "priority"
+		  };
+
+	  const periodLabels = {
+	    ytd: "Year to Date",
+	    quarter: "This Quarter",
+	    month: "This Month"
+	  };
+
+		  const stageAgingDays = {
+		    Identified: 12,
+		    Analysing: 24,
+		    Designing: 31,
+		    Implementing: 38,
+		    Completed: 8,
+		    Reviewing: 18
+		  };
+
+		  const demoToday = new Date("2026-05-12T00:00:00");
+
+		  function toIsoDate(date) {
+		    return date.toISOString().slice(0, 10);
+		  }
+
+		  function addDays(date, days) {
+		    const next = new Date(date);
+		    next.setDate(next.getDate() + days);
+		    return next;
+		  }
+
+		  function normaliseInitiatives() {
+		    initiatives = initiatives.map(item => {
+		      const daysInStage = item.daysInStage ?? stageAgingDays[item.stage] ?? 0;
+		      const stageEnteredDate = item.stageEnteredDate || toIsoDate(addDays(demoToday, -daysInStage));
+		      const targetHoursSavedMonthly = item.targetHoursSavedMonthly ?? item.targetSaving ?? item.estimatedHoursSaved ?? 0;
+		      const actualHoursSavedMonthly = item.actualHoursSavedMonthly ?? item.actualHoursSaved ?? 0;
+		      const estimatedHoursSavedMonthly = item.estimatedHoursSavedMonthly ?? item.estimatedHoursSaved ?? targetHoursSavedMonthly;
+		      const benefitStatus = item.benefitStatus || (
+		        actualHoursSavedMonthly >= targetHoursSavedMonthly && targetHoursSavedMonthly > 0 ? "exceeded" :
+		        actualHoursSavedMonthly > 0 ? "validated" :
+		        ["Implementing", "Reviewing"].includes(item.stage) ? "pending_validation" :
+		        "not_started"
+		      );
+		      const gateStatus = item.gateStatus || (
+		        item.priority === "Critical" || item.riskLevel === "Medium" || daysInStage > 30 ? "at_risk" : "on_track"
+		      );
+
+		      return {
+		        ...item,
+		        submittedDate: item.submittedDate || "2026-03-01",
+		        stageEnteredDate,
+		        lastUpdated: item.lastUpdated || "2026-05-12",
+		        targetHoursSavedMonthly,
+		        actualHoursSavedMonthly,
+		        estimatedHoursSavedMonthly,
+		        targetSaving: targetHoursSavedMonthly,
+		        actualHoursSaved: actualHoursSavedMonthly,
+		        estimatedHoursSaved: estimatedHoursSavedMonthly,
+		        benefitStatus,
+		        gateStatus
+		      };
+		    });
+		  }
+
+  function badgeClass(value, type = "stage") {
+    if (type === "priority") {
+      if (value === "Critical") return "bg-rose-50 text-rose-700 border border-rose-100";
+      if (value === "High") return "bg-amber-50 text-amber-700 border border-amber-100";
+      return "bg-slate-50 text-slate-700 border border-slate-200";
+    }
+
+    const color = stageMeta[value]?.color || "slate";
+    const map = {
+      slate: "bg-slate-100 text-slate-700 border border-slate-200",
+      blue: "bg-blue-50 text-blue-700 border border-blue-100",
+      purple: "bg-purple-50 text-purple-700 border border-purple-100",
+      amber: "bg-amber-50 text-amber-700 border border-amber-100",
+      emerald: "bg-emerald-50 text-emerald-700 border border-emerald-100",
+      cyan: "bg-cyan-50 text-cyan-700 border border-cyan-100"
+    };
+    return map[color] || map.slate;
+  }
+
+	  function showToast(message) {
+	    const toast = document.getElementById("toast");
+	    document.getElementById("toast-text").innerText = message;
+	    toast.classList.remove("translate-y-24", "opacity-0");
+	    setTimeout(() => {
+	      toast.classList.add("translate-y-24", "opacity-0");
+	    }, 2600);
+	  }
+
+		  function getBenefitStatus(item) {
+		    if (["validated", "exceeded"].includes(item.benefitStatus)) return "validated";
+		    if (item.benefitStatus === "pending_validation") return "pending";
+		    return "not-measured";
+		  }
+
+		  function getDaysInStage(item) {
+		    if (!item.stageEnteredDate) return stageAgingDays[item.stage] || 0;
+		    const entered = new Date(`${item.stageEnteredDate}T00:00:00`);
+		    return Math.max(0, Math.round((demoToday - entered) / 86400000));
+		  }
+
+		  function getNextGate(item) {
+		    const map = {
+		      Identified: "Approve problem statement",
+		      Analysing: "Confirm root cause",
+		      Designing: "Approve To-Be solution",
+		      Implementing: "UAT sign-off",
+		      Completed: "Schedule PIR",
+		      Reviewing: "Validate benefits"
+		    };
+		    return map[item.stage] || "Review case file";
+		  }
+
+		  function isStageMoveAllowed(item, targetStage) {
+		    const current = stageOrder.indexOf(item.stage);
+		    const target = stageOrder.indexOf(targetStage);
+		    if (current === -1 || target === -1 || current === target) return true;
+		    return target === current + 1 || target === current - 1;
+		  }
+
+		  function priorityRank(priority) {
+		    return { Critical: 3, High: 2, Medium: 1 }[priority] || 0;
+		  }
+
+	  function getFilteredInitiatives() {
+	    return initiatives.filter(item => {
+	      return (filters.department === "all" || item.department === filters.department)
+	        && (filters.owner === "all" || item.owner === filters.owner)
+	        && (filters.priority === "all" || item.priority === filters.priority)
+	        && (filters.status === "all" || getBenefitStatus(item) === filters.status);
+	    });
+	  }
+
+	  function updateFiltersFromControls() {
+	    filters.period = document.getElementById("period-filter")?.value || "ytd";
+	    filters.department = document.getElementById("global-department-filter")?.value || "all";
+	    filters.owner = document.getElementById("owner-filter")?.value || "all";
+		    filters.priority = document.getElementById("global-priority-filter")?.value || "all";
+		    filters.status = document.getElementById("status-filter")?.value || "all";
+		    filters.kanbanStage = document.getElementById("kanban-stage-filter")?.value || filters.kanbanStage || "all";
+		    filters.kanbanSort = document.getElementById("kanban-sort")?.value || filters.kanbanSort || "priority";
+
+	    const boardDepartment = document.getElementById("department-filter");
+	    const boardPriority = document.getElementById("priority-filter");
+	    if (boardDepartment) boardDepartment.value = filters.department;
+	    if (boardPriority) boardPriority.value = filters.priority;
+	  }
+
+	  function refreshFilteredViews() {
+	    updateFiltersFromControls();
+	    renderOverview();
+	    renderKanban();
+	    renderImpactTables();
+	    updateOverviewCharts();
+	    if (chartsInitialised) updateImpactCharts();
+	  }
+
+	  function periodFactor() {
+	    if (filters.period === "month") return 1;
+	    if (filters.period === "quarter") return 3;
+	    return 6;
+	  }
+
+	  function formatCurrencyShort(value) {
+	    if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}m`;
+	    if (value >= 1000) return `$${Math.round(value / 1000)}k`;
+	    return `$${Math.round(value).toLocaleString()}`;
+	  }
+
+	  function getImpactScore(item) {
+	    if (item.priority === "Critical") return 5;
+	    if (item.priority === "High") return 4;
+	    return 3;
+	  }
+
+	  function getEffortScore(item) {
+	    const riskBase = item.riskLevel === "High" ? 4 : item.riskLevel === "Medium" ? 3 : 2;
+	    return Math.min(5, Math.max(1, riskBase + (item.stage === "Implementing" ? 1 : 0)));
+	  }
+
+	  function updateContextStrip(items) {
+	    const departmentLabel = filters.department === "all" ? "All departments" : filters.department;
+	    const ownerLabel = filters.owner === "all" ? "All owners" : filters.owner;
+	    const priorityLabel = filters.priority === "all" ? "All priorities" : filters.priority;
+	    const statusLabel = {
+	      all: "All benefit statuses",
+	      validated: "Validated benefits",
+	      pending: "Pending validation",
+	      "not-measured": "Not measured"
+	    }[filters.status];
+
+	    document.getElementById("context-title").innerText = `Viewing: ${periodLabels[filters.period]} / ${departmentLabel} / ${ownerLabel}`;
+	    document.getElementById("context-meta").innerText = `${items.length} initiatives in scope · ${priorityLabel} · ${statusLabel}`;
+	    document.getElementById("context-chips").innerHTML = [
+	      ["fa-calendar", periodLabels[filters.period], "bg-slate-50 text-slate-700 border-slate-200"],
+	      ["fa-building", departmentLabel, "bg-blue-50 text-blue-700 border-blue-100"],
+	      ["fa-user", ownerLabel, "bg-teal-50 text-teal-700 border-teal-100"],
+	      ["fa-flag", priorityLabel, filters.priority === "Critical" ? "bg-rose-50 text-rose-700 border-rose-100" : "bg-amber-50 text-amber-700 border-amber-100"],
+	      ["fa-chart-line", statusLabel, "bg-emerald-50 text-emerald-700 border-emerald-100"]
+	    ].map(([icon, text, cls]) => `<span class="context-chip ${cls}"><i class="fa-solid ${icon}"></i>${text}</span>`).join("");
+	  }
+
+	  function switchTab(tab) {
+	    document.querySelectorAll(".page").forEach(page => page.classList.add("hidden"));
+	    document.getElementById(`page-${tab}`).classList.remove("hidden");
+
+	    document.querySelectorAll(".nav-btn").forEach(btn => {
+	      btn.classList.remove("bg-blue-600", "bg-blue-600", "text-white", "shadow", "shadow-sm");
+	      btn.classList.add("text-slate-400", "hover:bg-slate-900", "hover:text-white");
+	      btn.removeAttribute("aria-current");
+	    });
+
+		    document.querySelectorAll(`.nav-btn[data-tab="${tab}"]`).forEach(active => {
+		      active.classList.add("bg-blue-600", "text-white", "shadow-sm");
+		      active.classList.remove("text-slate-400", "hover:bg-slate-900", "hover:text-white");
+		      active.setAttribute("aria-current", "page");
+		    });
+
+	    const titles = {
+		      overview: ["Project Overview", "Portfolio case summary and operating dashboard."],
+		      "ba-process": ["BA Process", "Stakeholder analysis, requirements traceability and delivery artefacts."],
+		      methodology: ["Methodology", "Stage-gate governance, scoring model and benefit validation framework."],
+		      intake: ["Intake Scoring", "Assess improvement ideas before they enter delivery."],
+	      kanban: ["Stage-Gate Board", "Track BA initiatives through stage-gate delivery."],
+	      process: ["Process Mapping Workspace", "Compare As-Is and To-Be workflows with change impact."],
+	      impact: ["Benefits Realisation", "Validate time saved, cost avoided and operational benefits."],
+	      documents: ["BA Toolkit / Document Centre", "Standardised templates mapped to BA stages."],
+	      review: ["Post-Implementation Review Loop", "Close the loop with benefits validation and lessons learned."]
+	    };
+
+    document.getElementById("page-title").innerText = titles[tab][0];
+    document.getElementById("page-subtitle").innerText = titles[tab][1];
+
+	    if (tab === "impact") {
+	      setTimeout(initCharts, 100);
+	    }
+
+	    if (tab === "overview") {
+	      setTimeout(updateOverviewCharts, 100);
+	    }
+	  }
+
+  document.querySelectorAll(".nav-btn").forEach(btn => {
+    btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+  });
+
+	  function renderOverview() {
+	    const items = getFilteredInitiatives();
+	    const completed = items.filter(i => ["Completed", "Reviewing"].includes(i.stage));
+	    const active = items.filter(i => !["Completed", "Reviewing"].includes(i.stage));
+	    const validated = items.filter(i => i.actualHoursSaved > 0);
+	    const actualHours = validated.reduce((sum, i) => sum + i.actualHoursSaved, 0);
+	    const activeAtRisk = active.filter(i => i.gateStatus === "at_risk" || getDaysInStage(i) > 30);
+	    const annualCostAvoided = actualHours * 45 * 12;
+
+	    updateContextStrip(items);
+	    document.getElementById("sidebar-hours").innerText = (actualHours * periodFactor()).toLocaleString();
+
+	    const kpis = [
+	      [items.length, "Initiatives in scope", "fa-list-check", "border-l-blue-600", `${active.length} active · ${completed.length} complete/reviewing`],
+	      [activeAtRisk.length, "Active at risk", "fa-triangle-exclamation", activeAtRisk.length ? "border-l-amber-600" : "border-l-emerald-600", "Critical, medium-risk or over 30 days in stage"],
+	      [actualHours, "Validated hrs / month", "fa-clock", "border-l-emerald-600", `${validated.length} initiatives with measured benefits`],
+	      [formatCurrencyShort(annualCostAvoided), "Annualised cost avoidance", "fa-dollar-sign", "border-l-teal-700", "Calculated at $45/hr portfolio assumption"]
+	    ];
+
+	    document.getElementById("overview-kpis").innerHTML = kpis.map(([value, label, icon, borderClass, note]) => `
+	      <div class="metric-card border-l-4 ${borderClass}">
+	        <div class="flex justify-between items-start gap-4">
+	          <div>
+	            <p class="text-sm text-slate-500 font-bold">${label}</p>
+	            <p class="text-3xl font-black text-slate-950 mt-2">${value}</p>
+	          </div>
+	          <i class="fa-solid ${icon} text-blue-600 text-xl"></i>
+	        </div>
+	        <p class="text-sm text-slate-500 mt-3">${note}</p>
+	      </div>
+	    `).join("");
+
+	    const actionItems = [
+	      {
+	        title: activeAtRisk.length ? `${activeAtRisk.length} active initiatives need gate review` : "No active gate risk in current filter",
+	        detail: activeAtRisk.length ? "Review stage aging, sponsor sign-off and UAT blockers before the next portfolio meeting." : "Current filtered portfolio has no critical stage-gate warning.",
+	        color: activeAtRisk.length ? "bg-amber-50 border-amber-100 text-amber-900" : "bg-emerald-50 border-emerald-100 text-emerald-900",
+	        icon: activeAtRisk.length ? "fa-triangle-exclamation" : "fa-circle-check"
+	      },
+	      {
+	        title: `${items.filter(i => getBenefitStatus(i) === "pending").length} initiatives pending benefit validation`,
+	        detail: "Schedule 4-8 week post-implementation review and confirm actual hours saved.",
+	        color: "bg-blue-50 border-blue-100 text-blue-900",
+	        icon: "fa-chart-line"
+	      },
+	      {
+	        title: "BA artefacts linked to each case file",
+	        detail: "Problem statement, BRD, process map, solution design, UAT and PIR are visible from the case drawer.",
+	        color: "bg-slate-50 border-slate-200 text-slate-800",
+	        icon: "fa-folder-open"
+	      }
+	    ];
+
+	    document.getElementById("overview-action-register").innerHTML = actionItems.map(item => `
+	      <div class="rounded-md border p-4 ${item.color}">
+	        <div class="flex gap-3">
+	          <i class="fa-solid ${item.icon} mt-0.5"></i>
+	          <div>
+	            <p class="font-bold text-sm">${item.title}</p>
+	            <p class="text-sm opacity-80 mt-1">${item.detail}</p>
+	          </div>
+	        </div>
+	      </div>
+	    `).join("");
+
+	    document.getElementById("overview-decision-log").innerHTML = [
+	      ["Critical allocation workflow delayed client contact", "Approve rules-based case allocation pilot", "COO", "Released"],
+	      ["Benefits validation required after go-live", "Move IMP-204 into PIR and capture reusable allocation pattern", "Esther", "Ready"],
+	      ["New intake requests exceed BA capacity", "Prioritise high-impact and high-frequency pain points first", "BA Team", "In progress"]
+	    ].map(([trigger, decision, owner, status]) => `
+	      <tr class="border-b border-slate-100 last:border-0">
+	        <td class="py-4 pr-4 text-slate-700">${trigger}</td>
+	        <td class="py-4 pr-4 font-semibold text-slate-900">${decision}</td>
+	        <td class="py-4 pr-4 text-slate-600">${owner}</td>
+	        <td class="py-4">
+	          <span class="tag ${status === "Released" ? "bg-emerald-50 text-emerald-700 border-emerald-100" : status === "Ready" ? "bg-blue-50 text-blue-700 border-blue-100" : "bg-amber-50 text-amber-700 border-amber-100"}">${status}</span>
+	        </td>
+	      </tr>
+	    `).join("");
+
+	    document.getElementById("stakeholder-table").innerHTML = stakeholders.map(row => `
+	      <tr class="border-b border-slate-100 last:border-0">
+        <td class="py-4 pr-4 font-bold text-slate-900">${row[0]}</td>
+        <td class="py-4 pr-4 text-slate-600">${row[1]}</td>
+        <td class="py-4 pr-4 text-slate-600">${row[2]}</td>
+        <td class="py-4 pr-4 text-slate-600">${row[3]}</td>
+        <td class="py-4">
+          <span class="text-xs font-bold rounded-full px-3 py-1 ${row[4] === "High" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" : "bg-amber-50 text-amber-700 border border-amber-100"}">${row[4]}</span>
+        </td>
+	      </tr>
+	    `).join("");
+
+	    updateOverviewCharts();
+	  }
+
+	  function showChartFallback(containerId, title, detail) {
+	    const el = document.getElementById(containerId);
+	    if (!el) return;
+	    el.innerHTML = `
+	      <div class="chart-fallback">
+	        <div>
+	          <i class="fa-solid fa-chart-simple text-2xl text-blue-600"></i>
+	          <p class="font-bold text-slate-900 mt-3">${title}</p>
+	          <p class="text-sm text-slate-500 mt-1">${detail}</p>
+	        </div>
+	      </div>
+	    `;
+	  }
+
+	  function initOverviewCharts() {
+	    if (overviewChartsInitialised) return;
+	    if (typeof echarts === "undefined") {
+	      showChartFallback("overview-stage-chart", "Stage distribution unavailable", "Chart library did not load; KPI and table data remain visible.");
+	      showChartFallback("overview-benefit-chart", "Benefits chart unavailable", "Validated and target savings are still shown in the portfolio metrics.");
+	      showChartFallback("overview-aging-chart", "Pipeline aging unavailable", "Use the Kanban stage age indicators for delivery risk.");
+	      showChartFallback("overview-priority-chart", "Priority matrix unavailable", "Intake scoring remains available in the Intake workspace.");
+	      overviewChartsInitialised = true;
+	      return;
+	    }
+
+	    overviewCharts = {
+	      stage: echarts.init(document.getElementById("overview-stage-chart")),
+	      benefit: echarts.init(document.getElementById("overview-benefit-chart")),
+	      aging: echarts.init(document.getElementById("overview-aging-chart")),
+	      priority: echarts.init(document.getElementById("overview-priority-chart"))
+	    };
+
+	    window.addEventListener("resize", () => {
+	      Object.values(overviewCharts).forEach(chart => chart && chart.resize());
+	    });
+	    overviewChartsInitialised = true;
+	  }
+
+	  function updateOverviewCharts() {
+	    if (!document.getElementById("overview-stage-chart")) return;
+	    if (typeof echarts === "undefined") {
+	      initOverviewCharts();
+	      return;
+	    }
+	    initOverviewCharts();
+	    if (!overviewChartsInitialised) return;
+
+	    const items = getFilteredInitiatives();
+	    const stageCounts = stageOrder.map(stage => items.filter(i => i.stage === stage).length);
+	    const benefitItems = items.slice(0, 7);
+	    const agingValues = stageOrder.map(stage => {
+	      const stageItems = items.filter(i => i.stage === stage);
+	      if (!stageItems.length) return 0;
+	      return Math.round(stageItems.reduce((sum, item) => sum + getDaysInStage(item), 0) / stageItems.length);
+	    });
+
+	    overviewCharts.stage.setOption({
+	      tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+	      grid: { left: 96, right: 24, top: 18, bottom: 28 },
+	      xAxis: { type: "value", minInterval: 1 },
+	      yAxis: { type: "category", data: stageOrder },
+	      color: ["#2563eb"],
+	      series: [{
+	        type: "bar",
+	        barWidth: "52%",
+	        data: stageCounts.map((value, index) => ({
+	          value,
+	          itemStyle: { color: ["#64748b", "#2563eb", "#7c3aed", "#b45309", "#16a34a", "#0891b2"][index] }
+	        })),
+	        label: { show: true, position: "right" }
+	      }]
+	    });
+
+	    overviewCharts.benefit.setOption({
+	      tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+	      legend: { bottom: 0 },
+	      grid: { left: 42, right: 20, top: 24, bottom: 58, containLabel: true },
+	      xAxis: { type: "category", data: benefitItems.map(i => i.id), axisLabel: { interval: 0 } },
+	      yAxis: { type: "value", name: "hrs / mo" },
+	      color: ["#94a3b8", "#16a34a"],
+	      series: [
+	        { name: "Target", type: "bar", data: benefitItems.map(i => i.targetHoursSavedMonthly), itemStyle: { borderRadius: [4, 4, 0, 0] } },
+	        { name: "Actual", type: "bar", data: benefitItems.map(i => i.actualHoursSavedMonthly || 0), itemStyle: { borderRadius: [4, 4, 0, 0] } }
+	      ]
+	    });
+
+	    overviewCharts.aging.setOption({
+	      tooltip: { trigger: "axis", formatter: params => `${params[0].name}: ${params[0].value} days` },
+	      grid: { left: 96, right: 24, top: 20, bottom: 32 },
+	      xAxis: { type: "value", axisLabel: { formatter: "{value}d" } },
+	      yAxis: { type: "category", data: stageOrder },
+	      series: [{
+	        type: "bar",
+	        barWidth: "52%",
+	        data: agingValues.map(value => ({
+	          value,
+	          itemStyle: { color: value > 30 ? "#b45309" : "#2563eb" }
+	        })),
+	        label: { show: true, position: "right", formatter: value => `${value.value}d` },
+	        markLine: {
+	          data: [{ xAxis: 30, name: "Review threshold" }],
+	          lineStyle: { color: "#dc2626", type: "dashed" },
+	          label: { formatter: "30d threshold" }
+	        }
+	      }]
+	    });
+
+	    overviewCharts.priority.setOption({
+	      tooltip: {
+	        formatter: params => {
+	          const item = params.data.item;
+	          return `${item.id}<br>${item.title}<br>Impact: ${params.value[1]} / Effort: ${params.value[0]}<br>Target: ${item.targetHoursSavedMonthly} hrs/mo`;
+	        }
+	      },
+	      grid: { left: 48, right: 48, top: 28, bottom: 58 },
+	      xAxis: { type: "value", min: 0, max: 6, name: "Effort / risk", nameLocation: "middle", nameGap: 34, splitNumber: 6 },
+	      yAxis: { type: "value", min: 0, max: 6, name: "Impact", splitNumber: 6 },
+	      series: [{
+	        type: "scatter",
+	        symbolSize: value => Math.max(12, Math.min(32, value[2] / 5)),
+	        data: items.map(item => ({
+	          value: [getEffortScore(item), getImpactScore(item), item.estimatedHoursSavedMonthly],
+	          item,
+	          itemStyle: { color: item.priority === "Critical" ? "#dc2626" : item.priority === "High" ? "#2563eb" : "#64748b" }
+	        })),
+	        label: { show: true, formatter: params => params.data.item.priority === "Critical" ? params.data.item.id : "", position: "right", color: "#334155", fontWeight: 700 }
+	      }]
+	    });
+
+	    Object.values(overviewCharts).forEach(chart => chart.resize());
+	  }
+
+	  function scoreRequest(req) {
+	    return req.impact + req.frequency + req.risk + req.pain - req.effort + req.data;
+	  }
+
+	  function renderIntake() {
+	    document.getElementById("intake-count").innerText = `${intakeRequests.length} pending assessment`;
+	    document.getElementById("intake-list").innerHTML = intakeRequests.map((req, index) => `
+      <button onclick="selectRequest('${req.id}')" class="w-full text-left p-5 rounded-lg border border-slate-200 hover:border-blue-200 hover:bg-blue-50/30 transition bg-white">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <div class="flex flex-wrap items-center gap-2 mb-2">
+              <span class="text-xs font-mono bg-slate-100 text-slate-600 rounded-full px-3 py-1">${req.id}</span>
+              <span class="text-xs font-bold bg-blue-50 text-blue-700 border border-blue-100 rounded-full px-3 py-1">${req.department}</span>
+            </div>
+            <h4 class="font-black text-slate-900">${req.title}</h4>
+            <p class="text-sm text-slate-500 mt-2 leading-relaxed">${req.summary}</p>
+          </div>
+          <div class="text-right shrink-0">
+            <p class="text-xs text-slate-500">Priority score</p>
+            <p class="text-3xl font-black text-blue-600">${scoreRequest(req)}</p>
+          </div>
+        </div>
+      </button>
+    `).join("");
+
+    selectRequest(intakeRequests[0].id);
+  }
+
+  function selectRequest(id) {
+    const req = intakeRequests.find(r => r.id === id);
+    const dimensions = [
+      ["Business Impact", req.impact],
+      ["Frequency", req.frequency],
+      ["Compliance / Risk", req.risk],
+      ["Staff Pain", req.pain],
+      ["Implementation Effort", req.effort],
+      ["Data Readiness", req.data]
+    ];
+
+    document.getElementById("assessment-panel").innerHTML = `
+      <div class="rounded-lg bg-slate-50 border border-slate-200 p-5">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <p class="text-xs font-mono text-slate-500">${req.id}</p>
+            <h4 class="font-black text-slate-900">${req.title}</h4>
+          </div>
+          <div class="text-right">
+            <p class="text-xs text-slate-500">Score</p>
+            <p class="text-3xl font-black text-blue-600">${scoreRequest(req)}</p>
+          </div>
+        </div>
+        <p class="text-sm text-slate-600 leading-relaxed">${req.summary}</p>
+      </div>
+
+      <div class="space-y-3">
+        ${dimensions.map(([label, value]) => `
+          <div>
+            <div class="flex items-center justify-between text-xs mb-1">
+              <span class="font-bold text-slate-500">${label}</span>
+              <span class="font-black text-slate-900">${value}/5</span>
+            </div>
+            <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-2 bg-blue-600 rounded-full" style="width:${value * 20}%"></div>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+
+      <div class="rounded-lg bg-emerald-50 border border-emerald-100 p-4">
+        <p class="text-xs uppercase font-bold text-emerald-600 mb-1">Recommendation</p>
+        <p class="text-sm font-bold text-emerald-900">${req.recommendation}</p>
+      </div>
+
+      <button onclick="approveRequest('${req.id}')" class="w-full py-3 rounded-md bg-blue-600 text-white text-sm font-bold hover:bg-blue-700 transition">
+        Approve into Delivery Board
+      </button>
+    `;
+  }
+
+  function approveRequest(id) {
+    const req = intakeRequests.find(r => r.id === id);
+    if (!req) return;
+
+    const exists = initiatives.some(i => i.title === req.title);
+    if (!exists) {
+      initiatives.unshift({
+        id: `IMP-${Math.floor(300 + Math.random() * 80)}`,
+        title: req.title,
+	        department: req.department,
+	        processName: req.title,
+	        stage: "Identified",
+	        submittedDate: "2026-05-12",
+	        stageEnteredDate: "2026-05-12",
+	        lastUpdated: "2026-05-12",
+	        priority: scoreRequest(req) >= 17 ? "High" : "Medium",
+        owner: "BA Team",
+        sponsor: "Department Head",
+        dueDate: "TBC",
+        problemSummary: req.summary,
+        businessImpact: "Approved for initial BA analysis based on intake scoring.",
+        estimatedHoursSaved: 70,
+	        actualHoursSaved: 0,
+	        estimatedHoursSavedMonthly: 70,
+	        targetHoursSavedMonthly: 70,
+	        actualHoursSavedMonthly: 0,
+	        benefitStatus: "not_started",
+	        gateStatus: "on_track",
+        riskLevel: "Medium",
+        approvalStatus: "Approved for analysis",
+        targetSaving: 70,
+        beforeHours: 2.0,
+        afterHours: 0.5,
+        monthlyVolume: 40,
+        hourlyCost: 42,
+        stakeholders: [req.submittedBy, req.department, "BA Team"],
+        metrics: {},
+        gates: [["Problem Statement approved", false]],
+        documents: ["Problem Statement"],
+	        timeline: [["12 May 2026", "Approved from intake queue into BA delivery board"]],
+        lessonsLearned: []
+      });
+	      renderKanban();
+	      renderOverview();
+	      renderImpactTables();
+	      if (chartsInitialised) updateImpactCharts();
+	    }
+
+    showToast(`${req.title} approved into Identified stage.`);
+    switchTab("kanban");
+  }
+
+		  function renderKanban() {
+		    let filtered = getFilteredInitiatives();
+		    if (filters.kanbanStage !== "all") {
+		      filtered = filtered.filter(item => item.stage === filters.kanbanStage);
+		    }
+
+		    filtered = [...filtered].sort((a, b) => {
+		      if (filters.kanbanSort === "due") return new Date(a.dueDate) - new Date(b.dueDate);
+		      if (filters.kanbanSort === "age") return getDaysInStage(b) - getDaysInStage(a);
+		      if (filters.kanbanSort === "saving") return b.estimatedHoursSavedMonthly - a.estimatedHoursSavedMonthly;
+		      return priorityRank(b.priority) - priorityRank(a.priority);
+		    });
+
+		    const board = document.getElementById("kanban-board");
+		    board.className = filters.kanbanStage === "all"
+		      ? "grid grid-cols-6 gap-4 min-w-[1500px]"
+		      : "grid grid-cols-1 gap-4 min-w-0";
+
+		    const visibleStages = filters.kanbanStage === "all" ? stageOrder : [filters.kanbanStage];
+		    board.innerHTML = visibleStages.map(stage => {
+		      const items = filtered.filter(i => i.stage === stage);
+		      const riskCount = items.filter(i => i.gateStatus === "at_risk" || getDaysInStage(i) > 30).length;
+		      return `
+		        <div class="rounded-lg border border-slate-200 bg-slate-100/80 p-3 flex flex-col" ondragover="allowDrop(event)" ondragleave="clearDrag(event)" ondrop="dropCard(event, '${stage}')">
+		          <div class="px-2 py-2 flex items-center justify-between border-b border-slate-200 mb-3">
+		            <div>
+		              <h4 class="font-black text-sm text-slate-800">${stage}</h4>
+		              <p class="text-[11px] text-slate-500">${items.length} initiative${items.length === 1 ? "" : "s"} · ${riskCount} at risk</p>
+		            </div>
+		            <span class="text-xs font-black rounded-full px-2 py-1 bg-white border border-slate-200 text-slate-600">${items.length}</span>
+		          </div>
+
+		          <div class="kanban-col space-y-3">
+		            ${items.length ? items.map(renderCard).join("") : `
+		              <div class="rounded-lg border border-dashed border-slate-300 p-4 text-center text-xs text-slate-400 bg-white/60">
+		                ${emptyStageText(stage)}
+		              </div>
+		            `}
+		          </div>
+		        </div>
+		      `;
+		    }).join("");
+		  }
+
+		  function emptyStageText(stage) {
+		    const map = {
+		      Identified: "No captured ideas. Add a new intake request.",
+		      Analysing: "No active root-cause analysis in this filter.",
+		      Designing: "No solution design work in this filter.",
+		      Implementing: "No active build or UAT workload.",
+		      Completed: "No implemented initiatives awaiting review.",
+		      Reviewing: "No initiatives ready for PIR."
+		    };
+		    return map[stage] || "No initiatives in this stage.";
+		  }
+
+	  function renderCard(item) {
+	    const riskBorder = item.gateStatus === "at_risk" ? "border-l-4 border-l-amber-600" :
+	      item.priority === "Critical" ? "border-l-4 border-l-rose-600" :
+	      item.priority === "High" ? "border-l-4 border-l-blue-600" :
+	      "border-l-4 border-l-slate-300";
+	    const benefitLabel = getBenefitStatus(item) === "validated" ? "Validated" :
+	      getBenefitStatus(item) === "pending" ? "Pending validation" : "Not measured";
+	    return `
+	      <div class="rounded-lg bg-white border border-slate-200 ${riskBorder} shadow-sm p-4 hover:shadow-md hover:border-blue-200 transition cursor-grab"
+	           draggable="true"
+	           ondragstart="dragCard(event, '${item.id}')">
+	        <div class="flex items-start justify-between gap-3 mb-3">
+	          <div>
+	            <span class="text-[11px] font-mono bg-slate-100 text-slate-500 rounded-full px-2 py-1">${item.id}</span>
+	          </div>
+	          <span class="text-[11px] font-bold rounded-full px-2 py-1 ${badgeClass(item.priority, "priority")}">${item.priority}</span>
+	        </div>
+
+	        <h5 class="font-black text-sm text-slate-900 leading-tight mb-2">${item.title}</h5>
+	        <p class="text-xs text-slate-500 leading-relaxed mb-3 line-clamp-2">${item.problemSummary}</p>
+
+	        <div class="space-y-2 text-[11px] text-slate-500 mb-4">
+	          <div class="flex justify-between gap-3">
+	            <span>Owner</span>
+	            <span class="font-bold text-slate-700 text-right">${item.owner}</span>
+	          </div>
+	          <div class="flex justify-between gap-3">
+	            <span>Due</span>
+	            <span class="font-bold text-slate-700 text-right">${item.dueDate}</span>
+	          </div>
+	          <div class="flex justify-between gap-3">
+	            <span>Stage age</span>
+	            <span class="font-bold ${getDaysInStage(item) > 30 ? "text-amber-700" : "text-slate-700"} text-right">${getDaysInStage(item)} days</span>
+	          </div>
+	          <div class="flex justify-between gap-3">
+	            <span>Est. saving</span>
+	            <span class="font-bold text-blue-600 text-right">${item.estimatedHoursSavedMonthly} hrs/mo</span>
+	          </div>
+	          <div class="flex justify-between gap-3">
+	            <span>Next gate</span>
+	            <span class="font-bold text-slate-700 text-right">${getNextGate(item)}</span>
+	          </div>
+	          <div class="flex justify-between gap-3">
+	            <span>Benefit</span>
+	            <span class="font-bold text-slate-700 text-right">${benefitLabel}</span>
+	          </div>
+	        </div>
+
+	        <button onclick="openCaseFile('${item.id}')" class="w-full py-2 rounded-md bg-slate-900 text-white text-xs font-bold hover:bg-blue-600 transition">
+	          Open BA Case File
+	        </button>
+	      </div>
+	    `;
+	  }
+
+  function dragCard(event, id) {
+    event.dataTransfer.setData("initiativeId", id);
+  }
+
+  function allowDrop(event) {
+    event.preventDefault();
+    event.currentTarget.classList.add("drag-over");
+  }
+
+  function clearDrag(event) {
+    event.currentTarget.classList.remove("drag-over");
+  }
+
+  function dropCard(event, stage) {
+    event.preventDefault();
+    event.currentTarget.classList.remove("drag-over");
+
+    const id = event.dataTransfer.getData("initiativeId");
+	    const item = initiatives.find(i => i.id === id);
+	    if (!item) return;
+	    if (!isStageMoveAllowed(item, stage)) {
+	      showToast(`${item.id} cannot move directly from ${item.stage} to ${stage}. Complete the next stage gate first.`);
+	      return;
+	    }
+
+	    item.stage = stage;
+	    item.stageEnteredDate = toIsoDate(demoToday);
+	    item.lastUpdated = toIsoDate(demoToday);
+	    item.gateStatus = getDaysInStage(item) > 30 ? "at_risk" : "on_track";
+	    item.timeline.push(["12 May 2026", `Moved to ${stage} stage`]);
+		    renderKanban();
+	    renderOverview();
+	    renderImpactTables();
+	    if (chartsInitialised) updateImpactCharts();
+	    showToast(`${item.id} moved to ${stage}.`);
+	  }
+
+  function openCaseFile(id) {
+    const item = initiatives.find(i => i.id === id);
+    if (!item) return;
+
+    document.getElementById("case-id").innerText = item.id;
+    document.getElementById("case-title").innerText = item.title;
+    document.getElementById("case-meta").innerText = `${item.department} · Owner: ${item.owner} · Sponsor: ${item.sponsor} · Due: ${item.dueDate}`;
+    document.getElementById("case-stage").innerText = item.stage;
+    document.getElementById("case-stage").className = `text-xs font-bold rounded-full px-3 py-1 ${badgeClass(item.stage)}`;
+    document.getElementById("case-priority").innerText = item.priority;
+    document.getElementById("case-priority").className = `text-xs font-bold rounded-full px-3 py-1 ${badgeClass(item.priority, "priority")}`;
+    document.getElementById("case-problem").innerText = item.problemSummary;
+
+    document.getElementById("case-metrics").innerHTML = `
+      <div class="rounded-lg bg-blue-50 border border-blue-100 p-4">
+        <p class="text-xs text-blue-600 font-bold uppercase">Est. saving</p>
+        <p class="text-2xl font-black text-blue-900">${item.estimatedHoursSaved}</p>
+        <p class="text-xs text-blue-600">hrs / month</p>
+      </div>
+      <div class="rounded-lg bg-emerald-50 border border-emerald-100 p-4">
+        <p class="text-xs text-emerald-600 font-bold uppercase">Actual</p>
+        <p class="text-2xl font-black text-emerald-900">${item.actualHoursSaved || "—"}</p>
+        <p class="text-xs text-emerald-600">hrs / month</p>
+      </div>
+      <div class="rounded-lg bg-amber-50 border border-amber-100 p-4">
+        <p class="text-xs text-amber-600 font-bold uppercase">Risk</p>
+        <p class="text-2xl font-black text-amber-900">${item.riskLevel}</p>
+        <p class="text-xs text-amber-600">delivery risk</p>
+      </div>
+      <div class="rounded-lg bg-slate-50 border border-slate-200 p-4">
+        <p class="text-xs text-slate-500 font-bold uppercase">Approval</p>
+        <p class="text-sm font-black text-slate-900 mt-1">${item.approvalStatus}</p>
+      </div>
+    `;
+
+    document.getElementById("case-stakeholders").innerHTML = item.stakeholders.map(s => `
+      <div class="flex items-center gap-2 p-3 rounded-lg bg-slate-50 border border-slate-200">
+        <i class="fa-solid fa-user text-blue-500"></i>
+        <span class="text-sm font-semibold text-slate-700">${s}</span>
+      </div>
+    `).join("");
+
+    document.getElementById("case-gates").innerHTML = item.gates.map(([label, done]) => `
+      <div class="flex items-center gap-3">
+        <div class="w-6 h-6 rounded-full flex items-center justify-center ${done ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-500"}">
+          <i class="fa-solid ${done ? "fa-check" : "fa-hourglass-half"} text-xs"></i>
+        </div>
+        <span class="text-sm ${done ? "text-slate-700 font-semibold" : "text-slate-400"}">${label}</span>
+      </div>
+    `).join("");
+
+	    document.getElementById("case-docs").innerHTML = item.documents.map(doc => `
+	      <button onclick="openTemplateFromCase('${doc.replace(/'/g, "\\'")}')" class="text-left p-4 rounded-lg bg-slate-50 border border-slate-200 hover:bg-blue-50 hover:border-blue-100 transition">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-file-lines text-blue-500"></i>
+          <span class="text-sm font-bold text-slate-800">${doc}</span>
+        </div>
+      </button>
+    `).join("");
+
+    document.getElementById("case-timeline").innerHTML = item.timeline.map(([date, event]) => `
+      <div class="stage-line flex gap-4">
+        <div class="w-12 h-12 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100">
+          <i class="fa-solid fa-clock"></i>
+        </div>
+        <div class="pb-3">
+          <p class="text-xs font-bold text-slate-400 uppercase">${date}</p>
+          <p class="text-sm font-semibold text-slate-700 mt-1">${event}</p>
+        </div>
+      </div>
+    `).join("");
+
+    document.getElementById("case-overlay").classList.remove("hidden");
+    document.getElementById("case-drawer").classList.remove("translate-x-full");
+  }
+
+	  function closeCaseFile() {
+	    document.getElementById("case-overlay").classList.add("hidden");
+	    document.getElementById("case-drawer").classList.add("translate-x-full");
+	  }
+
+	  function openTemplateFromCase(docName) {
+	    const normalised = docName.toLowerCase();
+	    const templateIndex = templates.findIndex(template => {
+	      const name = template.name.toLowerCase();
+	      return name.includes(normalised)
+	        || normalised.includes(name.replace(" template", ""))
+	        || (normalised.includes("brd") && name.includes("requirements"))
+	        || (normalised.includes("process") && name.includes("process map"))
+	        || (normalised.includes("uat") && name.includes("uat"))
+	        || (normalised.includes("pir") && name.includes("post-implementation"))
+	        || (normalised.includes("post-implementation") && name.includes("post-implementation"))
+	        || (normalised.includes("solution") && name.includes("solution design"))
+	        || (normalised.includes("problem") && name.includes("problem statement"));
+	    });
+
+	    if (templateIndex >= 0) selectedTemplate = templates[templateIndex];
+	    closeCaseFile();
+	    switchTab("documents");
+	    renderDocuments();
+	    showToast(`${selectedTemplate.name} opened from case file.`);
+	  }
+
+	  function renderProcessMap() {
+	    document.getElementById("as-is-map").innerHTML = asIsSteps.map(([title, desc, risk], index) => `
+	      <div class="process-arrow">
+	        <button onclick="openProcessStepDetail('as-is', ${index})" class="w-full text-left rounded-lg bg-white border border-rose-100 p-4 hover:border-rose-300 hover:shadow-sm transition">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="font-bold text-slate-900">${title}</p>
+              <p class="text-xs text-slate-500 mt-1">${desc}</p>
+            </div>
+            <span class="text-[11px] font-bold rounded-full px-2 py-1 ${risk === "High" ? "bg-rose-100 text-rose-700" : risk === "Medium" ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-600"}">${risk}</span>
+          </div>
+        </button>
+      </div>
+    `).join("");
+
+	    document.getElementById("to-be-map").innerHTML = toBeSteps.map(([title, desc, type], index) => `
+	      <div class="process-arrow">
+	        <button onclick="openProcessStepDetail('to-be', ${index})" class="w-full text-left rounded-lg bg-white border border-emerald-100 p-4 hover:border-emerald-300 hover:shadow-sm transition">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="font-bold text-slate-900">${title}</p>
+              <p class="text-xs text-slate-500 mt-1">${desc}</p>
+            </div>
+            <span class="text-[11px] font-bold rounded-full px-2 py-1 ${type === "Automated" ? "bg-emerald-100 text-emerald-700" : type === "Control" ? "bg-blue-100 text-blue-700" : "bg-slate-100 text-slate-600"}">${type}</span>
+          </div>
+        </button>
+      </div>
+    `).join("");
+
+    const impacts = [
+      ["3", "Manual steps removed", "fa-trash-can", "rose"],
+      ["2", "Steps automated", "fa-robot", "emerald"],
+	      ["1", "New control point", "fa-shield-halved", "blue"],
+      ["98%", "Expected time reduction", "fa-bolt", "amber"]
+    ];
+
+    document.getElementById("change-impact").innerHTML = impacts.map(([value, label, icon, color]) => `
+      <div class="p-4 rounded-lg bg-white border border-slate-200">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-md bg-${color}-50 text-${color}-600 flex items-center justify-center">
+            <i class="fa-solid ${icon}"></i>
+          </div>
+          <div>
+            <p class="text-xl font-black text-slate-900">${value}</p>
+            <p class="text-xs text-slate-500">${label}</p>
+          </div>
+        </div>
+      </div>
+    `).join("");
+
+    document.getElementById("business-rules").innerHTML = businessRules.map((rule, idx) => `
+      <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 flex gap-3">
+        <span class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold shrink-0">${idx + 1}</span>
+        <p class="text-sm text-slate-700 font-medium">${rule}</p>
+      </div>
+    `).join("");
+
+	    document.getElementById("exception-rules").innerHTML = exceptionRules.map((rule, idx) => `
+	      <div class="p-4 rounded-lg bg-amber-50 border border-amber-100 flex gap-3">
+	        <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5"></i>
+	        <p class="text-sm text-amber-900 font-medium">${rule}</p>
+	      </div>
+	    `).join("");
+	  }
+
+	  function openProcessStepDetail(type, index) {
+	    const source = type === "as-is" ? asIsSteps : toBeSteps;
+	    const [title, desc, status] = source[index];
+	    const isCurrent = type === "as-is";
+	    document.getElementById("process-step-type").innerText = isCurrent ? "Current State · As-Is" : "Future State · To-Be";
+	    document.getElementById("process-step-title").innerText = title;
+	    document.getElementById("process-step-summary").innerText = desc;
+
+	    const detailRows = isCurrent ? [
+	      ["Owner / system", index <= 1 || index === 4 ? "Front desk admin" : "Regional manager"],
+	      ["Input", index === 0 ? "New client registration" : "Email, CRM record and workload spreadsheet"],
+	      ["Output", index >= 4 ? "CRM owner update and notification" : "Manual assignment decision"],
+	      ["Pain point", status === "High" ? "Manual decision point creates delay, rework or missed updates." : "Step adds handoff effort and limited visibility."],
+	      ["Risk / control", `${status} operational risk`],
+	      ["Related requirement", "FR-03 · As-Is workflow visibility"]
+	    ] : [
+	      ["Owner / system", status === "Automated" || status === "Control" ? "CRM automation / rules engine" : "Front desk admin"],
+	      ["Input", "CRM client profile, consultant capacity, specialist capability and location data"],
+	      ["Output", "Logged assignment reason, updated CRM owner field and instant consultant notification"],
+	      ["Control point", status === "Control" ? "Rules engine checks workload freshness before assignment." : "Automation logs decision rationale for auditability."],
+	      ["Exception handling", "Stale workload data or no eligible consultant routes to manual review."],
+	      ["Related requirement", "FR-04 / FR-05 · To-Be design and difference view"]
+	    ];
+
+	    document.getElementById("process-step-body").innerHTML = detailRows.map(([label, value]) => `
+	      <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
+	        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">${label}</p>
+	        <p class="text-sm font-semibold text-slate-800 mt-1">${value}</p>
+	      </div>
+	    `).join("");
+
+	    document.getElementById("process-step-overlay").classList.remove("hidden");
+	    document.getElementById("process-step-drawer").classList.remove("translate-x-full");
+	  }
+
+	  function closeProcessStepDetail() {
+	    document.getElementById("process-step-overlay").classList.add("hidden");
+	    document.getElementById("process-step-drawer").classList.add("translate-x-full");
+	  }
+
+	  function renderImpactTables() {
+	    const filtered = getFilteredInitiatives();
+	    const completed = filtered.filter(i => ["Completed", "Reviewing"].includes(i.stage));
+	    const active = filtered.filter(i => !["Completed", "Reviewing"].includes(i.stage));
+		    const actualHours = completed.reduce((sum, i) => sum + i.actualHoursSavedMonthly, 0);
+	    const costAvoided = actualHours * 45 * 12;
+
+	    const kpis = [
+	      [filtered.length, "Total initiatives", "fa-list-check", "blue"],
+      [active.length, "Active", "fa-spinner", "amber"],
+      [completed.length, "Completed / reviewing", "fa-circle-check", "emerald"],
+      [actualHours, "Validated hrs / mo", "fa-clock", "blue"],
+      [`$${Math.round(costAvoided / 1000)}k`, "Annualised cost avoidance", "fa-dollar-sign", "emerald"]
+    ];
+
+    document.getElementById("impact-kpis").innerHTML = kpis.map(([value, label, icon, color]) => `
+      <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-5">
+        <div class="w-11 h-11 rounded-lg bg-${color}-50 text-${color}-600 flex items-center justify-center mb-4">
+          <i class="fa-solid ${icon}"></i>
+        </div>
+        <p class="text-3xl font-black text-slate-900">${value}</p>
+        <p class="text-xs text-slate-500 mt-1">${label}</p>
+      </div>
+    `).join("");
+
+	    document.getElementById("benefit-table").innerHTML = filtered.filter(i => i.stage !== "Identified").map(item => {
+      const status = item.actualHoursSavedMonthly >= item.targetHoursSavedMonthly ? "Exceeded" :
+        item.actualHoursSavedMonthly > 0 ? "On track" :
+        ["Implementing", "Reviewing"].includes(item.stage) ? "Pending validation" : "Not measured yet";
+
+      const statusClass = status === "Exceeded" ? "bg-emerald-50 text-emerald-700 border-emerald-100" :
+        status === "On track" ? "bg-blue-50 text-blue-700 border-blue-100" :
+        "bg-amber-50 text-amber-700 border-amber-100";
+
+      return `
+        <tr class="border-b border-slate-100 last:border-0">
+          <td class="py-4 pr-4">
+            <p class="font-bold text-slate-900">${item.title}</p>
+            <p class="text-xs text-slate-500">${item.id} · ${item.department}</p>
+          </td>
+          <td class="py-4 pr-4 text-slate-600">${item.targetHoursSavedMonthly} hrs/mo</td>
+          <td class="py-4 pr-4 text-slate-600">
+            <input type="text" inputmode="numeric" value="${item.actualHoursSavedMonthly || ""}" placeholder="Pending" oninput="updateBenefitActual('${item.id}', this.value)" onchange="renderImpactTables()" class="w-24 rounded-md border border-slate-200 bg-white px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+          </td>
+          <td class="py-4 pr-4">
+            <span class="text-xs font-bold rounded-full px-3 py-1 border ${statusClass}">${status}</span>
+          </td>
+          <td class="py-4 text-slate-600">${item.owner}</td>
+        </tr>
+      `;
+	    }).join("");
+	  }
+
+	  function updateBenefitActual(id, value) {
+	    const item = initiatives.find(i => i.id === id);
+	    if (!item) return;
+	    const numericValue = Number(value || 0);
+	    item.actualHoursSavedMonthly = numericValue;
+	    item.actualHoursSaved = numericValue;
+	    item.benefitStatus = numericValue >= item.targetHoursSavedMonthly && item.targetHoursSavedMonthly > 0 ? "exceeded" :
+	      numericValue > 0 ? "validated" :
+	      ["Implementing", "Reviewing"].includes(item.stage) ? "pending_validation" :
+	      "not_started";
+	    item.lastUpdated = toIsoDate(demoToday);
+	    renderOverview();
+	    renderKanban();
+	    if (chartsInitialised) updateImpactCharts();
+	  }
+
+	  function initCharts() {
+	    if (chartsInitialised) {
+	      updateImpactCharts();
+	      window.bpiCharts?.forEach(chart => chart.resize());
+	      return;
+	    }
+
+	    window.bpiCharts = [];
+
+	    if (typeof echarts === "undefined") {
+	      showChartFallback("chart-before-after", "Before/after chart unavailable", "The benefit table remains editable and shows the same underlying measures.");
+	      showChartFallback("chart-cumulative", "Cumulative savings chart unavailable", "Validated monthly savings are still calculated in the KPI cards.");
+	      chartsInitialised = true;
+	      return;
+	    }
+
+	    const chart1 = echarts.init(document.getElementById("chart-before-after"));
+	    const chart2 = echarts.init(document.getElementById("chart-cumulative"));
+	    window.bpiCharts.push(chart1, chart2);
+	    window.addEventListener("resize", () => window.bpiCharts.forEach(chart => chart.resize()));
+	    chartsInitialised = true;
+	    updateImpactCharts();
+	  }
+
+	  function updateImpactCharts() {
+	    if (!chartsInitialised || !window.bpiCharts?.length) return;
+
+	    const chart1 = window.bpiCharts[0];
+	    const chart2 = window.bpiCharts[1];
+	    const chartItems = getFilteredInitiatives().slice(0, 6);
+		    const validatedHours = getFilteredInitiatives()
+		      .filter(i => i.actualHoursSavedMonthly > 0)
+		      .reduce((sum, item) => sum + item.actualHoursSavedMonthly, 0);
+
+	    chart1.setOption({
+	      tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+	      legend: { bottom: 0 },
+	      grid: { left: "3%", right: "4%", top: "8%", bottom: "18%", containLabel: true },
+      xAxis: {
+        type: "category",
+        data: chartItems.map(i => i.id),
+        axisLabel: { interval: 0 }
+      },
+      yAxis: { type: "value", name: "Hours" },
+      color: ["#fb7185", "#34d399"],
+      series: [
+        { name: "Before", type: "bar", data: chartItems.map(i => i.beforeHours), itemStyle: { borderRadius: [6, 6, 0, 0] } },
+	        { name: "After", type: "bar", data: chartItems.map(i => i.afterHours), itemStyle: { borderRadius: [6, 6, 0, 0] } }
+	      ]
+	    });
+
+	    const factor = periodFactor();
+	    const cumulative = [0.15, 0.31, 0.48, 0.66, 0.82, 1].map(multiplier => Math.round(validatedHours * factor * multiplier));
+	    chart2.setOption({
+	      tooltip: { trigger: "axis" },
+	      grid: { left: "3%", right: "4%", top: "8%", bottom: "12%", containLabel: true },
+	      xAxis: { type: "category", boundaryGap: false, data: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"] },
+	      yAxis: { type: "value", name: "Hours saved" },
+	      color: ["#2563eb"],
+	      series: [{
+	        name: "Cumulative hours saved",
+	        type: "line",
+	        smooth: true,
+	        lineStyle: { width: 4 },
+	        areaStyle: {
+	          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+	            { offset: 0, color: "rgba(37, 99, 235, 0.28)" },
+	            { offset: 1, color: "rgba(37, 99, 235, 0.03)" }
+	          ])
+	        },
+	        data: cumulative
+	      }]
+	    });
+	  }
+
+  function calculateROI() {
+    const impl = Number(document.getElementById("roi-implementation-hours").value || 0);
+    const cost = Number(document.getElementById("roi-hourly-cost").value || 0);
+    const saved = Number(document.getElementById("roi-monthly-hours").value || 0);
+
+    const investment = impl * cost;
+    const monthlySaving = saved * cost;
+    const annualSaving = monthlySaving * 12;
+    const payback = monthlySaving ? investment / monthlySaving : 0;
+    const roi = investment ? ((annualSaving - investment) / investment) * 100 : 0;
+
+    document.getElementById("roi-output").innerHTML = `
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <p class="text-xs text-slate-500 font-bold uppercase">Investment</p>
+          <p class="text-xl font-black text-slate-900">$${Math.round(investment).toLocaleString()}</p>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 font-bold uppercase">Monthly saving</p>
+          <p class="text-xl font-black text-emerald-700">$${Math.round(monthlySaving).toLocaleString()}</p>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 font-bold uppercase">Payback</p>
+          <p class="text-xl font-black text-blue-700">${payback.toFixed(1)} months</p>
+        </div>
+        <div>
+          <p class="text-xs text-slate-500 font-bold uppercase">Annual ROI</p>
+          <p class="text-xl font-black text-slate-900">${Math.round(roi)}%</p>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderDocuments() {
+    document.getElementById("template-list").innerHTML = templates.map((t, idx) => `
+      <button onclick="selectTemplate(${idx})" class="template-btn w-full text-left p-4 rounded-lg border transition ${t.name === selectedTemplate.name ? "bg-blue-50 border-blue-200" : "bg-white border-slate-200 hover:bg-slate-50"}" aria-pressed="${t.name === selectedTemplate.name}">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-md bg-slate-100 text-blue-600 flex items-center justify-center shrink-0">
+            <i class="fa-solid ${t.icon || "fa-file-lines"}"></i>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-start justify-between gap-2">
+              <p class="font-bold text-sm text-slate-900">${t.name}</p>
+              <span class="text-[10px] font-bold uppercase rounded-full px-2 py-0.5 ${t.status === "Generated" ? "bg-blue-50 text-blue-700 border border-blue-100" : "bg-emerald-50 text-emerald-700 border border-emerald-100"}">${t.status}</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">${t.stage} · ${t.requiredForGate}</p>
+            <p class="text-[11px] text-slate-400 mt-1">Owner: ${t.owner}</p>
+          </div>
+        </div>
+      </button>
+    `).join("");
+
+    updateTemplatePreview();
+  }
+
+  function selectTemplate(index) {
+    selectedTemplate = templates[index];
+    renderDocuments();
+  }
+
+  function updateTemplatePreview() {
+    document.getElementById("template-title").innerText = selectedTemplate.name;
+    document.getElementById("template-purpose").innerText = selectedTemplate.purpose;
+    document.getElementById("template-stage").innerText = selectedTemplate.stage;
+    document.getElementById("template-status").innerText = selectedTemplate.status;
+    document.getElementById("template-status").className = `text-xs font-bold rounded-full px-3 py-1 ${
+      selectedTemplate.status === "Generated"
+        ? "bg-blue-50 text-blue-700 border border-blue-100"
+        : "bg-emerald-50 text-emerald-700 border border-emerald-100"
+    }`;
+
+    document.getElementById("template-preview").innerHTML = `
+      <div class="rounded-lg bg-white border border-slate-200 p-5">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-500">Owner</p>
+            <p class="text-sm font-bold text-slate-900 mt-1">${selectedTemplate.owner}</p>
+          </div>
+          <div>
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-500">Gate</p>
+            <p class="text-sm font-bold text-slate-900 mt-1">${selectedTemplate.requiredForGate}</p>
+          </div>
+          <div>
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-500">Format</p>
+            <p class="text-sm font-bold text-slate-900 mt-1">${selectedTemplate.format}</p>
+          </div>
+          <div>
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-500">Updated</p>
+            <p class="text-sm font-bold text-slate-900 mt-1">${selectedTemplate.lastUpdated}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-lg bg-white border border-slate-200 p-5">
+        <h4 class="font-black text-slate-900 mb-3">Required Inputs</h4>
+        <div class="flex flex-wrap gap-2">
+          ${selectedTemplate.inputs.map(input => `<span class="tag">${input}</span>`).join("")}
+        </div>
+      </div>
+
+      <div class="rounded-lg bg-white border border-slate-200 p-5">
+        <h4 class="font-black text-slate-900 mb-4">Document Structure and IMP-204 Example Content</h4>
+        <div class="space-y-3">
+          ${selectedTemplate.sections.map((section, index) => `
+            <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
+              <div class="flex items-start gap-3">
+                <span class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-black shrink-0">${index + 1}</span>
+                <div>
+                  <h5 class="font-black text-slate-900">${section}</h5>
+                  <p class="text-sm text-slate-600 mt-1">${generateSectionText(section)}</p>
+                </div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+
+      <div class="rounded-lg bg-white border border-slate-200 p-5">
+        <h4 class="font-black text-slate-900 mb-3">Approval / Sign-off</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+          <div class="rounded-md border border-slate-200 p-3"><p class="text-xs font-bold uppercase text-slate-500">Prepared by</p><p class="font-bold text-slate-900 mt-1">BA Team</p></div>
+          <div class="rounded-md border border-slate-200 p-3"><p class="text-xs font-bold uppercase text-slate-500">Reviewed by</p><p class="font-bold text-slate-900 mt-1">Process Owner</p></div>
+          <div class="rounded-md border border-slate-200 p-3"><p class="text-xs font-bold uppercase text-slate-500">Approved by</p><p class="font-bold text-slate-900 mt-1">Sponsor / Department Head</p></div>
+        </div>
+      </div>
+    `;
+  }
+
+  function generateSectionText(section) {
+    if (selectedTemplate.exampleFields?.[section]) return selectedTemplate.exampleFields[section];
+
+    const map = {
+      "Problem Summary": "Regional managers manually assign cases using email and spreadsheets, causing delayed client contact and inconsistent workload balancing.",
+      "Business Background": "CoAct operations require a repeatable method to manage process improvement initiatives across multiple service workflows.",
+      "Functional Requirements": "System must support intake, prioritisation, stage tracking, case files, process mapping, benefits tracking and document previews.",
+      "Business Rules": "Assignment must consider location, consultant workload, specialist expertise and escalation conditions.",
+      "Acceptance Criteria": "Case assignment occurs automatically, CRM is updated, consultant receives notification and exception cases are escalated.",
+      "As-Is Process": "Client registered → email manager → spreadsheet check → email reply → manual CRM update → consultant notification.",
+      "To-Be Process": "Client registered → rules engine → auto assignment → CRM auto update → instant consultant notification.",
+      "Original Target": "Reduce average case allocation time from 4.2 hours to under 10 minutes.",
+      "Actual Result": "Reduced to approximately 5 minutes after rules-based assignment was introduced.",
+      "Lessons Learned": "Workload data freshness and exception visibility are required for reliable automation."
+    };
+
+    return map[section] || "Generated preview content based on the selected initiative case file and BA stage.";
+  }
+
+  function downloadTemplatePreview() {
+    const text = `# ${selectedTemplate.name}
+
+Generated from demo initiative: IMP-204 Client Case Allocation Automation
+
+## Purpose
+${selectedTemplate.purpose}
+
+## Document Control
+- Stage: ${selectedTemplate.stage}
+- Owner: ${selectedTemplate.owner}
+- Status: ${selectedTemplate.status}
+- Required gate: ${selectedTemplate.requiredForGate}
+- Last updated: ${selectedTemplate.lastUpdated}
+- Format: ${selectedTemplate.format}
+
+## Required Inputs
+${selectedTemplate.inputs.map(input => `- ${input}`).join("\n")}
+
+## Sections
+${selectedTemplate.sections.map((s, i) => `### ${i + 1}. ${s}\n${generateSectionText(s)}`).join("\n\n")}
+
+## Approval / Sign-off
+- Prepared by: BA Team
+- Reviewed by: Process Owner
+- Approved by: Sponsor / Department Head
+`;
+    const blob = new Blob([text], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = selectedTemplate.name.replaceAll(" ", "_") + "_Preview.md";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showToast(`${selectedTemplate.name} Markdown preview downloaded.`);
+  }
+
+  function renderReview() {
+    const featured = initiatives.find(i => i.id === "IMP-204");
+    document.getElementById("pir-status-timeline").innerHTML = pirData.statusSteps.map(([label, date, done], index) => `
+      <div class="rounded-lg border ${done ? "border-emerald-100 bg-emerald-50" : "border-slate-200 bg-slate-50"} p-4">
+        <div class="flex items-center gap-2">
+          <span class="w-7 h-7 rounded-full ${done ? "bg-emerald-600 text-white" : "bg-slate-200 text-slate-600"} flex items-center justify-center text-xs font-black">${done ? '<i class="fa-solid fa-check"></i>' : index + 1}</span>
+          <p class="text-sm font-bold ${done ? "text-emerald-900" : "text-slate-900"}">${label}</p>
+        </div>
+        <p class="text-xs ${done ? "text-emerald-700" : "text-slate-500"} mt-2">${date}</p>
+      </div>
+    `).join("");
+
+    document.getElementById("pir-summary-cards").innerHTML = pirData.summaryCards.map(([value, label, color, note]) => {
+      const colorClass = {
+        blue: "bg-blue-50 border-blue-100 text-blue-900",
+        emerald: "bg-emerald-50 border-emerald-100 text-emerald-900",
+        slate: "bg-slate-50 border-slate-200 text-slate-900",
+        amber: "bg-amber-50 border-amber-100 text-amber-900"
+      }[color];
+      return `
+        <div class="p-5 rounded-lg border ${colorClass}">
+          <p class="text-xs font-bold uppercase opacity-80">${label}</p>
+          <p class="text-2xl font-black mt-1">${value}</p>
+          <p class="text-xs opacity-80 mt-1">${note}</p>
+        </div>
+      `;
+    }).join("");
+
+    document.getElementById("pir-metrics-table").innerHTML = pirData.metrics.map(([metric, baseline, target, actual, variance]) => `
+      <tr class="border-b border-slate-200 last:border-0">
+        <td class="py-3 pr-4 font-bold text-slate-900">${metric}</td>
+        <td class="py-3 pr-4 text-slate-600">${baseline}</td>
+        <td class="py-3 pr-4 text-slate-600">${target}</td>
+        <td class="py-3 pr-4 font-bold text-emerald-700">${actual}</td>
+        <td class="py-3 font-bold text-emerald-700 text-right">${variance}</td>
+      </tr>
+    `).join("");
+
+    document.getElementById("pir-feedback-themes").innerHTML = pirData.feedbackThemes.map(([theme, detail, status]) => `
+      <div class="p-4 rounded-lg bg-white border border-slate-200">
+        <div class="flex items-center justify-between gap-3">
+          <p class="text-sm font-bold text-slate-900">${theme}</p>
+          <span class="text-[10px] font-bold uppercase rounded-full px-2 py-0.5 ${status === "Follow-up" ? "bg-amber-50 text-amber-700 border border-amber-100" : "bg-emerald-50 text-emerald-700 border border-emerald-100"}">${status}</span>
+        </div>
+        <p class="text-xs text-slate-600 mt-2 leading-relaxed">${detail}</p>
+      </div>
+    `).join("");
+
+    document.getElementById("pir-actions").innerHTML = pirData.actions.map(([action, owner, due, status]) => `
+      <div class="p-4 rounded-lg bg-white border border-slate-200">
+        <div class="flex items-start justify-between gap-3">
+          <p class="text-sm font-bold text-slate-900">${action}</p>
+          <span class="text-[10px] font-bold uppercase rounded-full px-2 py-0.5 ${status === "Done" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" : status === "In progress" ? "bg-blue-50 text-blue-700 border border-blue-100" : "bg-amber-50 text-amber-700 border border-amber-100"}">${status}</span>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">${owner} · Due ${due}</p>
+      </div>
+    `).join("");
+
+    document.getElementById("pir-signoff").innerHTML = pirData.signoffs.map(([name, role, note]) => `
+      <div class="p-4 rounded-lg bg-white border border-slate-200">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-blue-50 text-blue-700 flex items-center justify-center">
+            <i class="fa-solid fa-signature"></i>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-slate-900">${name}</p>
+            <p class="text-xs text-slate-500">${role}</p>
+          </div>
+        </div>
+        <p class="text-xs text-slate-600 mt-3">${note}</p>
+      </div>
+    `).join("");
+
+    document.getElementById("lessons-list").innerHTML = featured.lessonsLearned.map((lesson, index) => `
+      <div class="p-4 rounded-lg bg-white border border-slate-200 flex gap-3">
+        <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-black shrink-0">${index + 1}</div>
+        <p class="text-sm text-slate-700 font-medium">${lesson}</p>
+      </div>
+    `).join("");
+
+    document.getElementById("reusable-patterns").innerHTML = pirData.reusablePatterns.map(([label, icon]) => `
+      <div class="p-4 rounded-lg bg-white border border-slate-200 flex items-center gap-3">
+        <i class="fa-solid ${icon} text-blue-500"></i>
+        <span class="text-sm font-semibold">${label}</span>
+      </div>
+    `).join("");
+  }
+
+  function openNewInitiativePanel() {
+    document.getElementById("new-panel").classList.remove("hidden");
+    document.getElementById("new-drawer").classList.remove("translate-x-full");
+  }
+
+  function closeNewInitiativePanel() {
+    document.getElementById("new-panel").classList.add("hidden");
+    document.getElementById("new-drawer").classList.add("translate-x-full");
+  }
+
+	  function submitNewRequest() {
+	    const title = document.getElementById("new-process-name").value.trim();
+	    const summary = document.getElementById("new-problem-summary").value.trim();
+	    const department = document.getElementById("new-department").value;
+	    if (!title || !summary) {
+	      showToast("Add a process name and problem summary before submitting.");
+	      return;
+	    }
+
+	    const request = {
+	      id: `REQ-${Math.floor(400 + Math.random() * 90)}`,
+	      title,
+	      department,
+	      submittedBy: `${department} requester`,
+	      summary,
+	      impact: 4,
+	      frequency: 4,
+	      risk: 3,
+	      pain: 4,
+	      effort: 2,
+	      data: 3,
+	      recommendation: "Approve for BA triage"
+	    };
+
+	    intakeRequests.unshift(request);
+	    closeNewInitiativePanel();
+	    renderIntake();
+	    selectRequest(request.id);
+	    showToast(`${request.id} added to Intake Queue.`);
+	    switchTab("intake");
+	  }
+
+	  ["period-filter", "global-department-filter", "owner-filter", "global-priority-filter", "status-filter"].forEach(id => {
+	    document.getElementById(id)?.addEventListener("change", refreshFilteredViews);
+	  });
+
+	  document.getElementById("department-filter").addEventListener("change", event => {
+	    document.getElementById("global-department-filter").value = event.target.value;
+	    refreshFilteredViews();
+	  });
+
+	  document.getElementById("priority-filter").addEventListener("change", event => {
+	    document.getElementById("global-priority-filter").value = event.target.value;
+	    refreshFilteredViews();
+	  });
+
+	  ["kanban-stage-filter", "kanban-sort"].forEach(id => {
+	    document.getElementById(id)?.addEventListener("change", refreshFilteredViews);
+	  });
+
+	  ["roi-implementation-hours", "roi-hourly-cost", "roi-monthly-hours"].forEach(id => {
+	    document.getElementById(id)?.addEventListener("input", calculateROI);
+	  });
+
+	  document.addEventListener("keydown", event => {
+	    if (event.key !== "Escape") return;
+	    if (!document.getElementById("process-step-overlay").classList.contains("hidden")) {
+	      closeProcessStepDetail();
+	      return;
+	    }
+	    if (!document.getElementById("new-panel").classList.contains("hidden")) {
+	      closeNewInitiativePanel();
+	      return;
+	    }
+	    if (!document.getElementById("case-overlay").classList.contains("hidden")) {
+	      closeCaseFile();
+	    }
+	  });
+
+	  function init() {
+	    normaliseInitiatives();
+	    renderOverview();
+    renderIntake();
+    renderKanban();
+    renderProcessMap();
+    renderImpactTables();
+    renderDocuments();
+    renderReview();
+    calculateROI();
+    switchTab("overview");
+  }
+
+  init();
+</script>
+</body>
+</html>

@@ -47,7 +47,7 @@ export const en = {
         "Photos I couldn't pose for → a photography app.",
         "User feedback I couldn't get → a simulation plugin.",
       ],
-      proof: "Eight projects. Different domains. Same method.",
+      proof: "Nine projects. Different domains. Same method.",
       builderLines: [
         "I'm a non-coder learning by shipping —",
         "building in public, occasionally panicking,",
@@ -82,9 +82,9 @@ export const en = {
         href: links.buildLog,
       },
       stats: [
-        { value: "8", label: "Projects" },
+        { value: "9", label: "Projects" },
         { value: "1", label: "Live" },
-        { value: "6", label: "Demos" },
+        { value: "7", label: "Demos" },
         { value: "Public", label: "Build mode" },
       ],
     },
@@ -193,6 +193,16 @@ export const en = {
       "Lightweight receipts from what I shipped, tested, and learned while turning real friction into tools.",
     relatedDemoLabel: "Open related demo",
     entries: [
+      {
+        id: "2026-05-12-process-improvement-tracker-demo",
+        date: "2026-05-12",
+        label: "Today",
+        title: "Added a closed-loop process improvement tracker case study.",
+        summary:
+          "Imported the Business Process Improvement Tracker demo and framed it as a BA portfolio project: intake scoring, stage-gate governance, As-Is and To-Be mapping, delivery evidence, benefits realisation, and post-implementation review.",
+        tags: ["Business Analysis", "Process Improvement", "Stage-Gate Governance"],
+        href: "/lab/process-improvement-tracker",
+      },
       {
         id: "2026-05-12-employment-dashboard-demo",
         date: "2026-05-12",
@@ -370,6 +380,28 @@ export const en = {
         screenshot: null,
       },
       {
+        id: "process-improvement-tracker",
+        title: "Business Process Improvement Tracker",
+        tagline: "A closed-loop BA workflow for governed process improvements.",
+        status: "BA Process Demo",
+        statusLabel: "BA Demo",
+        domainLabel: "Process Improvement",
+        group: "DEMO",
+        type: "Demo",
+        category: "Business Analysis / Process Improvement",
+        problem:
+          "Operational improvement requests are scattered across email, meeting notes, and Slack with no consistent owner, stage, or benefits validation.",
+        tool:
+          "A stage-gate tracker that captures, scores, governs, documents, delivers, measures, and reviews process improvements.",
+        description:
+          "Built to show how a Business Analyst turns operational friction into prioritised, measured, reviewed change.",
+        href: "/lab/process-improvement-tracker",
+        ctaLabel: "Open the case study →",
+        isFeatured: false,
+        isExternal: false,
+        screenshot: null,
+      },
+      {
         id: "exact-transit",
         title: "Exact Transit",
         tagline: "A transparent transit timeline for self-reflection.",
@@ -518,12 +550,135 @@ export const en = {
         body: "Roadmap, UAT scenarios, acceptance criteria, and before-after success metrics complete the BA lifecycle.",
       },
     ],
+    companionEyebrow: "Companion BA Project",
+    companionTitle: "Pair it with the process improvement tracker.",
+    companionBody:
+      "This dashboard shows Data → Decision. The companion project shows Problem → Governed Change: intake, prioritisation, stage gates, implementation evidence, benefits tracking, and PIR.",
+    companionCtaLabel: "Open companion case",
     demoEyebrow: "Live Prototype",
     demoTitle: "Explore the dashboard below.",
     demoBody:
       "The embedded demo is the original BI prototype. Use the filters, navigation, funnel stages, regional map, and report preview directly inside the page.",
     openDemoLabel: "Open full demo",
     iframeTitle: "Employment Services Outcomes Dashboard interactive demo",
+  },
+  processImprovementPage: {
+    metadata: {
+      title: "Business Process Improvement Tracker Demo — Esther AI Builder Lab",
+      description:
+        "A working Business Analyst process improvement demo covering problem intake, prioritisation, stage-gate governance, process mapping, BA deliverables, benefits realisation, and PIR.",
+    },
+    backLabel: "Back to Lab",
+    eyebrow: "Business Analysis / Process Improvement",
+    title: "Business Process Improvement Tracker",
+    description:
+      "A closed-loop BA workflow for capturing, prioritising, delivering, and validating operational process improvements.",
+    noteTitle: "Why this belongs in the Lab",
+    noteBody:
+      "It turns BA method into a working interface: scattered improvement ideas become scored initiatives, governed stage movement, signed deliverables, measured benefits, and reusable lessons.",
+    summary: [
+      {
+        label: "Before",
+        body: "Improvement requests lived across email, meeting notes, and Slack with uneven ownership and no reliable benefits validation.",
+      },
+      {
+        label: "Process",
+        body: "Capture the issue, score business value, move through stage gates, document the change, test delivery, and review outcomes.",
+      },
+      {
+        label: "After",
+        body: "A governed improvement portfolio with visible owners, decisions, BA evidence, delivery risk, benefits, and PIR follow-up.",
+      },
+    ],
+    contextEyebrow: "Project Context",
+    contextTitle: "From scattered ideas to governed improvement delivery.",
+    contextBody:
+      "The tracker is framed around CoAct-style operations managing many core processes across regions. It demonstrates how a BA can run a continuous improvement program from problem intake and prioritisation through As-Is and To-Be mapping, controlled implementation, UAT, and post-implementation review.",
+    tags: [
+      "Business Analysis",
+      "Process Improvement",
+      "Stage-Gate Governance",
+      "Requirements Documentation",
+      "Process Mapping",
+      "Benefits Realisation",
+      "Stakeholder Management",
+      "UAT Planning",
+      "Continuous Improvement",
+      "PIR",
+    ],
+    demonstrates: [
+      {
+        title: "Structured Problem Intake",
+        body: "A quantified scoring model balances impact, urgency, risk, and effort before requests enter delivery.",
+      },
+      {
+        title: "Stage-Gate Governance",
+        body: "Initiatives move through Identify, Analyse, Design, Implement, Complete, and Review with explicit decision checkpoints.",
+      },
+      {
+        title: "Process Analysis",
+        body: "Interactive As-Is and To-Be maps, step detail drawers, and change-type tags make the operational shift visible.",
+      },
+      {
+        title: "BA Deliverables Library",
+        body: "Problem statements, BRDs, process maps, UAT plans, solution notes, and PIR documents are tied to stage readiness.",
+      },
+      {
+        title: "Benefits Realisation",
+        body: "Target-versus-actual tracking shows whether improvements delivered time saving, quality lift, or risk reduction.",
+      },
+      {
+        title: "Post-Implementation Review",
+        body: "The PIR panel captures user feedback, follow-up actions, sign-off status, and reusable improvement patterns.",
+      },
+    ],
+    methodEyebrow: "BA Method",
+    methodTitle: "A closed loop instead of a task list.",
+    methodBody:
+      "The workflow is designed around evidence and decision quality. Every initiative has a clear entry point, a prioritisation rationale, a controlled delivery path, and a review step before the change is considered complete.",
+    stages: [
+      {
+        label: "01",
+        title: "Capture and prioritise",
+        body: "Standardise intake, quantify the problem, and choose which requests deserve BA delivery time.",
+      },
+      {
+        label: "02",
+        title: "Analyse and design",
+        body: "Map current process pain, define requirements, compare future-state options, and prepare the change case.",
+      },
+      {
+        label: "03",
+        title: "Deliver and review",
+        body: "Track gates, UAT, benefits validation, PIR outcomes, lessons learned, and reusable patterns.",
+      },
+    ],
+    portfolioEyebrow: "Portfolio Pair",
+    portfolioTitle: "Two BA projects, one lifecycle.",
+    portfolioBody:
+      "The employment dashboard and this process tracker are meant to sit together. One demonstrates Data → Decision. The other demonstrates Problem → Governed Change.",
+    portfolioItems: [
+      {
+        label: "Project 1",
+        title: "Employment Services Outcomes Dashboard",
+        body: "Shows the analytical and governance side of BA work: KPI definition, stakeholder needs, data quality, reporting readiness, and UAT.",
+        href: "/lab/employment-dashboard",
+        ctaLabel: "Open dashboard case",
+      },
+      {
+        label: "Project 2",
+        title: "Business Process Improvement Tracker",
+        body: "Shows the continuous improvement side: intake, prioritisation, stage-gate delivery, process mapping, benefits validation, and PIR.",
+        href: null,
+        ctaLabel: null,
+      },
+    ],
+    demoEyebrow: "Live Prototype",
+    demoTitle: "Explore the tracker below.",
+    demoBody:
+      "The embedded demo is the original closed-loop BA prototype. Use the overview, stage-gate board, methodology, benefits tracker, document centre, and PIR controls directly inside the page.",
+    openDemoLabel: "Open full demo",
+    iframeTitle: "Business Process Improvement Tracker interactive demo",
   },
   tailorcvPage: {
     metadata: {
