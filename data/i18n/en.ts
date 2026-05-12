@@ -4,7 +4,7 @@ export const en = {
   site: {
     name: "Esther",
     domain: "estherbuilds.com",
-    lastUpdated: "2026-05-09",
+    lastUpdated: "2026-05-12",
     links,
     metadata: {
       title: "Esther — AI Builder Lab",
@@ -47,7 +47,7 @@ export const en = {
         "Photos I couldn't pose for → a photography app.",
         "User feedback I couldn't get → a simulation plugin.",
       ],
-      proof: "Seven projects. Different domains. Same method.",
+      proof: "Eight projects. Different domains. Same method.",
       builderLines: [
         "I'm a non-coder learning by shipping —",
         "building in public, occasionally panicking,",

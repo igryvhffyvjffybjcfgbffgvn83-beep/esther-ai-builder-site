@@ -4,7 +4,7 @@ export const zh = {
   site: {
     name: "Esther",
     domain: "estherbuilds.com",
-    lastUpdated: "2026-05-09",
+    lastUpdated: "2026-05-12",
     links,
     metadata: {
       title: "Esther — AI 产品实验室",
@@ -47,7 +47,7 @@ export const zh = {
         "拍照不会摆 → 做了个拍照指导 App",
         "产品没用户反馈 → 做了个用户模拟器",
       ],
-      proof: "七个项目，不同方向，同一个逻辑。",
+      proof: "八个项目，不同方向，同一个逻辑。",
       builderLines: [
         "没有计算机背景的文科生，",
         "用 AI 把方案落地，",
