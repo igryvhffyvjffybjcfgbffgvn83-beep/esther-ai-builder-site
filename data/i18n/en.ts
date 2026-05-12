@@ -82,9 +82,9 @@ export const en = {
         href: links.buildLog,
       },
       stats: [
-        { value: "7", label: "Projects" },
+        { value: "8", label: "Projects" },
         { value: "1", label: "Live" },
-        { value: "5", label: "Demos" },
+        { value: "6", label: "Demos" },
         { value: "Public", label: "Build mode" },
       ],
     },
@@ -193,6 +193,16 @@ export const en = {
       "Lightweight receipts from what I shipped, tested, and learned while turning real friction into tools.",
     relatedDemoLabel: "Open related demo",
     entries: [
+      {
+        id: "2026-05-12-employment-dashboard-demo",
+        date: "2026-05-12",
+        label: "Today",
+        title: "Added an employment services KPI and data governance dashboard demo.",
+        summary:
+          "Imported a working BI prototype into the Lab and wrapped it with a project page that explains the BA lifecycle behind it: stakeholder mapping, requirements traceability, journey funnel, data quality monitoring, regional drilldown, UAT, and DEWR reporting.",
+        tags: ["Business Analysis", "BI Dashboard", "Data Governance"],
+        href: "/lab/employment-dashboard",
+      },
       {
         id: "2026-05-09-auto-promo-current-cut-review",
         date: "2026-05-09",
@@ -338,6 +348,28 @@ export const en = {
         screenshot: null,
       },
       {
+        id: "employment-dashboard",
+        title: "Employment Services Outcomes Dashboard",
+        tagline: "A closed-loop KPI, data quality, and compliance reporting demo.",
+        status: "BA Dashboard Demo",
+        statusLabel: "BA Demo",
+        domainLabel: "Employment Services",
+        group: "DEMO",
+        type: "Demo",
+        category: "Business Analysis / BI",
+        problem:
+          "A national employment services team needs governed KPI reporting instead of monthly spreadsheet collation.",
+        tool:
+          "An interactive dashboard that connects stakeholder needs, BRD traceability, journey funnel analytics, data quality controls, regional drilldowns, and DEWR reporting.",
+        description:
+          "Built to show how a Business Analyst moves from messy operations to measurable requirements, working BI, UAT, and reporting value.",
+        href: "/lab/employment-dashboard",
+        ctaLabel: "Open the case study →",
+        isFeatured: false,
+        isExternal: false,
+        screenshot: null,
+      },
+      {
         id: "exact-transit",
         title: "Exact Transit",
         tagline: "A transparent transit timeline for self-reflection.",
@@ -416,6 +448,82 @@ export const en = {
         screenshot: null,
       },
     ],
+  },
+  employmentDashboardPage: {
+    metadata: {
+      title: "Employment Services Dashboard Demo — Esther AI Builder Lab",
+      description:
+        "A working Business Analyst dashboard demo covering stakeholder mapping, requirements traceability, data governance, KPI monitoring, UAT, and DEWR reporting.",
+    },
+    backLabel: "Back to Lab",
+    eyebrow: "Business Analysis / BI Dashboard",
+    title: "Employment Services Outcomes Dashboard",
+    description:
+      "A working prototype for a national employment services organisation, designed to replace spreadsheet-heavy reporting with KPI visibility, data quality controls, and compliance-ready reporting.",
+    noteTitle: "Why this belongs in the Lab",
+    noteBody:
+      "It is not just a chart demo. The prototype shows the BA delivery chain around the dashboard: stakeholders, BRD, data rules, UAT, operating actions, and measurable value.",
+    summary: [
+      {
+        label: "Before",
+        body: "Monthly spreadsheet collation across service sites created delay, inconsistency, and reporting risk.",
+      },
+      {
+        label: "Process",
+        body: "Map stakeholders, define traceable requirements, model the data, and build operating controls.",
+      },
+      {
+        label: "After",
+        body: "A governed dashboard with KPI trends, funnel analytics, quality monitoring, regional actions, and DEWR pack preview.",
+      },
+    ],
+    contextEyebrow: "Project Context",
+    contextTitle: "From reporting task to operating system.",
+    contextBody:
+      "The dashboard is framed around CoAct-style employment services operations: registrations, placements, service regions, priority cohorts, data completeness, exception queues, and quarterly government reporting. It demonstrates how requirements become visible controls rather than static documentation.",
+    tags: [
+      "Business Analysis",
+      "Requirements Gathering",
+      "Data Visualisation",
+      "Data Governance",
+      "Stakeholder Management",
+      "Process Improvement",
+      "BI Dashboard Design",
+      "UAT Planning",
+      "Compliance Reporting",
+    ],
+    demonstrates: [
+      {
+        title: "Stakeholder Analysis",
+        body: "Power and interest mapping connects six stakeholder groups to dashboard controls and reporting needs.",
+      },
+      {
+        title: "Requirements Traceability",
+        body: "Functional requirements are linked to stakeholders, priorities, and visible dashboard features.",
+      },
+      {
+        title: "Data Governance",
+        body: "Quality score, missing-rate monitoring, duplicate detection, exception queue, and data dictionary are built into the prototype.",
+      },
+      {
+        title: "Interactive BI",
+        body: "Global filters, trend charts, journey funnel, regional map, demographic cohorts, and action registers update through live page logic.",
+      },
+      {
+        title: "Compliance Reporting",
+        body: "The report pack preview ties dashboard context, risk notes, data readiness, and DEWR-style outputs together.",
+      },
+      {
+        title: "Delivery Framework",
+        body: "Roadmap, UAT scenarios, acceptance criteria, and before-after success metrics complete the BA lifecycle.",
+      },
+    ],
+    demoEyebrow: "Live Prototype",
+    demoTitle: "Explore the dashboard below.",
+    demoBody:
+      "The embedded demo is the original BI prototype. Use the filters, navigation, funnel stages, regional map, and report preview directly inside the page.",
+    openDemoLabel: "Open full demo",
+    iframeTitle: "Employment Services Outcomes Dashboard interactive demo",
   },
   tailorcvPage: {
     metadata: {

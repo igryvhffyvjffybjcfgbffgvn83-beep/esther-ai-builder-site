@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altivio Employment Services Client Outcomes Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #172033;
+            --muted: #5f6b7a;
+            --brand: #2563eb;
+            --teal: #0f766e;
+            --amber: #b45309;
+            --danger: #dc2626;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #eef2f6;
+            color: var(--ink);
+            font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-radius: 0.5rem;
+            padding: 0.7rem 0.95rem;
+            color: #cbd5e1;
+            transition: all 180ms ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .nav-active {
+            background: #2563eb;
+            color: #fff;
+            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.2);
+        }
+
+        .panel {
+            background: #fff;
+            border: 1px solid #dde5ef;
+            border-radius: 0.5rem;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.035);
+        }
+
+        .metric-card {
+            background: #fff;
+            border: 1px solid #dde5ef;
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.035);
+        }
+
+        .app-sidebar .panel {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: none;
+        }
+
+        .context-strip {
+            background: #fff;
+            border: 1px solid #dbe4ef;
+            border-left: 4px solid #2563eb;
+            border-radius: 0.5rem;
+            padding: 1rem 1.25rem;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.035);
+        }
+
+        .context-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: 1px solid #dbe4ef;
+            border-radius: 999px;
+            background: #f8fafc;
+            color: #334155;
+            padding: 0.35rem 0.7rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .business-flow {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0;
+            border: 1px solid #dbe4ef;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .business-step {
+            padding: 0.95rem;
+            border-right: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+
+        .business-step:last-child {
+            border-right: 0;
+        }
+
+        .mobile-nav {
+            display: none;
+        }
+
+        .filter-bar label {
+            margin-right: -0.35rem;
+        }
+
+        .status-dot {
+            width: 0.625rem;
+            height: 0.625rem;
+            border-radius: 999px;
+            display: inline-block;
+        }
+
+        .fade-in {
+            animation: fadeIn 220ms ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .matrix-cell {
+            min-height: 180px;
+            border: 1px solid #d7dee9;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .stakeholder-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            border-radius: 999px;
+            padding: 0.45rem 0.65rem;
+            margin: 0.25rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #172033;
+            background: #f8fafc;
+            border: 1px solid #dbe4ef;
+        }
+
+        .flow-node {
+            border: 1px solid #d7dee9;
+            border-radius: 0.65rem;
+            background: #fff;
+            padding: 0.95rem;
+            min-height: 86px;
+        }
+
+        .flow-arrow {
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 86px;
+        }
+
+        .table-head {
+            background: #f8fafc;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-size: 0.72rem;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 0.25rem 0.6rem;
+            font-size: 0.72rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            z-index: 80;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .australia-map svg {
+            width: 100%;
+            min-height: 380px;
+        }
+
+        .region-marker {
+            cursor: pointer;
+            transform-box: fill-box;
+            transform-origin: center;
+            transition: transform 180ms ease, filter 180ms ease;
+        }
+
+        .region-marker:hover {
+            transform: scale(1.08);
+        }
+
+        .region-marker.selected {
+            transform: scale(1.12);
+            filter: drop-shadow(0 8px 10px rgba(15, 23, 42, 0.24));
+        }
+
+        .region-marker.selected circle {
+            stroke: #0f172a;
+            stroke-width: 4;
+        }
+
+        .map-risk-label {
+            font-size: 12px;
+            font-weight: 800;
+            fill: #172033;
+        }
+
+        .pack-page {
+            border: 1px solid #dbe4ef;
+            border-left: 4px solid #2563eb;
+            border-radius: 0.5rem;
+            background: #fff;
+            padding: 1rem;
+        }
+
+        .pack-page-title {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            align-items: flex-start;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .pack-page-number {
+            color: #64748b;
+            font-size: 0.75rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        ::-webkit-scrollbar { width: 7px; height: 7px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+
+        @media (max-width: 900px), (max-device-width: 900px) {
+            body {
+                display: block !important;
+                height: auto !important;
+                min-height: 100vh;
+                overflow: auto !important;
+            }
+
+            .app-sidebar {
+                display: none !important;
+            }
+
+            .app-content {
+                height: auto !important;
+                min-height: 100vh;
+                overflow: visible !important;
+            }
+
+            .app-header {
+                position: sticky;
+                padding: 1rem;
+            }
+
+            .mobile-nav {
+                display: flex !important;
+                gap: 0.5rem;
+                overflow-x: auto;
+                padding-bottom: 0.25rem;
+                width: 100%;
+            }
+
+            .mobile-nav .nav-item {
+                color: #334155;
+                background: #f8fafc;
+                border: 1px solid #dbe4ef;
+                flex: 0 0 auto;
+                font-size: 0.82rem;
+                padding: 0.55rem 0.7rem;
+            }
+
+            .mobile-nav .nav-active {
+                background: #2563eb;
+                color: #fff;
+                border-color: #2563eb;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .filter-bar {
+                display: grid !important;
+                grid-template-columns: minmax(0, 1fr);
+                width: 100%;
+                align-items: stretch;
+            }
+
+            .filter-bar label {
+                margin-right: 0;
+            }
+
+            .filter-bar select,
+            .filter-bar button {
+                width: 100%;
+            }
+
+            .business-flow {
+                grid-template-columns: 1fr;
+            }
+
+            .business-step {
+                border-right: 0;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            .business-step:last-child {
+                border-bottom: 0;
+            }
+
+            .flow-node,
+            .flow-arrow {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden">
+    <aside class="app-sidebar w-72 bg-[#172033] text-white flex flex-col shadow-xl z-20">
+        <div class="p-6 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-lg bg-blue-600 flex items-center justify-center font-black text-xl">A</div>
+                <div>
+                    <h1 class="text-lg font-black tracking-wide">Altivio Outcomes</h1>
+                    <p class="text-xs text-slate-300">CoAct Employment Services</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-5 pt-5 pb-2 text-xs text-slate-400 uppercase tracking-widest font-bold">Demo Navigation</div>
+        <nav class="flex-1 px-4 space-y-2">
+            <a href="#" onclick="switchTab('overview')" id="nav-overview" class="nav-item nav-active">
+                <i class="fas fa-chart-line w-5"></i> Executive Overview
+            </a>
+            <a href="#" onclick="switchTab('stakeholders')" id="nav-stakeholders" class="nav-item">
+                <i class="fas fa-users-viewfinder w-5"></i> Stakeholders & BRD
+            </a>
+            <a href="#" onclick="switchTab('funnel')" id="nav-funnel" class="nav-item">
+                <i class="fas fa-filter w-5"></i> Client Journey Funnel
+            </a>
+            <a href="#" onclick="switchTab('quality')" id="nav-quality" class="nav-item">
+                <i class="fas fa-shield-halved w-5"></i> Data Quality Monitor
+            </a>
+            <a href="#" onclick="switchTab('region')" id="nav-region" class="nav-item">
+                <i class="fas fa-map-location-dot w-5"></i> Regional Deep Dive
+            </a>
+            <a href="#" onclick="switchTab('delivery')" id="nav-delivery" class="nav-item">
+                <i class="fas fa-clipboard-check w-5"></i> Report, UAT & Value
+            </a>
+        </nav>
+
+        <div class="m-4 panel bg-white/8 border-white/10 p-4">
+            <div class="flex items-center gap-2 text-xs text-slate-300">
+                <span class="status-dot bg-emerald-400"></span>
+                <span>Daily CRM sync completed</span>
+            </div>
+            <p class="text-sm font-bold text-white mt-2" id="syncStamp">12 May 2026, 08:30</p>
+            <p class="text-xs text-slate-400 mt-1">T+1 refresh, 36-month retention</p>
+        </div>
+    </aside>
+
+    <div class="app-content flex-1 flex flex-col h-screen overflow-y-auto">
+        <header class="app-header sticky top-0 bg-white/95 backdrop-blur border-b border-slate-200 px-6 py-4 z-10">
+            <div class="flex flex-wrap gap-4 items-center justify-between">
+                <div>
+                    <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Employment Services Client Outcomes Dashboard</p>
+                    <h2 class="text-xl font-bold text-slate-900">Closed-loop KPI, data quality and DEWR reporting demo</h2>
+                </div>
+                <div class="filter-bar flex flex-wrap gap-3 items-center">
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider" for="timeFilter">Time</label>
+                    <select id="timeFilter" class="border border-slate-300 rounded-md px-3 py-2 text-sm bg-slate-50 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="ytd">Year to Date</option>
+                        <option value="quarter">Last Quarter</option>
+                        <option value="month">This Month</option>
+                    </select>
+
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider" for="regionFilter">Region</label>
+                    <select id="regionFilter" class="border border-slate-300 rounded-md px-3 py-2 text-sm bg-slate-50 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="All">All Regions</option>
+                        <option value="QLD">Queensland</option>
+                        <option value="NSW">New South Wales</option>
+                        <option value="VIC">Victoria</option>
+                        <option value="WA">Western Australia</option>
+                        <option value="SA">South Australia</option>
+                    </select>
+
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider" for="programFilter">Program</label>
+                    <select id="programFilter" class="border border-slate-300 rounded-md px-3 py-2 text-sm bg-slate-50 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="All">All Programs</option>
+                        <option value="jobactive">jobactive</option>
+                        <option value="DES">DES</option>
+                        <option value="TTW">Transition to Work</option>
+                    </select>
+
+                    <button onclick="openReportPreview()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-bold transition shadow-sm flex items-center justify-center gap-2">
+                        <i class="fas fa-file-pdf"></i> Generate DEWR Pack
+                    </button>
+                </div>
+                <nav class="mobile-nav" aria-label="Mobile navigation">
+                    <a href="#" onclick="switchTab('overview')" id="mobile-nav-overview" class="nav-item nav-active"><i class="fas fa-chart-line"></i> Overview</a>
+                    <a href="#" onclick="switchTab('stakeholders')" id="mobile-nav-stakeholders" class="nav-item"><i class="fas fa-users-viewfinder"></i> BRD</a>
+                    <a href="#" onclick="switchTab('funnel')" id="mobile-nav-funnel" class="nav-item"><i class="fas fa-filter"></i> Funnel</a>
+                    <a href="#" onclick="switchTab('quality')" id="mobile-nav-quality" class="nav-item"><i class="fas fa-shield-halved"></i> Quality</a>
+                    <a href="#" onclick="switchTab('region')" id="mobile-nav-region" class="nav-item"><i class="fas fa-map-location-dot"></i> Region</a>
+                    <a href="#" onclick="switchTab('delivery')" id="mobile-nav-delivery" class="nav-item"><i class="fas fa-clipboard-check"></i> Delivery</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main-content p-6 xl:p-8 w-full max-w-[1500px] mx-auto">
+            <section id="page-overview" class="page fade-in">
+                <div class="context-strip mb-5">
+                    <div class="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-blue-700 font-bold">Current Operating View</p>
+                            <h3 class="text-lg font-bold text-slate-900 mt-1" id="contextTitle">Viewing: Year to Date / All Regions / All Programs</h3>
+                            <p class="text-sm text-slate-600 mt-1" id="contextMeta">T+1 refresh · 12 sites · DEWR-ready context</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2" id="contextChips"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 mb-6">
+                    <div class="metric-card border-l-4 border-l-blue-600">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-slate-500 font-bold">Registered Job Seekers</p>
+                                <p class="text-3xl font-black mt-2" id="kpiRegistrations">8,245</p>
+                            </div>
+                            <i class="fas fa-user-plus text-blue-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm mt-3" id="kpiRegistrationDelta"><span class="text-emerald-700 font-bold">+12.0%</span> vs prior period</p>
+                    </div>
+                    <div class="metric-card border-l-4 border-l-emerald-600">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-slate-500 font-bold">Placement Rate</p>
+                                <p class="text-3xl font-black mt-2" id="kpiPlacementRate">68.4%</p>
+                            </div>
+                            <i class="fas fa-bullseye text-emerald-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm mt-3" id="kpiPlacementStatus"><span class="text-emerald-700 font-bold">On track</span> against 60% threshold</p>
+                    </div>
+                    <div class="metric-card border-l-4 border-l-amber-600">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-slate-500 font-bold">Average Days to Placement</p>
+                                <p class="text-3xl font-black mt-2" id="kpiDays">42</p>
+                            </div>
+                            <i class="fas fa-hourglass-half text-amber-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm mt-3" id="kpiDaysDelta"><span class="text-red-700 font-bold">+2 days</span> vs prior period</p>
+                    </div>
+                    <div class="metric-card border-l-4 border-l-teal-700">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-slate-500 font-bold">Satisfaction Score</p>
+                                <p class="text-3xl font-black mt-2" id="kpiSatisfaction">4.7 / 5.0</p>
+                            </div>
+                            <i class="fas fa-star text-teal-700 text-xl"></i>
+                        </div>
+                        <p class="text-sm mt-3" id="kpiSatisfactionStatus"><span class="text-emerald-700 font-bold">Above target</span> target 4.0+</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
+                    <div class="panel p-5">
+                        <div class="flex justify-between items-start gap-4 mb-2">
+                            <div>
+                                <h3 class="font-bold text-slate-900" id="trendTitle">Monthly Registration and Placement Trend</h3>
+                                <p class="text-sm text-slate-500" id="trendSubtitle">Daily CRM sync feeds the operating dashboard.</p>
+                            </div>
+                            <span class="tag bg-blue-50 text-blue-700">FR-01 / FR-03</span>
+                        </div>
+                        <div id="trendChart" class="h-[330px]"></div>
+                    </div>
+                    <div class="panel p-5">
+                        <div class="flex justify-between items-start gap-4 mb-2">
+                            <div>
+                                <h3 class="font-bold text-slate-900" id="regionChartTitle">Regional Placement Rate Comparison</h3>
+                                <p class="text-sm text-slate-500" id="regionChartSubtitle">Any result below 60% is flagged for regional review.</p>
+                            </div>
+                            <span class="tag bg-amber-50 text-amber-700">FR-02 / FR-08</span>
+                        </div>
+                        <div id="regionChart" class="h-[330px]"></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-[1fr_1.35fr] gap-6">
+                    <div class="panel p-5">
+                        <h3 class="font-bold text-slate-900 mb-4">Alert-to-Action Register</h3>
+                        <div class="space-y-3" id="actionRegister"></div>
+                    </div>
+                    <div class="panel p-5">
+                        <h3 class="font-bold text-slate-900 mb-4">Executive Decision Log</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="table-head">
+                                    <tr>
+                                        <th class="text-left px-4 py-3">Trigger</th>
+                                        <th class="text-left px-4 py-3">Decision</th>
+                                        <th class="text-left px-4 py-3">Owner</th>
+                                        <th class="text-left px-4 py-3">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <tr>
+                                        <td class="px-4 py-3">WA placement rate below threshold</td>
+                                        <td class="px-4 py-3">Deploy interview coaching playbook</td>
+                                        <td class="px-4 py-3">WA Regional Manager</td>
+                                        <td class="px-4 py-3"><span class="tag bg-amber-50 text-amber-700">In progress</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3">Demographic group missing above 10%</td>
+                                        <td class="px-4 py-3">Mandatory CRM validation rule</td>
+                                        <td class="px-4 py-3">IT / Data Team</td>
+                                        <td class="px-4 py-3"><span class="tag bg-emerald-50 text-emerald-700">Released</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3">Quarterly DEWR pack due</td>
+                                        <td class="px-4 py-3">Generate controlled PDF preview</td>
+                                        <td class="px-4 py-3">Government Liaison</td>
+                                        <td class="px-4 py-3"><span class="tag bg-blue-50 text-blue-700">Ready</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-stakeholders" class="page fade-in hidden">
+                <div class="panel p-5 mb-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_1.9fr] gap-5 items-center">
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-blue-700 font-bold">Business Case</p>
+                            <h3 class="text-lg font-bold text-slate-900 mt-1">From monthly spreadsheet collation to a governed operating rhythm.</h3>
+                            <p class="text-sm text-slate-600 mt-2">The demo ties each stakeholder concern to a measurable dashboard control, a data quality rule, a report output and a UAT acceptance test.</p>
+                        </div>
+                        <div class="business-flow text-sm">
+                            <div class="business-step">
+                                <div class="font-bold text-slate-900">Capture</div>
+                                <div class="text-slate-500 text-xs mt-1">CRM field validation</div>
+                            </div>
+                            <div class="business-step">
+                                <div class="font-bold text-slate-900">Monitor</div>
+                                <div class="text-slate-500 text-xs mt-1">KPI and quality alerts</div>
+                            </div>
+                            <div class="business-step">
+                                <div class="font-bold text-slate-900">Act</div>
+                                <div class="text-slate-500 text-xs mt-1">Regional actions and tickets</div>
+                            </div>
+                            <div class="business-step">
+                                <div class="font-bold text-slate-900">Report</div>
+                                <div class="text-slate-500 text-xs mt-1">Quarterly DEWR pack</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 xl:grid-cols-[1fr_1.25fr] gap-6 mb-6">
+                    <div class="panel p-5">
+                        <div class="flex justify-between items-start gap-4 mb-4">
+                            <div>
+                                <h3 class="font-bold text-slate-900">Power / Interest Stakeholder Map</h3>
+                                <p class="text-sm text-slate-500">Engagement model for dashboard delivery and adoption.</p>
+                            </div>
+                            <span class="tag bg-teal-50 text-teal-700">Discovery</span>
+                        </div>
+                        <div class="grid grid-cols-2 rounded-lg overflow-hidden">
+                            <div class="matrix-cell bg-blue-50">
+                                <div class="text-xs uppercase tracking-widest text-blue-800 font-bold mb-3">Manage Closely</div>
+                                <span class="stakeholder-pill"><i class="fas fa-user-tie text-blue-700"></i> Head of Operations</span>
+                                <span class="stakeholder-pill"><i class="fas fa-map text-blue-700"></i> Regional Managers</span>
+                            </div>
+                            <div class="matrix-cell bg-slate-50">
+                                <div class="text-xs uppercase tracking-widest text-slate-600 font-bold mb-3">Keep Satisfied</div>
+                                <span class="stakeholder-pill"><i class="fas fa-building-columns text-slate-700"></i> Government Liaison</span>
+                                <span class="stakeholder-pill"><i class="fas fa-database text-slate-700"></i> IT / Data Team</span>
+                            </div>
+                            <div class="matrix-cell bg-emerald-50">
+                                <div class="text-xs uppercase tracking-widest text-emerald-700 font-bold mb-3">Keep Informed</div>
+                                <span class="stakeholder-pill"><i class="fas fa-clipboard-list text-emerald-700"></i> Service Coordinators</span>
+                            </div>
+                            <div class="matrix-cell bg-amber-50">
+                                <div class="text-xs uppercase tracking-widest text-amber-700 font-bold mb-3">Monitor</div>
+                                <span class="stakeholder-pill"><i class="fas fa-users text-amber-700"></i> Job Seekers</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-500 mt-3">
+                            <span>Low power</span>
+                            <span>High power</span>
+                        </div>
+                    </div>
+
+                    <div class="panel p-5">
+                        <h3 class="font-bold text-slate-900 mb-4">Business Requirements Document</h3>
+                        <div class="overflow-auto max-h-[480px]">
+                            <table class="w-full text-sm">
+                                <thead class="table-head sticky top-0">
+                                    <tr>
+                                        <th class="text-left px-4 py-3">ID</th>
+                                        <th class="text-left px-4 py-3">Requirement</th>
+                                        <th class="text-left px-4 py-3">Priority</th>
+                                        <th class="text-left px-4 py-3">Source</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <tr><td class="px-4 py-3 font-bold">FR-01</td><td class="px-4 py-3">Show organisation-wide placement KPI in near real time.</td><td class="px-4 py-3"><span class="tag bg-red-50 text-red-700">P0</span></td><td class="px-4 py-3">Head of Ops</td></tr>
+                                    <tr><td class="px-4 py-3 font-bold">FR-02</td><td class="px-4 py-3">Filter by region, service site and program type.</td><td class="px-4 py-3"><span class="tag bg-red-50 text-red-700">P0</span></td><td class="px-4 py-3">Regional Managers</td></tr>
+                                    <tr><td class="px-4 py-3 font-bold">FR-03</td><td class="px-4 py-3">Display monthly trends for placements, registrations and satisfaction.</td><td class="px-4 py-3"><span class="tag bg-red-50 text-red-700">P0</span></td><td class="px-4 py-3">Head of Ops</td></tr>
+                                    <tr><td class="px-4 py-3 font-bold">FR-04</td><td class="px-4 py-3">Show client journey funnel from registration to placement.</td><td class="px-4 py-3"><span class="tag bg-amber-50 text-amber-700">P1</span></td><td class="px-4 py-3">Government Liaison</td></tr>
+                                    <tr><td class="px-4 py-3 font-bold">FR-05</td><td class="px-4 py-3">Monitor missingness, duplicates and completeness.</td><td class="px-4 py-3"><span class="tag bg-amber-50 text-amber-700">P1</span></td><td class="px-4 py-3">IT / Data Team</td></tr>
+                                    <tr><td class="px-4 py-3 font-bold">FR-06</td><td class="px-4 py-3">Analyse outcomes by youth, long-term unemployed, disability and First Nations cohorts.</td><td class="px-4 py-3"><span class="tag bg-amber-50 text-amber-700">P1</span></td><td class="px-4 py-3">Government Liaison</td></tr>
+                                    <tr><td class="px-4 py-3 font-bold">FR-07</td><td class="px-4 py-3">Export a quarterly performance report for DEWR.</td><td class="px-4 py-3"><span class="tag bg-blue-50 text-blue-700">P2</span></td><td class="px-4 py-3">Government Liaison</td></tr>
+                                    <tr><td class="px-4 py-3 font-bold">FR-08</td><td class="px-4 py-3">Flag placement rates below agreed thresholds.</td><td class="px-4 py-3"><span class="tag bg-blue-50 text-blue-700">P2</span></td><td class="px-4 py-3">Regional Managers</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <div class="panel p-5">
+                        <h3 class="font-bold text-slate-900 mb-4">As-Is Process</h3>
+                        <div class="grid grid-cols-[1fr_42px_1fr_42px_1fr] gap-2 items-stretch">
+                            <div class="flow-node">
+                                <p class="font-bold">Service Sites</p>
+                                <p class="text-sm text-slate-500 mt-1">Manual Excel files and local CSV extracts.</p>
+                            </div>
+                            <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+                            <div class="flow-node">
+                                <p class="font-bold">Head Office Ops</p>
+                                <p class="text-sm text-slate-500 mt-1">Merge 12 spreadsheets and rebuild charts.</p>
+                            </div>
+                            <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+                            <div class="flow-node">
+                                <p class="font-bold">Government Liaison</p>
+                                <p class="text-sm text-slate-500 mt-1">Reformat DEWR report manually.</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 grid grid-cols-2 gap-3">
+                            <div class="rounded-lg bg-red-50 border border-red-100 p-3">
+                                <p class="text-sm font-bold text-red-800">Monthly effort</p>
+                                <p class="text-2xl font-black text-red-700">3 days</p>
+                            </div>
+                            <div class="rounded-lg bg-red-50 border border-red-100 p-3">
+                                <p class="text-sm font-bold text-red-800">Primary risk</p>
+                                <p class="text-sm text-red-700 mt-1">Delayed, inconsistent and error-prone reporting.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel p-5">
+                        <h3 class="font-bold text-slate-900 mb-4">To-Be Process</h3>
+                        <div class="grid grid-cols-[1fr_42px_1fr_42px_1fr] gap-2 items-stretch">
+                            <div class="flow-node">
+                                <p class="font-bold">Validated CRM</p>
+                                <p class="text-sm text-slate-500 mt-1">Standard fields, mandatory values and stage rules.</p>
+                            </div>
+                            <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+                            <div class="flow-node">
+                                <p class="font-bold">Data Layer</p>
+                                <p class="text-sm text-slate-500 mt-1">Clean, deduplicate and score quality daily.</p>
+                            </div>
+                            <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+                            <div class="flow-node">
+                                <p class="font-bold">Dashboard + Report</p>
+                                <p class="text-sm text-slate-500 mt-1">KPI, alerts, actions and DEWR pack.</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 grid grid-cols-2 gap-3">
+                            <div class="rounded-lg bg-emerald-50 border border-emerald-100 p-3">
+                                <p class="text-sm font-bold text-emerald-800">Reporting cycle</p>
+                                <p class="text-2xl font-black text-emerald-700">&lt; 1 hour</p>
+                            </div>
+                            <div class="rounded-lg bg-emerald-50 border border-emerald-100 p-3">
+                                <p class="text-sm font-bold text-emerald-800">Primary gain</p>
+                                <p class="text-sm text-emerald-700 mt-1">Near real-time control with governed exceptions.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel p-5 mt-6">
+                    <h3 class="font-bold text-slate-900 mb-4">Data Dictionary and Validation Rules</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="table-head">
+                                <tr>
+                                    <th class="text-left px-4 py-3">Field</th>
+                                    <th class="text-left px-4 py-3">Type</th>
+                                    <th class="text-left px-4 py-3">Definition</th>
+                                    <th class="text-left px-4 py-3">Source</th>
+                                    <th class="text-left px-4 py-3">Quality Rule</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr><td class="px-4 py-3 font-bold">client_id</td><td class="px-4 py-3">STRING</td><td class="px-4 py-3">Unique client identifier.</td><td class="px-4 py-3">CRM</td><td class="px-4 py-3">Required and unique.</td></tr>
+                                <tr><td class="px-4 py-3 font-bold">registration_date</td><td class="px-4 py-3">DATE</td><td class="px-4 py-3">Client registration date.</td><td class="px-4 py-3">CRM</td><td class="px-4 py-3">Required and not later than today.</td></tr>
+                                <tr><td class="px-4 py-3 font-bold">region</td><td class="px-4 py-3">ENUM</td><td class="px-4 py-3">Service region.</td><td class="px-4 py-3">CRM</td><td class="px-4 py-3">Required, one of five regions.</td></tr>
+                                <tr><td class="px-4 py-3 font-bold">service_site</td><td class="px-4 py-3">STRING</td><td class="px-4 py-3">Service site name.</td><td class="px-4 py-3">CRM</td><td class="px-4 py-3">Required.</td></tr>
+                                <tr><td class="px-4 py-3 font-bold">program_type</td><td class="px-4 py-3">ENUM</td><td class="px-4 py-3">DES, jobactive or TTW.</td><td class="px-4 py-3">CRM</td><td class="px-4 py-3">Required.</td></tr>
+                                <tr><td class="px-4 py-3 font-bold">demographic_group</td><td class="px-4 py-3">ENUM</td><td class="px-4 py-3">Priority cohort category.</td><td class="px-4 py-3">CRM</td><td class="px-4 py-3">Required.</td></tr>
+                                <tr><td class="px-4 py-3 font-bold">current_stage</td><td class="px-4 py-3">ENUM</td><td class="px-4 py-3">Registered, assessed, training, interview or placed.</td><td class="px-4 py-3">CRM</td><td class="px-4 py-3">Required, must follow journey sequence.</td></tr>
+                                <tr><td class="px-4 py-3 font-bold">placement_date</td><td class="px-4 py-3">DATE</td><td class="px-4 py-3">Date of successful placement.</td><td class="px-4 py-3">CRM</td><td class="px-4 py-3">Required for placed clients only.</td></tr>
+                                <tr><td class="px-4 py-3 font-bold">placement_employer</td><td class="px-4 py-3">STRING</td><td class="px-4 py-3">Employer name for placement.</td><td class="px-4 py-3">CRM</td><td class="px-4 py-3">Required for placed clients only.</td></tr>
+                                <tr><td class="px-4 py-3 font-bold">days_to_placement</td><td class="px-4 py-3">INT</td><td class="px-4 py-3">Days between registration and placement.</td><td class="px-4 py-3">Calculated</td><td class="px-4 py-3">Calculated automatically.</td></tr>
+                                <tr><td class="px-4 py-3 font-bold">satisfaction_score</td><td class="px-4 py-3">FLOAT</td><td class="px-4 py-3">Client satisfaction score from 1 to 5.</td><td class="px-4 py-3">Survey System</td><td class="px-4 py-3">Must be within 1-5.</td></tr>
+                                <tr><td class="px-4 py-3 font-bold">case_manager</td><td class="px-4 py-3">STRING</td><td class="px-4 py-3">Responsible employment consultant.</td><td class="px-4 py-3">CRM</td><td class="px-4 py-3">Required.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-funnel" class="page fade-in hidden">
+                <div class="grid grid-cols-1 xl:grid-cols-[1.3fr_1fr] gap-6 mb-6">
+                    <div class="panel p-5">
+                        <div class="flex justify-between items-start gap-4 mb-3">
+                            <div>
+                                <h3 class="font-bold text-slate-900">Client Journey Conversion Funnel</h3>
+                                <p class="text-sm text-slate-500">Stage values update with the global filters.</p>
+                            </div>
+                            <span class="tag bg-blue-50 text-blue-700">FR-04</span>
+                        </div>
+                        <div id="funnelChart" class="h-[430px]"></div>
+                    </div>
+                    <div class="panel p-5">
+                        <h3 class="font-bold text-slate-900 mb-3">Stage Detail</h3>
+                        <div id="stageDetail" class="rounded-lg border border-slate-200 bg-slate-50 p-4 min-h-[170px]"></div>
+                        <h3 class="font-bold text-slate-900 mt-5 mb-3">Average Stage Duration</h3>
+                        <div id="durationChart" class="h-[230px]"></div>
+                    </div>
+                </div>
+
+                <div class="panel p-5">
+                    <div class="flex justify-between items-start gap-4 mb-3">
+                        <div>
+                            <h3 class="font-bold text-slate-900">Outcome Comparison by Priority Cohort</h3>
+                            <p class="text-sm text-slate-500">Supports quarterly equity and program performance review.</p>
+                        </div>
+                        <span class="tag bg-amber-50 text-amber-700">FR-06</span>
+                    </div>
+                    <div id="demographicChart" class="h-[320px]"></div>
+                </div>
+            </section>
+
+            <section id="page-quality" class="page fade-in hidden">
+                <div class="grid grid-cols-1 xl:grid-cols-[0.8fr_1.2fr_1fr] gap-6 mb-6">
+                    <div class="panel p-5">
+                        <div class="flex justify-between items-start gap-4">
+                            <div>
+                                <h3 class="font-bold text-slate-900">Overall Data Quality Score</h3>
+                                <p class="text-sm text-slate-500">Target greater than 95%.</p>
+                            </div>
+                            <span class="tag bg-amber-50 text-amber-700">FR-05</span>
+                        </div>
+                        <div id="gaugeChart" class="h-[260px]"></div>
+                    </div>
+                    <div class="panel p-5">
+                        <h3 class="font-bold text-slate-900 mb-3">Missing Rate by Critical Field</h3>
+                        <div id="missingChart" class="h-[260px]"></div>
+                    </div>
+                    <div class="panel p-5">
+                        <h3 class="font-bold text-slate-900 mb-3">Completeness Trend</h3>
+                        <div id="qualityTrendChart" class="h-[260px]"></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-[1fr_1.4fr] gap-6">
+                    <div class="panel p-5">
+                        <h3 class="font-bold text-slate-900 mb-4">Duplicate Record Detection</h3>
+                        <div class="grid grid-cols-3 gap-3 mb-4">
+                            <div class="rounded-lg bg-slate-50 border border-slate-200 p-3">
+                                <p class="text-xs font-bold text-slate-500 uppercase">Potential duplicates</p>
+                                <p class="text-2xl font-black" id="duplicateCount">31</p>
+                            </div>
+                            <div class="rounded-lg bg-slate-50 border border-slate-200 p-3">
+                                <p class="text-xs font-bold text-slate-500 uppercase">Matched to owner</p>
+                                <p class="text-2xl font-black" id="duplicateOwned">24</p>
+                            </div>
+                            <div class="rounded-lg bg-slate-50 border border-slate-200 p-3">
+                                <p class="text-xs font-bold text-slate-500 uppercase">SLA risk</p>
+                                <p class="text-2xl font-black text-amber-700" id="slaRisk">7</p>
+                            </div>
+                        </div>
+                        <div id="qualityActions" class="space-y-3"></div>
+                    </div>
+
+                    <div class="panel overflow-hidden">
+                        <div class="px-5 py-4 bg-red-50 border-b border-red-100 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-red-800">Exception Queue</h3>
+                                <p class="text-sm text-red-700">Records blocked from automated reporting until corrected.</p>
+                            </div>
+                            <span class="tag bg-red-100 text-red-800" id="exceptionCount">12 open</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="table-head">
+                                    <tr>
+                                        <th class="text-left px-5 py-3">Client ID</th>
+                                        <th class="text-left px-5 py-3">Site</th>
+                                        <th class="text-left px-5 py-3">Issue</th>
+                                        <th class="text-left px-5 py-3">Owner</th>
+                                        <th class="text-left px-5 py-3">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="exceptionRows" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-region" class="page fade-in hidden">
+                <div class="grid grid-cols-1 xl:grid-cols-[1.15fr_0.85fr] gap-6 mb-6">
+                    <div class="panel p-5 australia-map">
+                        <div class="flex justify-between items-start gap-4 mb-4">
+                            <div>
+                                <h3 class="font-bold text-slate-900">Australian Coverage View</h3>
+                                <p class="text-sm text-slate-500">Placement risk view by regional portfolio.</p>
+                            </div>
+                            <span class="tag bg-blue-50 text-blue-700">FR-02</span>
+                        </div>
+                        <svg viewBox="0 0 720 430" role="img" aria-label="Stylised Australia map with five service regions">
+                            <rect x="0" y="0" width="720" height="430" rx="18" fill="#f8fafc"></rect>
+                            <path d="M162 115 C212 58 308 61 370 83 C427 103 452 88 508 118 C574 153 592 214 565 267 C536 324 478 326 427 352 C381 376 312 382 270 351 C229 321 205 307 163 312 C119 318 88 291 96 245 C103 204 127 156 162 115 Z" fill="#dbeafe" stroke="#93c5fd" stroke-width="3"></path>
+                            <path d="M482 336 C511 348 525 368 514 389 C502 411 459 411 446 388 C435 368 453 344 482 336 Z" fill="#dbeafe" stroke="#93c5fd" stroke-width="3"></path>
+                            <g class="region-marker" id="map-marker-WA" onclick="selectRegion('WA')">
+                                <circle cx="182" cy="226" r="18" fill="#dc2626"></circle>
+                                <text x="182" y="231" text-anchor="middle" font-size="13" fill="white" font-weight="800">WA</text>
+                                <text x="182" y="260" text-anchor="middle" class="map-risk-label" id="map-label-WA">WA 58%</text>
+                            </g>
+                            <g class="region-marker" id="map-marker-SA" onclick="selectRegion('SA')">
+                                <circle cx="330" cy="267" r="18" fill="#b45309"></circle>
+                                <text x="330" y="272" text-anchor="middle" font-size="13" fill="white" font-weight="800">SA</text>
+                                <text x="330" y="296" text-anchor="middle" class="map-risk-label" id="map-label-SA">SA 62%</text>
+                            </g>
+                            <g class="region-marker" id="map-marker-QLD" onclick="selectRegion('QLD')">
+                                <circle cx="478" cy="163" r="18" fill="#0f766e"></circle>
+                                <text x="478" y="168" text-anchor="middle" font-size="13" fill="white" font-weight="800">QLD</text>
+                                <text x="478" y="136" text-anchor="middle" class="map-risk-label" id="map-label-QLD">QLD 75%</text>
+                            </g>
+                            <g class="region-marker" id="map-marker-NSW" onclick="selectRegion('NSW')">
+                                <circle cx="492" cy="250" r="18" fill="#2563eb"></circle>
+                                <text x="492" y="255" text-anchor="middle" font-size="13" fill="white" font-weight="800">NSW</text>
+                                <text x="552" y="254" text-anchor="middle" class="map-risk-label" id="map-label-NSW">NSW 70%</text>
+                            </g>
+                            <g class="region-marker" id="map-marker-VIC" onclick="selectRegion('VIC')">
+                                <circle cx="450" cy="313" r="18" fill="#7c3aed"></circle>
+                                <text x="450" y="318" text-anchor="middle" font-size="13" fill="white" font-weight="800">VIC</text>
+                                <text x="450" y="346" text-anchor="middle" class="map-risk-label" id="map-label-VIC">VIC 65%</text>
+                            </g>
+                            <text x="28" y="390" font-size="13" fill="#64748b">Marker colour and labels reflect placement rate against the 60% threshold.</text>
+                        </svg>
+                    </div>
+
+                    <div class="panel p-5">
+                        <h3 class="font-bold text-slate-900 mb-4">Selected Region Detail</h3>
+                        <div id="selectedRegionCard" class="space-y-4"></div>
+                    </div>
+                </div>
+
+                <div class="panel p-5">
+                    <div class="flex justify-between items-start gap-4 mb-4">
+                        <div>
+                            <h3 class="font-bold text-slate-900">Regional Ranking and Service Site View</h3>
+                            <p class="text-sm text-slate-500">Ranking combines placement rate, data quality and satisfaction.</p>
+                        </div>
+                        <span class="tag bg-emerald-50 text-emerald-700">Operating Review</span>
+                    </div>
+                    <div id="rankingChart" class="h-[360px]"></div>
+                </div>
+            </section>
+
+            <section id="page-delivery" class="page fade-in hidden">
+                <div class="grid grid-cols-1 xl:grid-cols-[1fr_1fr] gap-6 mb-6">
+                    <div class="panel p-5">
+                        <div class="flex justify-between items-start gap-4 mb-4">
+                            <div>
+                                <h3 class="font-bold text-slate-900">Quarterly DEWR Report Pack</h3>
+                                <p class="text-sm text-slate-500">Report preview uses the current filter context.</p>
+                            </div>
+                            <button onclick="openReportPreview()" class="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-3 py-2 text-sm font-bold">
+                                Preview Pack
+                            </button>
+                        </div>
+                        <div class="rounded-lg border border-slate-200 bg-slate-50 p-5">
+                            <div class="flex items-start justify-between gap-4">
+                                <div>
+                                    <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Included Pages</p>
+                                    <h4 class="text-xl font-bold mt-1">KPI summary, trend charts, funnel, data quality, exception register and action log.</h4>
+                                </div>
+                                <i class="fas fa-file-pdf text-3xl text-red-600"></i>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 mt-5">
+                                <div class="bg-white rounded-lg border border-slate-200 p-3">
+                                    <p class="text-xs font-bold text-slate-500 uppercase">Owner</p>
+                                    <p class="font-bold mt-1">Government Liaison</p>
+                                </div>
+                                <div class="bg-white rounded-lg border border-slate-200 p-3">
+                                    <p class="text-xs font-bold text-slate-500 uppercase">Cadence</p>
+                                    <p class="font-bold mt-1">Quarterly</p>
+                                </div>
+                                <div class="bg-white rounded-lg border border-slate-200 p-3">
+                                    <p class="text-xs font-bold text-slate-500 uppercase">Data refresh</p>
+                                    <p class="font-bold mt-1">Daily</p>
+                                </div>
+                                <div class="bg-white rounded-lg border border-slate-200 p-3">
+                                    <p class="text-xs font-bold text-slate-500 uppercase">Access model</p>
+                                    <p class="font-bold mt-1">Role-based</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel p-5">
+                        <h3 class="font-bold text-slate-900 mb-4">Implementation Roadmap</h3>
+                        <div class="space-y-3">
+                            <div class="flex gap-3"><span class="tag bg-blue-50 text-blue-700">Weeks 1-2</span><div><p class="font-bold">Discovery</p><p class="text-sm text-slate-500">Stakeholder interviews and requirement validation.</p></div></div>
+                            <div class="flex gap-3"><span class="tag bg-teal-50 text-teal-700">Weeks 3-4</span><div><p class="font-bold">Design</p><p class="text-sm text-slate-500">Data dictionary, process design and dashboard wireframes.</p></div></div>
+                            <div class="flex gap-3"><span class="tag bg-amber-50 text-amber-700">Weeks 5-8</span><div><p class="font-bold">Build</p><p class="text-sm text-slate-500">Interactive dashboard, data pipeline and quality rules.</p></div></div>
+                            <div class="flex gap-3"><span class="tag bg-purple-50 text-purple-700">Week 9</span><div><p class="font-bold">UAT</p><p class="text-sm text-slate-500">Scenario testing, fixes and stakeholder sign-off.</p></div></div>
+                            <div class="flex gap-3"><span class="tag bg-emerald-50 text-emerald-700">Week 10</span><div><p class="font-bold">Go-Live</p><p class="text-sm text-slate-500">Deployment, training and handover pack.</p></div></div>
+                            <div class="flex gap-3"><span class="tag bg-slate-100 text-slate-700">Week 12</span><div><p class="font-bold">Review</p><p class="text-sm text-slate-500">Benefits review and optimisation backlog.</p></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-[1.1fr_0.9fr] gap-6">
+                    <div class="panel p-5">
+                        <h3 class="font-bold text-slate-900 mb-4">UAT Plan</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="table-head">
+                                    <tr>
+                                        <th class="text-left px-4 py-3">Test Scenario</th>
+                                        <th class="text-left px-4 py-3">Expected Result</th>
+                                        <th class="text-left px-4 py-3">Acceptance Standard</th>
+                                        <th class="text-left px-4 py-3">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <tr><td class="px-4 py-3">Select Queensland.</td><td class="px-4 py-3">Only QLD values are shown.</td><td class="px-4 py-3">All charts refresh consistently.</td><td class="px-4 py-3"><span class="tag bg-emerald-50 text-emerald-700">Pass</span></td></tr>
+                                    <tr><td class="px-4 py-3">Switch time range to Last Quarter.</td><td class="px-4 py-3">KPI and trends use quarter context.</td><td class="px-4 py-3">Numbers match report preview.</td><td class="px-4 py-3"><span class="tag bg-emerald-50 text-emerald-700">Pass</span></td></tr>
+                                    <tr><td class="px-4 py-3">Review fields above 10% missingness.</td><td class="px-4 py-3">High-risk fields are highlighted red.</td><td class="px-4 py-3">Exception queue shows owners.</td><td class="px-4 py-3"><span class="tag bg-emerald-50 text-emerald-700">Pass</span></td></tr>
+                                    <tr><td class="px-4 py-3">Select the Training funnel stage.</td><td class="px-4 py-3">Stage detail updates.</td><td class="px-4 py-3">Count reconciles to funnel total.</td><td class="px-4 py-3"><span class="tag bg-emerald-50 text-emerald-700">Pass</span></td></tr>
+                                    <tr><td class="px-4 py-3">Generate DEWR PDF preview.</td><td class="px-4 py-3">Formatted pack is created.</td><td class="px-4 py-3">All KPIs and charts are listed.</td><td class="px-4 py-3"><span class="tag bg-blue-50 text-blue-700">Ready</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="panel p-5">
+                        <h3 class="font-bold text-slate-900 mb-4">Success Metrics</h3>
+                        <div id="successMetrics" class="space-y-3"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="reportModal" class="modal-backdrop">
+        <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-start gap-4">
+                <div>
+                    <p class="text-xs uppercase tracking-widest text-blue-700 font-bold">DEWR Quarterly Pack Preview</p>
+                    <h3 class="text-xl font-bold text-slate-900" id="reportTitle">Altivio Employment Services Performance Report</h3>
+                </div>
+                <button onclick="closeReportPreview()" class="w-9 h-9 rounded-md border border-slate-200 hover:bg-slate-50" aria-label="Close report preview">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 max-h-[74vh] overflow-y-auto bg-slate-50">
+                <div class="space-y-4" id="reportPackPages"></div>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button onclick="closeReportPreview()" class="px-4 py-2 rounded-md border border-slate-300 text-sm font-bold">Close</button>
+                    <button onclick="simulatePdfBuild()" id="buildPdfBtn" class="px-4 py-2 rounded-md bg-blue-600 text-white text-sm font-bold flex items-center gap-2">
+                        <i class="fas fa-file-export"></i> Build PDF Preview
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-5 right-5 bg-emerald-700 text-white px-5 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-y-20 opacity-0 z-50">
+        <div class="flex items-start gap-3">
+            <i class="fas fa-check-circle mt-1"></i>
+            <div>
+                <p class="font-bold text-sm">Quarterly pack preview built</p>
+                <p class="text-xs text-emerald-100">The selected context is ready for DEWR review.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const formatNumber = value => new Intl.NumberFormat('en-AU').format(Math.round(value));
+        const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+        const regionData = {
+            All: {
+                label: 'All Regions',
+                sites: 12,
+                registrations: 8245,
+                rate: 68.4,
+                days: 42,
+                satisfaction: 4.7,
+                quality: 92,
+                monthlyRegistrations: [1200, 1320, 1010, 1340, 1600, 1775],
+                monthlyPlacements: [780, 850, 680, 950, 1100, 1215],
+                serviceSites: ['Brisbane CBD', 'Sydney West', 'Melbourne North', 'Perth East', 'Adelaide Metro'],
+                notes: 'National portfolio across five operating regions.'
+            },
+            QLD: {
+                label: 'Queensland',
+                sites: 3,
+                registrations: 1830,
+                rate: 75,
+                days: 38,
+                satisfaction: 4.8,
+                quality: 94,
+                monthlyRegistrations: [245, 292, 235, 301, 355, 402],
+                monthlyPlacements: [182, 211, 171, 224, 271, 309],
+                serviceSites: ['Brisbane CBD', 'Gold Coast', 'Townsville'],
+                notes: 'Highest conversion rate, strongest employer engagement.'
+            },
+            NSW: {
+                label: 'New South Wales',
+                sites: 3,
+                registrations: 2010,
+                rate: 70,
+                days: 41,
+                satisfaction: 4.6,
+                quality: 91,
+                monthlyRegistrations: [301, 315, 254, 325, 390, 425],
+                monthlyPlacements: [210, 222, 177, 229, 276, 299],
+                serviceSites: ['Sydney West', 'Parramatta', 'Newcastle'],
+                notes: 'High volume region with stable placement performance.'
+            },
+            VIC: {
+                label: 'Victoria',
+                sites: 2,
+                registrations: 1645,
+                rate: 65,
+                days: 44,
+                satisfaction: 4.5,
+                quality: 90,
+                monthlyRegistrations: [232, 261, 202, 275, 325, 350],
+                monthlyPlacements: [151, 169, 130, 177, 211, 228],
+                serviceSites: ['Melbourne North', 'Geelong'],
+                notes: 'Improving after targeted case-manager coaching.'
+            },
+            WA: {
+                label: 'Western Australia',
+                sites: 2,
+                registrations: 1510,
+                rate: 58,
+                days: 49,
+                satisfaction: 4.2,
+                quality: 88,
+                monthlyRegistrations: [226, 237, 186, 251, 295, 315],
+                monthlyPlacements: [128, 136, 106, 144, 172, 185],
+                serviceSites: ['Perth East', 'Fremantle'],
+                notes: 'Below placement threshold; action plan active.'
+            },
+            SA: {
+                label: 'South Australia',
+                sites: 2,
+                registrations: 1250,
+                rate: 62,
+                days: 46,
+                satisfaction: 4.3,
+                quality: 89,
+                monthlyRegistrations: [196, 215, 133, 188, 235, 283],
+                monthlyPlacements: [109, 112, 96, 122, 170, 194],
+                serviceSites: ['Adelaide Metro', 'Elizabeth'],
+                notes: 'Moderate placement rate with data quality backlog.'
+            }
+        };
+
+        const programAdjustments = {
+            All: { label: 'All Programs', volume: 1, rate: 0, days: 0, satisfaction: 0, quality: 0 },
+            jobactive: { label: 'jobactive', volume: 0.52, rate: 2.5, days: -3, satisfaction: 0.0, quality: 1 },
+            DES: { label: 'DES', volume: 0.28, rate: -5.8, days: 7, satisfaction: -0.1, quality: -2 },
+            TTW: { label: 'Transition to Work', volume: 0.20, rate: 4.2, days: -5, satisfaction: 0.1, quality: 0 }
+        };
+
+        const timeAdjustments = {
+            ytd: { label: 'Year to Date', volume: 1, rate: 0, days: 0, trendLabels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'] },
+            quarter: { label: 'Last Quarter', volume: 0.46, rate: -1.2, days: 1, trendLabels: ['Q-3 Jan', 'Q-3 Feb', 'Q-3 Mar', 'Q-2 Apr', 'Q-2 May', 'Q-2 Jun'] },
+            month: { label: 'This Month', volume: 0.16, rate: 1.4, days: -1, trendLabels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Current'] }
+        };
+
+        const regions = ['QLD', 'NSW', 'VIC', 'WA', 'SA'];
+        const pageIds = ['overview', 'stakeholders', 'funnel', 'quality', 'region', 'delivery'];
+        let currentStage = 'Training';
+        let charts = {};
+        let currentMetrics = {};
+
+        function getFilters() {
+            return {
+                region: document.getElementById('regionFilter').value,
+                program: document.getElementById('programFilter').value,
+                time: document.getElementById('timeFilter').value
+            };
+        }
+
+        function calculateMetrics() {
+            const filters = getFilters();
+            const base = regionData[filters.region];
+            const program = programAdjustments[filters.program];
+            const time = timeAdjustments[filters.time];
+            const registrations = Math.round(base.registrations * program.volume * time.volume);
+            const rate = clamp(base.rate + program.rate + time.rate, 48, 82);
+            const placements = Math.round(registrations * rate / 100);
+            const days = Math.round(clamp(base.days + program.days + time.days, 24, 65));
+            const satisfaction = clamp(base.satisfaction + program.satisfaction, 3.7, 4.9);
+            const quality = Math.round(clamp(base.quality + program.quality - (filters.time === 'month' ? 1 : 0), 82, 98));
+            const qualityGap = Math.max(0, 95 - quality);
+
+            return {
+                filters,
+                base,
+                program,
+                time,
+                registrations,
+                placements,
+                rate,
+                days,
+                satisfaction,
+                quality,
+                qualityGap
+            };
+        }
+
+        function switchTab(tabId) {
+            pageIds.forEach(id => {
+                document.getElementById('page-' + id).classList.add('hidden');
+                document.getElementById('nav-' + id).classList.remove('nav-active');
+                document.getElementById('mobile-nav-' + id).classList.remove('nav-active');
+            });
+            document.getElementById('page-' + tabId).classList.remove('hidden');
+            document.getElementById('nav-' + tabId).classList.add('nav-active');
+            document.getElementById('mobile-nav-' + tabId).classList.add('nav-active');
+            setTimeout(resizeCharts, 80);
+        }
+
+        function selectRegion(region) {
+            document.getElementById('regionFilter').value = region;
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            currentMetrics = calculateMetrics();
+            updateContextStrip(currentMetrics);
+            updateChartHeaders(currentMetrics);
+            updateKpis(currentMetrics);
+            updateTrendChart(currentMetrics);
+            updateRegionChart(currentMetrics);
+            updateActionRegister(currentMetrics);
+            updateFunnelChart(currentMetrics);
+            updateDurationChart(currentMetrics);
+            updateDemographicChart(currentMetrics);
+            updateQualityCharts(currentMetrics);
+            updateExceptions(currentMetrics);
+            updateRegionDetail(currentMetrics);
+            updateRankingChart(currentMetrics);
+            updateSuccessMetrics();
+            updateReportPreviewContent(currentMetrics);
+            resizeCharts();
+        }
+
+        function getRegionRate(region, metrics) {
+            return clamp(regionData[region].rate + metrics.program.rate + metrics.time.rate, 48, 82);
+        }
+
+        function getRiskColor(rate) {
+            if (rate < 60) return '#dc2626';
+            if (rate < 65) return '#b45309';
+            return '#0f766e';
+        }
+
+        function getTrendTitle(metrics) {
+            if (metrics.filters.time === 'quarter') return 'Last Quarter Registration and Placement Trend';
+            if (metrics.filters.time === 'month') return 'This Month Registration and Placement Trend';
+            return 'YTD Registration and Placement Trend';
+        }
+
+        function updateChartHeaders(metrics) {
+            document.getElementById('trendTitle').textContent = getTrendTitle(metrics);
+            document.getElementById('trendSubtitle').textContent = `${metrics.time.label} view for ${metrics.base.label} and ${metrics.program.label}.`;
+            const regionalMode = metrics.filters.region === 'All';
+            document.getElementById('regionChartTitle').textContent = regionalMode
+                ? 'Regional Placement Rate Comparison'
+                : `${metrics.base.label} Service Site Placement Comparison`;
+            document.getElementById('regionChartSubtitle').textContent = regionalMode
+                ? 'Any region below 60% is flagged for regional review.'
+                : 'Service sites inherit the same 60% operating threshold.';
+        }
+
+        function updateContextStrip(metrics) {
+            const readiness = metrics.quality >= 95 ? 'DEWR-ready context' : 'Remediation context';
+            const riskLabel = metrics.rate < 60 ? 'Placement risk active' : 'Placement on track';
+            const riskClass = metrics.rate < 60 ? 'text-red-700 bg-red-50 border-red-100' : 'text-emerald-700 bg-emerald-50 border-emerald-100';
+            document.getElementById('contextTitle').textContent = `Viewing: ${metrics.time.label} / ${metrics.base.label} / ${metrics.program.label}`;
+            document.getElementById('contextMeta').textContent = `T+1 refresh · ${metrics.base.sites} sites · ${readiness}`;
+            document.getElementById('contextChips').innerHTML = [
+                { icon: 'fa-calendar', text: metrics.time.label, cls: 'text-slate-700 bg-slate-50 border-slate-200' },
+                { icon: 'fa-location-dot', text: metrics.base.label, cls: 'text-blue-700 bg-blue-50 border-blue-100' },
+                { icon: 'fa-briefcase', text: metrics.program.label, cls: 'text-teal-700 bg-teal-50 border-teal-100' },
+                { icon: metrics.rate < 60 ? 'fa-triangle-exclamation' : 'fa-circle-check', text: riskLabel, cls: riskClass }
+            ].map(item => `
+                <span class="context-chip ${item.cls}">
+                    <i class="fas ${item.icon}"></i>${item.text}
+                </span>
+            `).join('');
+        }
+
+        function updateKpis(metrics) {
+            document.getElementById('kpiRegistrations').textContent = formatNumber(metrics.registrations);
+            document.getElementById('kpiPlacementRate').textContent = metrics.rate.toFixed(1) + '%';
+            document.getElementById('kpiDays').textContent = metrics.days;
+            document.getElementById('kpiSatisfaction').textContent = metrics.satisfaction.toFixed(1) + ' / 5.0';
+
+            const placementClass = metrics.rate >= 60 ? 'text-emerald-700' : 'text-red-700';
+            const placementText = metrics.rate >= 60 ? 'On track' : 'Below threshold';
+            document.getElementById('kpiPlacementStatus').innerHTML = `<span class="${placementClass} font-bold">${placementText}</span> against 60% threshold`;
+            document.getElementById('kpiDaysDelta').innerHTML = metrics.days <= 42
+                ? '<span class="text-emerald-700 font-bold">On target</span> against 42-day benchmark'
+                : `<span class="text-red-700 font-bold">+${metrics.days - 42} days</span> above benchmark`;
+            document.getElementById('kpiSatisfactionStatus').innerHTML = metrics.satisfaction >= 4
+                ? '<span class="text-emerald-700 font-bold">Above target</span> target 4.0+'
+                : '<span class="text-red-700 font-bold">Below target</span> target 4.0+';
+            document.getElementById('kpiRegistrationDelta').innerHTML = metrics.filters.time === 'month'
+                ? '<span class="text-emerald-700 font-bold">+4.5%</span> month to date'
+                : '<span class="text-emerald-700 font-bold">+12.0%</span> vs prior period';
+        }
+
+        function scaledSeries(series, metrics, placement = false) {
+            const programFactor = metrics.program.volume;
+            const timeFactor = metrics.filters.time === 'month' ? 0.18 : metrics.filters.time === 'quarter' ? 0.48 : 1;
+            return series.map((value, index) => {
+                const baseValue = value * programFactor * timeFactor;
+                return Math.max(8, Math.round(placement ? baseValue * (0.94 + index * 0.014) : baseValue));
+            });
+        }
+
+        function updateTrendChart(metrics) {
+            charts.trend.setOption({
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['Registrations', 'Placements'], bottom: 0 },
+                grid: { left: 35, right: 24, top: 28, bottom: 54, containLabel: true },
+                xAxis: { type: 'category', boundaryGap: false, data: metrics.time.trendLabels },
+                yAxis: { type: 'value' },
+                color: ['#94a3b8', '#2563eb'],
+                series: [
+                    { name: 'Registrations', type: 'line', smooth: true, symbolSize: 7, data: scaledSeries(metrics.base.monthlyRegistrations, metrics) },
+                    { name: 'Placements', type: 'line', smooth: true, symbolSize: 7, areaStyle: { opacity: 0.16 }, data: scaledSeries(metrics.base.monthlyPlacements, metrics, true) }
+                ]
+            });
+        }
+
+        function updateRegionChart(metrics) {
+            const selected = metrics.filters.region;
+            const labels = selected === 'All' ? regions : metrics.base.serviceSites;
+            const values = selected === 'All'
+                ? regions.map(region => getRegionRate(region, metrics))
+                : metrics.base.serviceSites.map((site, index) => clamp(metrics.base.rate + metrics.program.rate + metrics.time.rate + [2, -1.5, 0.8][index % 3], 48, 82));
+
+            charts.region.setOption({
+                tooltip: { trigger: 'axis', formatter: params => `${params[0].name}: ${params[0].value.toFixed(1)}%` },
+                grid: { left: 35, right: 24, top: 20, bottom: 40, containLabel: true },
+                xAxis: { type: 'category', data: labels },
+                yAxis: { type: 'value', max: 100, axisLabel: { formatter: '{value}%' } },
+                series: [{
+                    type: 'bar',
+                    barWidth: '42%',
+                    data: values.map(value => ({
+                        value,
+                        itemStyle: { color: getRiskColor(value) }
+                    })),
+                    label: { show: true, position: 'top', formatter: value => `${value.value.toFixed(1)}%` },
+                    markLine: {
+                        data: [{ yAxis: 60, name: 'Threshold' }],
+                        lineStyle: { color: '#dc2626', type: 'dashed' },
+                        label: { formatter: '60% threshold' }
+                    }
+                }]
+            });
+        }
+
+        function updateActionRegister(metrics) {
+            const regionLabel = metrics.base.label;
+            const placementRisk = metrics.rate < 60;
+            const qualityRisk = metrics.quality < 95;
+            const actions = [
+                {
+                    icon: placementRisk ? 'fa-triangle-exclamation' : 'fa-circle-check',
+                    color: placementRisk ? 'text-red-700 bg-red-50 border-red-100' : 'text-emerald-700 bg-emerald-50 border-emerald-100',
+                    title: placementRisk ? `${regionLabel} placement rate is below 60%` : `${regionLabel} placement rate is within threshold`,
+                    detail: placementRisk ? 'Regional Manager to run case review and employer pipeline check.' : 'Continue weekly monitoring cadence.'
+                },
+                {
+                    icon: qualityRisk ? 'fa-database' : 'fa-shield',
+                    color: qualityRisk ? 'text-amber-700 bg-amber-50 border-amber-100' : 'text-emerald-700 bg-emerald-50 border-emerald-100',
+                    title: qualityRisk ? `Data quality is ${metrics.quality}%` : `Data quality is above control threshold`,
+                    detail: qualityRisk ? 'IT / Data Team to resolve missing demographic and employer fields.' : 'Quality rules are ready for report generation.'
+                },
+                {
+                    icon: 'fa-file-pdf',
+                    color: 'text-blue-700 bg-blue-50 border-blue-100',
+                    title: 'DEWR quarterly pack can be generated',
+                    detail: `${metrics.time.label}, ${regionLabel}, ${metrics.program.label}.`
+                }
+            ];
+
+            document.getElementById('actionRegister').innerHTML = actions.map(action => `
+                <div class="rounded-lg border p-3 ${action.color}">
+                    <div class="flex gap-3">
+                        <i class="fas ${action.icon} mt-1"></i>
+                        <div>
+                            <p class="font-bold">${action.title}</p>
+                            <p class="text-sm opacity-85 mt-1">${action.detail}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getFunnelData(metrics) {
+            const registered = metrics.registrations;
+            return [
+                { name: 'Registered', value: registered, rate: 100 },
+                { name: 'Assessed', value: Math.round(registered * 0.95), rate: 95 },
+                { name: 'Training', value: Math.round(registered * 0.79), rate: 79 },
+                { name: 'Interview', value: Math.round(registered * 0.59), rate: 59 },
+                { name: 'Placed', value: metrics.placements, rate: metrics.rate }
+            ];
+        }
+
+        function updateFunnelChart(metrics) {
+            const funnelData = getFunnelData(metrics);
+            charts.funnel.setOption({
+                tooltip: {
+                    trigger: 'item',
+                    formatter: params => `${params.name}<br>${formatNumber(params.value)} clients`
+                },
+                series: [{
+                    name: 'Client Journey',
+                    type: 'funnel',
+                    left: '8%',
+                    top: 24,
+                    bottom: 24,
+                    width: '84%',
+                    min: 0,
+                    max: Math.max(metrics.registrations, 1),
+                    minSize: '18%',
+                    maxSize: '100%',
+                    sort: 'descending',
+                    gap: 3,
+                    label: { show: true, position: 'inside', formatter: params => `${params.name}: ${formatNumber(params.value)}` },
+                    data: funnelData.map((item, index) => ({
+                        value: item.value,
+                        name: item.name,
+                        itemStyle: {
+                            color: item.name === currentStage ? '#172033' : ['#bfdbfe', '#93c5fd', '#60a5fa', '#2563eb', '#1d4ed8'][index],
+                            borderColor: item.name === currentStage ? '#f59e0b' : '#fff',
+                            borderWidth: item.name === currentStage ? 3 : 1
+                        },
+                        label: {
+                            color: item.name === currentStage ? '#fff' : undefined,
+                            fontWeight: item.name === currentStage ? 900 : 700
+                        }
+                    }))
+                }]
+            });
+
+            charts.funnel.off('click');
+            charts.funnel.on('click', params => {
+                currentStage = params.name;
+                updateFunnelChart(metrics);
+                updateStageDetail(metrics);
+            });
+            updateStageDetail(metrics);
+        }
+
+        function updateStageDetail(metrics) {
+            const funnelData = getFunnelData(metrics);
+            const stage = funnelData.find(item => item.name === currentStage) || funnelData[2];
+            const previousIndex = funnelData.findIndex(item => item.name === stage.name) - 1;
+            const previous = previousIndex >= 0 ? funnelData[previousIndex] : null;
+            const dropOff = previous ? Math.max(0, previous.value - stage.value) : 0;
+            document.getElementById('stageDetail').innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Selected Stage</p>
+                        <h4 class="text-2xl font-bold text-slate-900 mt-1">Selected: ${stage.name}</h4>
+                    </div>
+                    <span class="tag bg-blue-50 text-blue-700">${stage.rate.toFixed(1)}%</span>
+                </div>
+                <div class="grid grid-cols-2 gap-3 mt-4">
+                    <div class="bg-white rounded-lg border border-slate-200 p-3">
+                        <p class="text-xs font-bold text-slate-500 uppercase">Clients</p>
+                        <p class="text-xl font-black">${formatNumber(stage.value)}</p>
+                    </div>
+                    <div class="bg-white rounded-lg border border-slate-200 p-3">
+                        <p class="text-xs font-bold text-slate-500 uppercase">Drop-off</p>
+                        <p class="text-xl font-black">${formatNumber(dropOff)}</p>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-600 mt-4">Owner: ${stage.name === 'Placed' ? 'Regional Managers' : 'Service Coordinators'}. Control: reconcile stage counts to CRM workflow status.</p>
+            `;
+        }
+
+        function updateDurationChart(metrics) {
+            charts.duration.setOption({
+                tooltip: { trigger: 'axis' },
+                grid: { left: 35, right: 18, top: 14, bottom: 36, containLabel: true },
+                xAxis: { type: 'category', data: ['Register', 'Assess', 'Train', 'Interview', 'Place'] },
+                yAxis: { type: 'value', name: 'Days' },
+                color: ['#0f766e'],
+                series: [{
+                    type: 'bar',
+                    barWidth: '45%',
+                    data: [2, 5, Math.max(8, metrics.days - 24), 9, 8],
+                    itemStyle: { color: params => params.value > 14 ? '#b45309' : '#0f766e' },
+                    label: { show: true, position: 'top' }
+                }]
+            });
+        }
+
+        function updateDemographicChart(metrics) {
+            const baseRate = metrics.rate;
+            charts.demographic.setOption({
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['Placement Rate', 'Satisfaction'], bottom: 0 },
+                grid: { left: 42, right: 28, top: 28, bottom: 56, containLabel: true },
+                xAxis: { type: 'category', data: ['Youth', 'Long-term Unemployed', 'Disability', 'First Nations'] },
+                yAxis: [{ type: 'value', max: 100, axisLabel: { formatter: '{value}%' } }, { type: 'value', max: 5 }],
+                series: [
+                    {
+                        name: 'Placement Rate',
+                        type: 'bar',
+                        barWidth: '38%',
+                        data: [baseRate + 4, baseRate - 3, baseRate - 8, baseRate - 2].map(value => clamp(value, 40, 86)),
+                        itemStyle: { color: '#2563eb' },
+                        label: { show: true, position: 'top', formatter: value => `${value.value.toFixed(1)}%` }
+                    },
+                    {
+                        name: 'Satisfaction',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        smooth: true,
+                        data: [metrics.satisfaction + 0.1, metrics.satisfaction - 0.1, metrics.satisfaction - 0.2, metrics.satisfaction].map(value => Number(clamp(value, 3.5, 5).toFixed(1))),
+                        itemStyle: { color: '#0f766e' }
+                    }
+                ]
+            });
+        }
+
+        function updateQualityCharts(metrics) {
+            const gaugeColor = metrics.quality >= 95 ? '#16a34a' : metrics.quality >= 90 ? '#b45309' : '#dc2626';
+            charts.gauge.setOption({
+                series: [{
+                    type: 'gauge',
+                    startAngle: 180,
+                    endAngle: 0,
+                    min: 0,
+                    max: 100,
+                    pointer: { show: false },
+                    progress: { show: true, overlap: false, roundCap: true, itemStyle: { color: gaugeColor } },
+                    axisLine: { lineStyle: { width: 22, color: [[1, '#e2e8f0']] } },
+                    splitLine: { show: false },
+                    axisTick: { show: false },
+                    axisLabel: { show: false },
+                    detail: { formatter: '{value}%', fontSize: 32, fontWeight: 900, color: '#172033', offsetCenter: [0, '-8%'] },
+                    title: { offsetCenter: [0, '24%'], fontSize: 13, color: '#64748b' },
+                    data: [{ value: metrics.quality, name: metrics.quality >= 95 ? 'Report ready' : 'Remediation required' }]
+                }]
+            });
+
+            const missing = [
+                { name: 'service_site', value: 1.2 + metrics.qualityGap * 0.08 },
+                { name: 'placement_employer', value: 3.5 + metrics.qualityGap * 0.18 },
+                { name: 'case_manager', value: 4.1 + metrics.qualityGap * 0.12 },
+                { name: 'demographic_group', value: 8.6 + metrics.qualityGap * 0.65 }
+            ];
+
+            charts.missing.setOption({
+                tooltip: { trigger: 'axis', formatter: params => `${params[0].name}: ${params[0].value.toFixed(1)}% missing` },
+                grid: { left: 110, right: 28, top: 20, bottom: 28 },
+                xAxis: { type: 'value', max: 18, axisLabel: { formatter: '{value}%' } },
+                yAxis: { type: 'category', data: missing.map(item => item.name) },
+                series: [{
+                    type: 'bar',
+                    data: missing.map(item => ({
+                        value: Number(item.value.toFixed(1)),
+                        itemStyle: { color: item.value > 10 ? '#dc2626' : '#b45309' }
+                    })),
+                    label: { show: true, position: 'right', formatter: value => `${value.value.toFixed(1)}%` }
+                }]
+            });
+
+            charts.qualityTrend.setOption({
+                tooltip: { trigger: 'axis' },
+                grid: { left: 35, right: 18, top: 18, bottom: 36, containLabel: true },
+                xAxis: { type: 'category', data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'] },
+                yAxis: { type: 'value', min: 80, max: 100, axisLabel: { formatter: '{value}%' } },
+                color: ['#0f766e'],
+                series: [{
+                    type: 'line',
+                    smooth: true,
+                    areaStyle: { opacity: 0.12 },
+                    data: [86, 88, 89, 90, Math.max(90, metrics.quality - 1), metrics.quality],
+                    markLine: {
+                        data: [{ yAxis: 95, name: 'Target' }],
+                        lineStyle: { color: '#16a34a', type: 'dashed' }
+                    }
+                }]
+            });
+
+            const duplicates = Math.max(4, Math.round((100 - metrics.quality) * 3.8));
+            document.getElementById('duplicateCount').textContent = duplicates;
+            document.getElementById('duplicateOwned').textContent = Math.max(0, duplicates - 7);
+            document.getElementById('slaRisk').textContent = Math.min(9, Math.max(1, Math.round(duplicates * 0.22)));
+
+            document.getElementById('qualityActions').innerHTML = [
+                { title: 'Mandatory demographic group validation', status: metrics.quality >= 95 ? 'Complete' : 'In progress' },
+                { title: 'Placed-stage employer and date check', status: 'Released' },
+                { title: 'Duplicate matching review queue', status: duplicates > 15 ? 'Open' : 'Monitored' }
+            ].map(item => `
+                <div class="rounded-lg border border-slate-200 p-3 bg-slate-50 flex justify-between gap-3">
+                    <p class="font-bold text-sm">${item.title}</p>
+                    <span class="tag ${item.status === 'Open' ? 'bg-red-50 text-red-700' : item.status === 'In progress' ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'}">${item.status}</span>
+                </div>
+            `).join('');
+        }
+
+        function updateExceptions(metrics) {
+            const openCount = Math.max(3, Math.round((100 - metrics.quality) * 1.5));
+            document.getElementById('exceptionCount').textContent = `${openCount} open`;
+            const site = metrics.base.serviceSites[0];
+            const rows = [
+                ['CLI-9021', site, 'Placement date before registration date', 'Case Manager', 'Blocked'],
+                ['CLI-8832', metrics.base.serviceSites[1] || site, 'Missing demographic group', 'Service Coordinator', 'Open'],
+                ['CLI-7714', metrics.base.serviceSites[2] || site, 'Duplicate client identifier match', 'Data Steward', 'Review'],
+                ['CLI-6648', site, 'Placed stage without employer', 'Case Manager', 'Open']
+            ];
+            document.getElementById('exceptionRows').innerHTML = rows.map(row => `
+                <tr>
+                    <td class="px-5 py-3 font-bold">${row[0]}</td>
+                    <td class="px-5 py-3">${row[1]}</td>
+                    <td class="px-5 py-3">${row[2]}</td>
+                    <td class="px-5 py-3">${row[3]}</td>
+                    <td class="px-5 py-3"><span class="tag ${row[4] === 'Blocked' ? 'bg-red-50 text-red-700' : row[4] === 'Review' ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700'}">${row[4]}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function updateRegionDetail(metrics) {
+            updateMapState(metrics);
+            if (metrics.filters.region === 'All') {
+                const ranking = regions.map(region => ({
+                    region,
+                    label: regionData[region].label,
+                    rate: getRegionRate(region, metrics),
+                    quality: Math.round(clamp(regionData[region].quality + metrics.program.quality, 82, 98)),
+                    sites: regionData[region].sites
+                })).sort((a, b) => b.rate - a.rate);
+                const strongest = ranking[0];
+                const highestRisk = ranking[ranking.length - 1];
+                document.getElementById('selectedRegionCard').innerHTML = `
+                    <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">National Portfolio Summary</p>
+                        <h4 class="text-2xl font-black mt-1">All Regions</h4>
+                        <p class="text-sm text-slate-600 mt-2">National view across five regional portfolios. Select a map marker to inspect one region.</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="rounded-lg border border-slate-200 p-3">
+                            <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Regions</p>
+                            <p class="text-2xl font-black mt-1">5</p>
+                        </div>
+                        <div class="rounded-lg border border-slate-200 p-3">
+                            <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Service Sites</p>
+                            <p class="text-2xl font-black mt-1">${metrics.base.sites}</p>
+                        </div>
+                        <div class="rounded-lg border border-slate-200 p-3">
+                            <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">National Rate</p>
+                            <p class="text-2xl font-black mt-1 ${metrics.rate < 60 ? 'text-red-700' : 'text-emerald-700'}">${metrics.rate.toFixed(1)}%</p>
+                        </div>
+                        <div class="rounded-lg border border-slate-200 p-3">
+                            <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Quality</p>
+                            <p class="text-2xl font-black mt-1">${metrics.quality}%</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg border border-slate-200 p-3 bg-white">
+                        <p class="font-bold text-slate-900">Regional risk signal</p>
+                        <p class="text-sm text-slate-600 mt-1">Strongest: ${strongest.label} at ${strongest.rate.toFixed(1)}%. Highest risk: ${highestRisk.label} at ${highestRisk.rate.toFixed(1)}%.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const region = metrics.filters.region;
+            const detail = regionData[region];
+            const rate = getRegionRate(region, metrics);
+            document.getElementById('selectedRegionCard').innerHTML = `
+                <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                    <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Region</p>
+                    <h4 class="text-2xl font-black mt-1">${detail.label}</h4>
+                    <p class="text-sm text-slate-600 mt-2">${detail.notes}</p>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="rounded-lg border border-slate-200 p-3">
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Service Sites</p>
+                        <p class="text-2xl font-black mt-1">${detail.sites}</p>
+                    </div>
+                    <div class="rounded-lg border border-slate-200 p-3">
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Placement Rate</p>
+                        <p class="text-2xl font-black mt-1 ${rate < 60 ? 'text-red-700' : 'text-emerald-700'}">${rate.toFixed(1)}%</p>
+                    </div>
+                    <div class="rounded-lg border border-slate-200 p-3">
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Avg Days</p>
+                        <p class="text-2xl font-black mt-1">${Math.round(detail.days + metrics.program.days + metrics.time.days)}</p>
+                    </div>
+                    <div class="rounded-lg border border-slate-200 p-3">
+                        <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Quality</p>
+                        <p class="text-2xl font-black mt-1">${Math.round(detail.quality + metrics.program.quality)}%</p>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-xs uppercase tracking-widest text-slate-500 font-bold mb-2">Service sites</p>
+                    <div class="flex flex-wrap gap-2">${detail.serviceSites.map(site => `<span class="tag bg-slate-100 text-slate-700">${site}</span>`).join('')}</div>
+                </div>
+            `;
+        }
+
+        function updateMapState(metrics) {
+            regions.forEach(region => {
+                const marker = document.getElementById(`map-marker-${region}`);
+                const label = document.getElementById(`map-label-${region}`);
+                const circle = marker && marker.querySelector('circle');
+                const rate = getRegionRate(region, metrics);
+                if (marker) marker.classList.toggle('selected', metrics.filters.region === region);
+                if (label) {
+                    label.textContent = `${region} ${rate.toFixed(0)}%`;
+                    label.style.fill = rate < 60 ? '#991b1b' : rate < 65 ? '#92400e' : '#065f46';
+                }
+                if (circle) circle.setAttribute('fill', getRiskColor(rate));
+            });
+        }
+
+        function updateRankingChart(metrics) {
+            const ranking = regions.map(region => {
+                const data = regionData[region];
+                const rate = clamp(data.rate + metrics.program.rate + metrics.time.rate, 48, 82);
+                const quality = clamp(data.quality + metrics.program.quality, 82, 98);
+                const score = rate * 0.55 + quality * 0.3 + data.satisfaction * 20 * 0.15;
+                return { region, rate, quality, satisfaction: data.satisfaction, score: Number(score.toFixed(1)) };
+            }).sort((a, b) => b.score - a.score);
+
+            charts.ranking.setOption({
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['Composite Score', 'Placement Rate'], bottom: 0 },
+                grid: { left: 45, right: 28, top: 18, bottom: 56, containLabel: true },
+                xAxis: { type: 'category', data: ranking.map(item => item.region) },
+                yAxis: { type: 'value', max: 100 },
+                series: [
+                    { name: 'Composite Score', type: 'bar', barWidth: '38%', data: ranking.map(item => item.score), itemStyle: { color: '#0f766e' }, label: { show: true, position: 'top' } },
+                    { name: 'Placement Rate', type: 'line', smooth: true, data: ranking.map(item => Number(item.rate.toFixed(1))), itemStyle: { color: '#2563eb' } }
+                ]
+            });
+        }
+
+        function updateSuccessMetrics() {
+            const metrics = [
+                ['Monthly reporting preparation', '3 days', '< 1 hour', 'Operational efficiency'],
+                ['Data latency', 'Month-end only', 'T+1 refresh', 'Decision speed'],
+                ['Data quality score', 'Not tracked', '> 95%', 'Governance control'],
+                ['Quarterly compliance reporting', '5 days', 'One-click pack', 'DEWR readiness'],
+                ['Stakeholder satisfaction', 'Not measured', '> 4.0 / 5.0', 'Adoption']
+            ];
+            document.getElementById('successMetrics').innerHTML = metrics.map(item => `
+                <div class="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                    <div class="flex justify-between gap-3">
+                        <p class="font-bold">${item[0]}</p>
+                        <span class="tag bg-emerald-50 text-emerald-700">${item[3]}</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 mt-3 text-sm">
+                        <div><p class="text-xs uppercase tracking-widest text-slate-500 font-bold">As-Is</p><p class="font-bold">${item[1]}</p></div>
+                        <div><p class="text-xs uppercase tracking-widest text-slate-500 font-bold">To-Be</p><p class="font-bold text-emerald-700">${item[2]}</p></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateReportPreviewContent(metrics) {
+            const title = `Altivio Performance Report - ${metrics.time.label}, ${metrics.base.label}, ${metrics.program.label}`;
+            document.getElementById('reportTitle').textContent = title;
+            const riskText = metrics.rate < 60
+                ? 'Placement rate is below the agreed operating threshold and requires regional action before the next governance meeting.'
+                : 'Placement performance is within the agreed operating threshold and is supported by an auditable action register.';
+            const qualityText = metrics.quality < 95
+                ? `Data quality is ${metrics.quality}%, so the pack includes exception remediation owners.`
+                : `Data quality is ${metrics.quality}%, meeting the report-readiness target.`;
+            const placedRateClass = metrics.rate < 60 ? 'text-red-700' : 'text-emerald-700';
+            const regionalFindings = metrics.filters.region === 'All'
+                ? regions.map(region => {
+                    const rate = getRegionRate(region, metrics);
+                    return `<li><span class="font-bold">${regionData[region].label}</span>: ${rate.toFixed(1)}% placement rate, ${regionData[region].sites} sites.</li>`;
+                }).join('')
+                : metrics.base.serviceSites.map((site, index) => {
+                    const siteRate = clamp(metrics.rate + [2, -1.5, 0.8][index % 3], 48, 82);
+                    return `<li><span class="font-bold">${site}</span>: ${siteRate.toFixed(1)}% placement rate.</li>`;
+                }).join('');
+
+            document.getElementById('reportPackPages').innerHTML = `
+                <section class="pack-page">
+                    <div class="pack-page-title">
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-blue-700 font-bold">Cover</p>
+                            <h4 class="text-xl font-bold text-slate-900 mt-1">${title}</h4>
+                        </div>
+                        <span class="pack-page-number">Page 1</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                        <div><p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Period</p><p class="font-bold">${metrics.time.label}</p></div>
+                        <div><p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Portfolio</p><p class="font-bold">${metrics.base.label}</p></div>
+                        <div><p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Program</p><p class="font-bold">${metrics.program.label}</p></div>
+                    </div>
+                    <p class="text-sm text-slate-600 mt-3">${riskText} ${qualityText}</p>
+                </section>
+
+                <section class="pack-page">
+                    <div class="pack-page-title">
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-blue-700 font-bold">KPI Summary</p>
+                            <h4 class="font-bold text-slate-900 mt-1">Executive dashboard extract</h4>
+                        </div>
+                        <span class="pack-page-number">Page 2</span>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div class="rounded-lg border border-slate-200 bg-slate-50 p-3"><p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Registered</p><p class="text-2xl font-black mt-1">${formatNumber(metrics.registrations)}</p></div>
+                        <div class="rounded-lg border border-slate-200 bg-slate-50 p-3"><p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Placed</p><p class="text-2xl font-black mt-1">${formatNumber(metrics.placements)}</p></div>
+                        <div class="rounded-lg border border-slate-200 bg-slate-50 p-3"><p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Placement Rate</p><p class="text-2xl font-black mt-1 ${placedRateClass}">${metrics.rate.toFixed(1)}%</p></div>
+                        <div class="rounded-lg border border-slate-200 bg-slate-50 p-3"><p class="text-xs uppercase tracking-widest text-slate-500 font-bold">Quality Score</p><p class="text-2xl font-black mt-1">${metrics.quality}%</p></div>
+                    </div>
+                </section>
+
+                <section class="pack-page">
+                    <div class="pack-page-title">
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-blue-700 font-bold">Regional Findings</p>
+                            <h4 class="font-bold text-slate-900 mt-1">${metrics.filters.region === 'All' ? 'Regional portfolio comparison' : 'Service site comparison'}</h4>
+                        </div>
+                        <span class="pack-page-number">Page 3</span>
+                    </div>
+                    <ul class="text-sm text-slate-600 space-y-1">${regionalFindings}</ul>
+                </section>
+
+                <section class="pack-page">
+                    <div class="pack-page-title">
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-blue-700 font-bold">Data Quality Appendix</p>
+                            <h4 class="font-bold text-slate-900 mt-1">Controls and exception handling</h4>
+                        </div>
+                        <span class="pack-page-number">Page 4</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                        <div><p class="font-bold">Quality score</p><p class="text-slate-600">${metrics.quality}% against 95% readiness target.</p></div>
+                        <div><p class="font-bold">Blocked records</p><p class="text-slate-600">${Math.max(3, Math.round((100 - metrics.quality) * 1.5))} open exceptions before automated report release.</p></div>
+                        <div><p class="font-bold">Primary control</p><p class="text-slate-600">Mandatory demographic, employer and stage validation rules.</p></div>
+                    </div>
+                </section>
+
+                <section class="pack-page">
+                    <div class="pack-page-title">
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-blue-700 font-bold">Action Register</p>
+                            <h4 class="font-bold text-slate-900 mt-1">Governance follow-up items</h4>
+                        </div>
+                        <span class="pack-page-number">Page 5</span>
+                    </div>
+                    <ul class="text-sm text-slate-600 space-y-1">
+                        <li><span class="font-bold">Placement:</span> ${metrics.rate < 60 ? 'Regional Manager to run employer pipeline review.' : 'Continue weekly threshold monitoring.'}</li>
+                        <li><span class="font-bold">Data:</span> ${metrics.quality < 95 ? 'IT / Data Team to clear remediation owners.' : 'Quality controls ready for report generation.'}</li>
+                        <li><span class="font-bold">Reporting:</span> Government Liaison to review quarterly pack before submission.</li>
+                    </ul>
+                </section>
+
+                <section class="pack-page">
+                    <div class="pack-page-title">
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-blue-700 font-bold">UAT Evidence</p>
+                            <h4 class="font-bold text-slate-900 mt-1">Acceptance scenarios attached to pack</h4>
+                        </div>
+                        <span class="pack-page-number">Page 6</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                        <div class="rounded-lg bg-emerald-50 border border-emerald-100 p-3"><p class="font-bold text-emerald-800">Filter reconciliation</p><p class="text-emerald-700 mt-1">Dashboard values match the report context.</p></div>
+                        <div class="rounded-lg bg-emerald-50 border border-emerald-100 p-3"><p class="font-bold text-emerald-800">Quality gate</p><p class="text-emerald-700 mt-1">Exceptions show owner, issue and status.</p></div>
+                    </div>
+                </section>
+            `;
+        }
+
+        function openReportPreview() {
+            updateReportPreviewContent(currentMetrics);
+            document.getElementById('reportModal').classList.add('open');
+        }
+
+        function closeReportPreview() {
+            document.getElementById('reportModal').classList.remove('open');
+        }
+
+        function simulatePdfBuild() {
+            const button = document.getElementById('buildPdfBtn');
+            const original = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Building...';
+            button.disabled = true;
+            setTimeout(() => {
+                button.innerHTML = original;
+                button.disabled = false;
+                const toast = document.getElementById('toast');
+                toast.classList.remove('translate-y-20', 'opacity-0');
+                setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 2600);
+            }, 900);
+        }
+
+        function resizeCharts() {
+            Object.values(charts).forEach(chart => chart && chart.resize());
+        }
+
+        function initCharts() {
+            charts = {
+                trend: echarts.init(document.getElementById('trendChart')),
+                region: echarts.init(document.getElementById('regionChart')),
+                funnel: echarts.init(document.getElementById('funnelChart')),
+                duration: echarts.init(document.getElementById('durationChart')),
+                demographic: echarts.init(document.getElementById('demographicChart')),
+                gauge: echarts.init(document.getElementById('gaugeChart')),
+                missing: echarts.init(document.getElementById('missingChart')),
+                qualityTrend: echarts.init(document.getElementById('qualityTrendChart')),
+                ranking: echarts.init(document.getElementById('rankingChart'))
+            };
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            document.getElementById('timeFilter').addEventListener('change', updateDashboard);
+            document.getElementById('regionFilter').addEventListener('change', updateDashboard);
+            document.getElementById('programFilter').addEventListener('change', updateDashboard);
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape') closeReportPreview();
+            });
+            window.addEventListener('resize', resizeCharts);
+            updateDashboard();
+        });
+    </script>
+</body>
+</html>

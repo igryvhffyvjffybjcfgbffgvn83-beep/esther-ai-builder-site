@@ -82,9 +82,9 @@ export const zh = {
         href: links.buildLog,
       },
       stats: [
-        { value: "7", label: "项目" },
+        { value: "8", label: "项目" },
         { value: "1", label: "已上线" },
-        { value: "5", label: "Demo" },
+        { value: "6", label: "Demo" },
         { value: "开放合作", label: "怎么做" },
       ],
     },
@@ -189,6 +189,16 @@ export const zh = {
     intro: "每天在做什么、试了什么、学到什么。",
     relatedDemoLabel: "看 demo",
     entries: [
+      {
+        id: "2026-05-12-employment-dashboard-demo",
+        date: "2026-05-12",
+        label: "今天",
+        title: "接入了一个就业服务 KPI 和数据治理 dashboard demo。",
+        summary:
+          "把一个能交互的 BI 原型接入实验室，并用项目页解释它背后的 BA 交付链路：利益相关者分析、需求追溯、客户旅程漏斗、数据质量监控、区域下钻、UAT 和 DEWR 报告。",
+        tags: ["业务分析", "BI 看板", "数据治理"],
+        href: "/lab/employment-dashboard",
+      },
       {
         id: "2026-05-09-auto-promo-current-cut-review",
         date: "2026-05-09",
@@ -325,6 +335,25 @@ export const zh = {
         screenshot: null,
       },
       {
+        id: "employment-dashboard",
+        title: "Employment Services Outcomes Dashboard",
+        tagline: "围绕 KPI、数据质量和合规报告的闭环 dashboard demo。",
+        status: "BA Dashboard Demo",
+        statusLabel: "BA Demo",
+        domainLabel: "就业服务",
+        group: "DEMO",
+        type: "Demo",
+        category: "业务分析 / BI",
+        problem: "全国就业服务团队需要被治理过的 KPI 报告，而不是每月手动合并表格。",
+        tool: "一个交互式 dashboard，把利益相关者需求、BRD 追溯、客户旅程漏斗、数据质量控制、区域下钻和 DEWR 报告串起来。",
+        description: "用来展示 BA 如何从混乱运营出发，落到可衡量需求、可运行 BI、UAT 和报告价值。",
+        href: "/lab/employment-dashboard",
+        ctaLabel: "查看案例 →",
+        isFeatured: false,
+        isExternal: false,
+        screenshot: null,
+      },
+      {
         id: "exact-transit",
         title: "Exact Transit",
         tagline: "看得懂算法的星象行运时间线。",
@@ -401,6 +430,82 @@ export const zh = {
         screenshot: null,
       },
     ],
+  },
+  employmentDashboardPage: {
+    metadata: {
+      title: "就业服务 Dashboard Demo — Esther AI 产品实验室",
+      description:
+        "一个可运行的 BA dashboard demo，覆盖利益相关者分析、需求追溯、数据治理、KPI 监控、UAT 和 DEWR 报告。",
+    },
+    backLabel: "返回实验室",
+    eyebrow: "业务分析 / BI Dashboard",
+    title: "Employment Services Outcomes Dashboard",
+    description:
+      "一个面向全国就业服务机构的工作原型，用 KPI 可视化、数据质量控制和合规报告能力，替代依赖表格的月度汇总流程。",
+    noteTitle: "为什么放在实验室",
+    noteBody:
+      "它不只是图表 demo。这个原型展示了 dashboard 背后的 BA 交付链路：利益相关者、BRD、数据规则、UAT、运营行动和可衡量价值。",
+    summary: [
+      {
+        label: "之前",
+        body: "服务站点每月手动合并表格，带来延迟、不一致和报告风险。",
+      },
+      {
+        label: "过程",
+        body: "梳理利益相关者，定义可追溯需求，建立数据规则，再设计运营控制点。",
+      },
+      {
+        label: "之后",
+        body: "一个有 KPI 趋势、漏斗分析、质量监控、区域行动和 DEWR 报告预览的治理型 dashboard。",
+      },
+    ],
+    contextEyebrow: "项目背景",
+    contextTitle: "从报告任务，变成运营系统。",
+    contextBody:
+      "这个 dashboard 按 CoAct 类就业服务场景组织：注册人数、就业安置、服务区域、重点人群、数据完整性、异常队列和季度政府报告。它展示的是需求如何变成可见的运营控制，而不是停在静态文档里。",
+    tags: [
+      "业务分析",
+      "需求梳理",
+      "数据可视化",
+      "数据治理",
+      "利益相关者管理",
+      "流程改进",
+      "BI Dashboard 设计",
+      "UAT 规划",
+      "合规报告",
+    ],
+    demonstrates: [
+      {
+        title: "利益相关者分析",
+        body: "Power / Interest 矩阵把六类利益相关者和 dashboard 控制点、报告需求连接起来。",
+      },
+      {
+        title: "需求追溯",
+        body: "功能需求绑定来源、优先级和页面中的实际功能，避免需求只停在文档里。",
+      },
+      {
+        title: "数据治理",
+        body: "质量评分、缺失率监控、重复检测、异常队列和数据字典都被放进原型。",
+      },
+      {
+        title: "交互式 BI",
+        body: "全局筛选、趋势图、客户旅程漏斗、区域地图、人群分析和行动登记都能在页面内交互。",
+      },
+      {
+        title: "合规报告",
+        body: "报告包预览把 dashboard 场景、风险说明、数据 readiness 和 DEWR 风格输出串起来。",
+      },
+      {
+        title: "交付框架",
+        body: "路线图、UAT 场景、验收标准和 before-after 指标补齐完整 BA 生命周期。",
+      },
+    ],
+    demoEyebrow: "可运行原型",
+    demoTitle: "下面可以直接操作 dashboard。",
+    demoBody:
+      "嵌入的是原始 BI 原型。你可以直接使用筛选器、侧边导航、漏斗阶段、区域地图和报告预览。",
+    openDemoLabel: "打开完整 demo",
+    iframeTitle: "就业服务成果 Dashboard 交互 demo",
   },
   tailorcvPage: {
     metadata: {
