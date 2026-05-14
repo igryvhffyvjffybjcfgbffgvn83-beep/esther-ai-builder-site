@@ -4,7 +4,7 @@ export const zh = {
   site: {
     name: "Esther",
     domain: "estherbuilds.com",
-    lastUpdated: "2026-05-12",
+    lastUpdated: "2026-05-14",
     links,
     metadata: {
       title: "Esther — AI 产品实验室",
@@ -82,9 +82,9 @@ export const zh = {
         href: links.buildLog,
       },
       stats: [
-        { value: "9", label: "项目" },
+        { value: "10", label: "项目" },
         { value: "1", label: "已上线" },
-        { value: "7", label: "Demo" },
+        { value: "8", label: "Demo" },
         { value: "开放合作", label: "怎么做" },
       ],
     },
@@ -190,6 +190,16 @@ export const zh = {
     relatedDemoLabel: "看 demo",
     entries: [
       {
+        id: "2026-05-14-job-radar-demo",
+        date: "2026-05-14",
+        label: "今天",
+        title: "做了一个自动找工作的客户端。",
+        summary:
+          "接入了脱敏产品 demo：定时扫描岗位、按匹配度评分，并一键生成投递材料。",
+        tags: ["职业 AI", "自动找工作", "产品 Demo"],
+        href: "/lab/job-radar",
+      },
+      {
         id: "2026-05-12-process-improvement-tracker-demo",
         date: "2026-05-12",
         label: "今天",
@@ -286,6 +296,25 @@ export const zh = {
         isFeatured: true,
         isExternal: false,
         screenshot: "/demos/tailorcv/poster.jpg",
+      },
+      {
+        id: "job-radar",
+        title: "自动找工作的客户端",
+        tagline: "发现岗位、评分、一键生成投递材料。",
+        status: "Product Demo",
+        statusLabel: "产品 Demo",
+        domainLabel: "职业",
+        group: "DEMO",
+        type: "Product Demo",
+        category: "职业 AI / 自动化",
+        problem: "找工作很容易变成一堆标签页、表格、重复筛选和反复重写材料。",
+        tool: "一个桌面客户端，自动扫描岗位、给匹配度评分，并生成针对岗位的投递材料。",
+        description: "从真实找工作流程里长出来的工具，用来减少重复筛选和重复改材料。",
+        href: "/lab/job-radar",
+        ctaLabel: "查看 demo →",
+        isFeatured: false,
+        isExternal: false,
+        screenshot: "/demos/job-radar/poster-zh.jpg",
       },
       {
         id: "justphoto",
@@ -657,6 +686,116 @@ export const zh = {
       "嵌入的是原始闭环 BA 原型。你可以直接使用 overview、stage-gate board、methodology、benefits tracker、document centre 和 PIR controls。",
     openDemoLabel: "打开完整 demo",
     iframeTitle: "Business Process Improvement Tracker 交互 demo",
+  },
+  jobRadarPage: {
+    metadata: {
+      title: "自动找工作的客户端 Demo — Esther AI 产品实验室",
+      description: "一个脱敏产品 demo：自动发现岗位、评分，并生成针对岗位的投递材料。",
+    },
+    backLabel: "返回实验室",
+    eyebrow: "职业 AI / 求职自动化",
+    title: "自动找工作的客户端",
+    description: "发现岗位、评分、一键生成投递材料。一个从真实求职流程里长出来的工具。",
+    noteTitle: "为什么放在实验室",
+    noteBody:
+      "它把一个重复的个人工作流做成产品界面：扫描、排序、匹配证据、人工确认，再生成投递材料。",
+    summary: [
+      {
+        label: "之前",
+        body: "找工作散在一堆网站标签页、表格、重复筛选和反复重写的投递材料里。",
+      },
+      {
+        label: "过程",
+        body: "定时扫描带回岗位，匹配度评分排出优先级，再把经历证据和岗位要求对齐。",
+      },
+      {
+        label: "之后",
+        body: "得到一个有分数、有理由、有材料草稿的岗位队列，最后再由人确认是否投递。",
+      },
+    ],
+    contextEyebrow: "产品背景",
+    contextTitle: "从混乱刷岗位，变成一套可重复的投递系统。",
+    contextBody:
+      "这个客户端围绕真实求职流程设计：扫描招聘网站、过滤弱匹配、把岗位和私人 profile 对照，再生成可审核的投递材料。公开 demo 使用的是脱敏数据和虚拟候选人信息。",
+    tags: [
+      "职业 AI",
+      "岗位发现",
+      "匹配度评分",
+      "投递材料生成",
+      "工作流自动化",
+      "脱敏 Demo",
+    ],
+    demonstrates: [
+      {
+        title: "岗位发现",
+        body: "把反复刷招聘网站变成结构化扫描，岗位集中进入一个 review 界面。",
+      },
+      {
+        title: "匹配度评分",
+        body: "每个岗位都有可见分数和理由，帮助判断哪些岗位值得花时间投。",
+      },
+      {
+        title: "经历证据匹配",
+        body: "生成材料时仍然围绕真实经历，不只是堆关键词。",
+      },
+      {
+        title: "投递材料包",
+        body: "围绕目标岗位生成 summary、简历角度、cover note 和下一步动作。",
+      },
+      {
+        title: "人工确认",
+        body: "工具负责缩小范围和准备材料，最后投不投仍然由人判断。",
+      },
+      {
+        title: "脱敏录屏",
+        body: "视频只展示产品行为，不暴露私人 profile、真实联系方式或本地路径。",
+      },
+    ],
+  },
+  jobRadarDemo: {
+    artifactLabel: "产品 Demo",
+    title: "看一遍自动找工作的完整链路。",
+    videoLabel: "Demo 版本",
+    outputLabel: "当前视频",
+    asideLabel: "自动找工作工作流",
+    workflowLabel: "Workflow",
+    workflowTitle: "这个客户端做什么",
+    videos: [
+      {
+        id: "zh",
+        label: "中文",
+        duration: "22.9s",
+        summary: "中文版 demo 使用脱敏的 Boss 直聘风格岗位数据和虚拟候选人信息。",
+      },
+      {
+        id: "en",
+        label: "English",
+        duration: "24.5s",
+        summary: "英文版 demo 使用脱敏的 SEEK 风格岗位数据和虚拟候选人信息。",
+      },
+    ],
+    steps: [
+      {
+        number: "01",
+        title: "扫描岗位",
+        body: "定时把相关岗位抓回来，集中放进一个可审查的界面。",
+      },
+      {
+        number: "02",
+        title: "匹配度评分",
+        body: "根据岗位要求、经历重叠和投递价值，先排出优先级。",
+      },
+      {
+        number: "03",
+        title: "审查短名单",
+        body: "用更短的岗位队列决定哪些值得认真准备。",
+      },
+      {
+        number: "04",
+        title: "生成材料",
+        body: "选中的岗位会生成一套可审核的定制投递材料。",
+      },
+    ],
   },
   tailorcvPage: {
     metadata: {

@@ -4,7 +4,7 @@ export const en = {
   site: {
     name: "Esther",
     domain: "estherbuilds.com",
-    lastUpdated: "2026-05-12",
+    lastUpdated: "2026-05-14",
     links,
     metadata: {
       title: "Esther — AI Builder Lab",
@@ -82,9 +82,9 @@ export const en = {
         href: links.buildLog,
       },
       stats: [
-        { value: "9", label: "Projects" },
+        { value: "10", label: "Projects" },
         { value: "1", label: "Live" },
-        { value: "7", label: "Demos" },
+        { value: "8", label: "Demos" },
         { value: "Public", label: "Build mode" },
       ],
     },
@@ -194,6 +194,16 @@ export const en = {
     relatedDemoLabel: "Open related demo",
     entries: [
       {
+        id: "2026-05-14-job-radar-demo",
+        date: "2026-05-14",
+        label: "Today",
+        title: "Built an automated job hunting client.",
+        summary:
+          "Added a desensitized product demo for a client that scans job boards, scores role fit, and generates tailored application materials.",
+        tags: ["Career AI", "Job Search", "Product Demo"],
+        href: "/lab/job-radar",
+      },
+      {
         id: "2026-05-12-process-improvement-tracker-demo",
         date: "2026-05-12",
         label: "Today",
@@ -292,6 +302,28 @@ export const en = {
         isFeatured: true,
         isExternal: false,
         screenshot: "/demos/tailorcv/poster.jpg",
+      },
+      {
+        id: "job-radar",
+        title: "Automated Job Hunting Client",
+        tagline: "Finds roles, scores fit, and generates tailored applications.",
+        status: "Product Demo",
+        statusLabel: "Product Demo",
+        domainLabel: "Career",
+        group: "DEMO",
+        type: "Product Demo",
+        category: "Career AI / Automation",
+        problem:
+          "Job hunting turns into a spreadsheet of tabs, repeated screening, and rewritten applications.",
+        tool:
+          "A desktop client that scans job boards, scores each role, and generates a tailored application package.",
+        description:
+          "Built as a real workflow for searching and applying with more focus and less repetitive rewriting.",
+        href: "/lab/job-radar",
+        ctaLabel: "Watch the demo →",
+        isFeatured: false,
+        isExternal: false,
+        screenshot: "/demos/job-radar/poster-en.jpg",
       },
       {
         id: "justphoto",
@@ -679,6 +711,120 @@ export const en = {
       "The embedded demo is the original closed-loop BA prototype. Use the overview, stage-gate board, methodology, benefits tracker, document centre, and PIR controls directly inside the page.",
     openDemoLabel: "Open full demo",
     iframeTitle: "Business Process Improvement Tracker interactive demo",
+  },
+  jobRadarPage: {
+    metadata: {
+      title: "Automated Job Hunting Client Demo — Esther AI Builder Lab",
+      description:
+        "A desensitized product demo for a job hunting client that finds roles, scores fit, and generates tailored application materials.",
+    },
+    backLabel: "Back to Lab",
+    eyebrow: "Career AI / Job Search Automation",
+    title: "Automated Job Hunting Client",
+    description:
+      "A real job hunting workflow that finds roles, scores fit, and generates tailored application materials from a private profile.",
+    noteTitle: "Why this belongs in the Lab",
+    noteBody:
+      "It turns a repetitive personal workflow into a product surface: scanning, ranking, evidence matching, review, and application drafting.",
+    summary: [
+      {
+        label: "Before",
+        body: "Job search lived across tabs, spreadsheets, repeated screening, and rewritten application materials.",
+      },
+      {
+        label: "Process",
+        body: "Scheduled scans bring in roles, fit scoring prioritises the shortlist, and evidence matching grounds the draft.",
+      },
+      {
+        label: "After",
+        body: "A focused queue of roles with scores, reasons, and application materials ready for human review.",
+      },
+    ],
+    contextEyebrow: "Product Context",
+    contextTitle: "From job board chaos to a repeatable application system.",
+    contextBody:
+      "The client is framed around a practical job hunting loop: scan job boards, remove weak matches, compare the role against a private profile, and generate materials that can be reviewed before applying. The public demo uses sanitized data and fake candidate details.",
+    tags: [
+      "Career AI",
+      "Job Discovery",
+      "Fit Scoring",
+      "Application Drafting",
+      "Workflow Automation",
+      "Privacy-Safe Demo",
+    ],
+    demonstrates: [
+      {
+        title: "Job Discovery",
+        body: "The client turns recurring job-board checks into a structured scan instead of a manual browsing routine.",
+      },
+      {
+        title: "Fit Scoring",
+        body: "Each role gets a visible score and rationale so the user can decide where to spend application energy.",
+      },
+      {
+        title: "Evidence Matching",
+        body: "The workflow keeps application drafts tied to real experience instead of generic keyword stuffing.",
+      },
+      {
+        title: "Application Package",
+        body: "The output is shaped around the role: summary, resume angle, cover note, and review-ready next steps.",
+      },
+      {
+        title: "Human Review",
+        body: "The tool narrows the queue and prepares materials, while the final decision stays with the applicant.",
+      },
+      {
+        title: "Desensitized Recording",
+        body: "The video demonstrates the product behavior without exposing private profile details or local paths.",
+      },
+    ],
+  },
+  jobRadarDemo: {
+    artifactLabel: "Product demo",
+    title: "Watch the automated job search loop.",
+    videoLabel: "Demo version",
+    outputLabel: "Selected cut",
+    asideLabel: "Job radar workflow",
+    workflowLabel: "Workflow",
+    workflowTitle: "What the client does",
+    videos: [
+      {
+        id: "en",
+        label: "English",
+        duration: "24.5s",
+        summary:
+          "The English demo shows the product using sanitized SEEK-style job data and a fake candidate profile.",
+      },
+      {
+        id: "zh",
+        label: "Chinese",
+        duration: "22.9s",
+        summary:
+          "The Chinese demo shows the same workflow with sanitized Boss Zhipin-style job data.",
+      },
+    ],
+    steps: [
+      {
+        number: "01",
+        title: "Scan job boards",
+        body: "Scheduled runs collect relevant roles and bring them into one review surface.",
+      },
+      {
+        number: "02",
+        title: "Score fit",
+        body: "The client ranks roles by requirements, evidence overlap, and practical application value.",
+      },
+      {
+        number: "03",
+        title: "Review the shortlist",
+        body: "A compact queue makes it easier to choose which roles deserve attention.",
+      },
+      {
+        number: "04",
+        title: "Generate materials",
+        body: "The selected role becomes a tailored application package ready for final human review.",
+      },
+    ],
   },
   tailorcvPage: {
     metadata: {
