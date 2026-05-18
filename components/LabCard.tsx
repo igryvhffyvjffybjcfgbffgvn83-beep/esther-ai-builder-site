@@ -54,6 +54,19 @@ export default function LabCard({ item, locale }: LabCardProps) {
         <p className="mt-4 text-sm leading-6 text-[#3B3630]">{item.description}</p>
       ) : null}
 
+      {"techStack" in item && (item as { techStack?: readonly string[] }).techStack?.length ? (
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {((item as { techStack: readonly string[] }).techStack).map((tech) => (
+            <span
+              key={tech}
+              className="rounded-full border border-[#E4D9CB] bg-[#FBF7EF] px-2.5 py-0.5 font-mono text-[0.6875rem] font-medium text-[#686057]"
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+      ) : null}
+
       <div className="mt-auto pt-6">
         {item.href ? (
           <a

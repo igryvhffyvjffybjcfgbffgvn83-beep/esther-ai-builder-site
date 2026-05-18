@@ -19,29 +19,29 @@ const jetBrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://estherbuilds.com"),
-  title: "Esther — AI Builder Lab",
+  title: "Esther — AI Product Builder",
   description:
-    "I just turn the problems I run into into tools. A public lab of AI products, demos, and experiments built by a non-coder learning by shipping.",
+    "10 products shipped in 2026. 1 live on the App Store. Full-stack AI product builder working across iOS, desktop, and web.",
   openGraph: {
-    title: "Esther — AI Builder Lab",
+    title: "Esther — AI Product Builder",
     description:
-      "I just turn the problems I run into into tools. A public lab of AI products, demos, and experiments built by a non-coder learning by shipping.",
+      "10 products shipped in 2026. 1 live on the App Store. Full-stack AI product builder working across iOS, desktop, and web.",
     url: "https://estherbuilds.com",
-    siteName: "Esther — AI Builder Lab",
+    siteName: "Esther — AI Product Builder",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Esther — AI Builder Lab",
+        alt: "Esther — AI Product Builder",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Esther — AI Builder Lab",
+    title: "Esther — AI Product Builder",
     description:
-      "I just turn the problems I run into into tools. A public lab of AI products, demos, and experiments built by a non-coder learning by shipping.",
+      "10 products shipped in 2026. 1 live on the App Store. Full-stack AI product builder working across iOS, desktop, and web.",
     images: ["/og-image.png"],
   },
 };

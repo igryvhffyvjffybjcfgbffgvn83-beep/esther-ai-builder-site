@@ -7,9 +7,9 @@ export const en = {
     lastUpdated: "2026-05-14",
     links,
     metadata: {
-      title: "Esther — AI Builder Lab",
+      title: "Esther — AI Product Builder",
       description:
-        "I just turn the problems I run into into tools. A public lab of AI products, demos, and experiments built by a non-coder learning by shipping.",
+        "10 products shipped in 2026. 1 live on the App Store. Full-stack AI product builder working across iOS, desktop, and web.",
     },
     header: {
       ariaHome: "Esther home",
@@ -40,28 +40,27 @@ export const en = {
   home: {
     hero: {
       title: "Esther.",
-      headline: "Building in public.",
-      thesis: "I turn real friction into tools.",
+      headline: "I build AI products that ship.",
+      thesis: "10 projects. 1 live on the App Store. 8 interactive demos.",
       productLines: [
-        "Job applications I couldn't get right → a resume AI.",
-        "Photos I couldn't pose for → a photography app.",
-        "User feedback I couldn't get → a simulation plugin.",
+        "Resume AI that landed on the App Store →",
+        "Job hunting client that scores roles and drafts applications →",
+        "Video pipeline that turns recordings into promos →",
       ],
-      proof: "Nine projects. Different domains. Same method.",
+      proof: "From real problems to real products.",
       builderLines: [
-        "I'm a non-coder learning by shipping —",
-        "building in public, occasionally panicking,",
-        "but always shipping.",
+        "Full-stack AI products across iOS, desktop, and web —",
+        "built with React, TypeScript, Electron, Swift, and LLMs.",
       ],
       primaryCta: {
-        label: "Subscribe to the Build",
-        href: links.subscribe,
-      },
-      secondaryCta: {
-        label: "Explore the Lab →",
+        label: "Explore the Lab",
         href: links.lab,
       },
-      contactLine: "Open to AI product collaborations.",
+      secondaryCta: {
+        label: "See What I Build →",
+        href: links.buildLog,
+      },
+      contactLine: "Looking for my next role in AI product development.",
       contactCta: {
         label: "Get in touch",
         href: links.email,
@@ -82,10 +81,10 @@ export const en = {
         href: links.buildLog,
       },
       stats: [
-        { value: "10", label: "Projects" },
-        { value: "1", label: "Live" },
-        { value: "8", label: "Demos" },
-        { value: "Public", label: "Build mode" },
+        { value: "10", label: "Products Shipped" },
+        { value: "1", label: "Live on App Store" },
+        { value: "8", label: "Interactive Demos" },
+        { value: "6+", label: "Tech Domains" },
       ],
     },
     lab: {
@@ -93,15 +92,14 @@ export const en = {
       title: "Products, prototypes, and experiments.",
     },
     manifesto: {
-      title: "What I'm building toward",
+      title: "How I think about building",
       paragraphs: [
-        "Most of my products start with a problem.",
-        "First, I try to solve it the normal way.\nThen I notice the same problem keeps coming back —\nfor me, or for other people.",
-        "At that point, it stops being just a problem.\nIt becomes a pattern.",
-        "And once something becomes a pattern,\nI start thinking about how to turn the solution into a tool —\nso the next time, it takes less effort,\nless time,\nand fewer repeated decisions.",
-        "I'm not a traditional developer.\nI don't have a CS background.",
-        "But I have AI now,\nand I pay attention to problems.",
-        "That turns out to be enough.",
+        "Every product starts with a real problem.",
+        "First, I solve it the hard way.\nThen I notice the same problem keeps coming back —\nfor me, and for other people.",
+        "That's when it becomes a pattern.\nAnd patterns become products.",
+        "Once I see a pattern,\nI design a tool around it —\nso the next time takes less effort,\nless time,\nand fewer repeated decisions.",
+        "I work across the full stack — React, TypeScript, Electron, Swift, LLMs —\nbecause the problem dictates the tool,\nnot the other way around.",
+        "10 products later, the method keeps working.",
       ],
     },
     subscribe: {
@@ -112,29 +110,29 @@ export const en = {
     aboutShort: {
       title: "About Esther",
       paragraphs: [
-        "I'm Esther, a non-coder builder from China, currently building between places.",
-        "Most of what I build started as something I personally got stuck on:\na resume I couldn't tailor, a photo I couldn't pose for,\na product loop I couldn't debug.",
-        "The pattern keeps repeating, so I keep building.",
+        "I'm Esther — an AI product builder who ships across iOS, desktop, and web.",
+        "I've shipped 10 products in 2026: a live App Store app, an Electron desktop client, automated video pipelines, BI dashboards, and workflow automation systems.",
+        "Each one started from a real problem. Each one went from idea to working product.",
       ],
       cta: {
-        label: "→ Read the longer version",
+        label: "→ Read the full story",
         href: links.about,
       },
       comingSoonLabel: "Coming soon",
     },
     workWithMe: {
-      title: "Work with me",
-      intro: "I'm open to thoughtful conversations around:",
+      title: "What I bring",
+      intro: "I'm looking for my next full-time role. Here's what I ship:",
       items: [
-        "→ AI product collaborations",
-        "→ early-stage product experiments",
-        "→ practical AI workflows",
-        "→ career tools",
-        "→ photography and self-expression products",
+        "→ Full-stack AI product development (iOS, desktop, web)",
+        "→ End-to-end delivery: from problem discovery to App Store",
+        "→ LLM integration, prompt engineering, and AI agent workflows",
+        "→ Business analysis, BI dashboards, and process automation",
+        "→ Video automation and content pipeline engineering",
       ],
-      closing: "If something here resonates, say hi.",
+      closing: "If you're building something interesting, let's talk.",
       cta: {
-        label: "Say hi",
+        label: "Get in touch",
         href: links.email,
       },
     },
@@ -149,34 +147,33 @@ export const en = {
     title: "About Esther",
     ctas: [
       { label: "Explore the Lab", href: links.lab },
-      { label: "Say hi", href: links.email },
+      { label: "Get in touch", href: links.email },
     ],
     paragraphs: [
-      "I'm Esther — a non-coder builder from China,\nlearning product, code, and distribution by shipping real things.",
-      "I used to think building software was something only engineers did.\nThen AI changed the distance between having a problem\nand making a tool for it.",
-      "So I started building. Mostly from things that personally annoyed me —\nresumes I couldn't tailor, photos I couldn't pose for,\nastrology reports I couldn't decode, AI workflows that kept breaking.",
-      "I'm not trying to build a clean startup arc.\nI'm just building from things that actually bothered me.",
-      "Some of these turned into products.\nSome are still rough demos.\nA few will probably never go anywhere —\nand that's fine, because each one taught me how to take\nsomething messy and make it slightly more usable.",
-      "This site is where I keep the receipts:\nthe products that worked,\nthe demos that are still rough,\nthe ideas I'm still testing,\nand the notes I'm collecting along the way.",
+      "I'm Esther — an AI product builder shipping across iOS, desktop, and web.",
+      "In 2026, I shipped 10 products: a resume AI live on the App Store,\nan Electron-based job hunting client, automated video pipelines,\nBI dashboards, and workflow automation systems.",
+      "I work across the full stack — React, Next.js, TypeScript, Electron, Swift, and LLM APIs —\nbecause the problem dictates the tool.",
+      "Every product started from something that actually bothered me.\nA resume I couldn't tailor for different roles became an App Store product.\nA manual job search became an automated desktop client.\nA messy video workflow became a reproducible pipeline.",
+      "This site is the portfolio:\n10 products, 8 interactive demos,\nand a running build log of what I shipped and how.",
     ],
     principles: {
       title: "How I build",
       items: [
         {
           title: "Start from real friction.",
-          body: "I don't begin with market maps. I begin with something\nthat bothered me enough to make a tool for it.",
+          body: "Every product begins with a problem I personally experienced.\nThat's what makes the solution specific.",
         },
         {
-          title: "Make the first version visible.",
-          body: "A working demo teaches me more than a perfect idea.",
+          title: "Ship the working version.",
+          body: "A running demo beats a perfect plan.\nAll 10 products were built this way.",
         },
         {
-          title: "Keep the human feeling.",
-          body: "The best AI tools shouldn't feel like machines judging people.\nThey should feel like someone helping you move forward.",
+          title: "Use the right tool for the job.",
+          body: "iOS when it needs to be native. Electron when it needs desktop power.\nNext.js when it needs to be on the web. The problem decides.",
         },
         {
-          title: "Ship before it feels ready.",
-          body: "That's the whole point. Confusion turns into clarity faster\nwhen something is already in front of you.",
+          title: "Build the full loop.",
+          body: "From problem discovery to production deployment.\nNot just prototypes — products people actually use.",
         },
       ],
     },
@@ -302,6 +299,7 @@ export const en = {
         isFeatured: true,
         isExternal: false,
         screenshot: "/demos/tailorcv/poster.jpg",
+        techStack: ["iOS", "Swift", "LLM", "App Store"],
       },
       {
         id: "job-radar",
@@ -324,6 +322,7 @@ export const en = {
         isFeatured: false,
         isExternal: false,
         screenshot: "/demos/job-radar/poster-en.jpg",
+        techStack: ["Electron", "React", "TypeScript", "LLM", "Node.js"],
       },
       {
         id: "justphoto",
@@ -344,6 +343,7 @@ export const en = {
         isFeatured: true,
         isExternal: false,
         screenshot: "/images/lab/justphoto.png",
+        techStack: ["iOS", "Swift", "Computer Vision"],
       },
       {
         id: "auto-promo-recorder",
@@ -366,6 +366,7 @@ export const en = {
         isFeatured: false,
         isExternal: false,
         screenshot: null,
+        techStack: ["FFmpeg", "HyperFrames", "Node.js"],
       },
       {
         id: "real-estate-workflow",
@@ -388,6 +389,7 @@ export const en = {
         isFeatured: false,
         isExternal: false,
         screenshot: null,
+        techStack: ["React", "TypeScript", "Systems Design"],
       },
       {
         id: "employment-dashboard",
@@ -410,6 +412,7 @@ export const en = {
         isFeatured: false,
         isExternal: false,
         screenshot: null,
+        techStack: ["React", "Data Visualization", "BI"],
       },
       {
         id: "process-improvement-tracker",
@@ -432,6 +435,7 @@ export const en = {
         isFeatured: false,
         isExternal: false,
         screenshot: null,
+        techStack: ["React", "TypeScript", "Stage-Gate"],
       },
       {
         id: "exact-transit",
@@ -451,6 +455,7 @@ export const en = {
         isFeatured: false,
         isExternal: false,
         screenshot: "/images/lab/exact-transit.png",
+        techStack: ["React", "Astrology API", "Timeline"],
       },
       {
         id: "simuser-loop",
@@ -471,6 +476,7 @@ export const en = {
         isFeatured: false,
         isExternal: false,
         screenshot: "/images/lab/simuser-loop.png",
+        techStack: ["LLM", "Prompt Engineering", "React"],
       },
       {
         id: "orchestrator-telemetry",
@@ -491,6 +497,7 @@ export const en = {
         isFeatured: false,
         isExternal: false,
         screenshot: "/images/lab/orchestrator.png",
+        techStack: ["Node.js", "AI Agents", "React"],
       },
       {
         id: "next",
@@ -510,6 +517,7 @@ export const en = {
         isFeatured: false,
         isExternal: false,
         screenshot: null,
+        techStack: [],
       },
     ],
   },

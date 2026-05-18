@@ -73,7 +73,7 @@ export default function CurrentlyBuilding({
             {currentlyBuilding.stats.map((stat) => (
               <div
                 key={stat.label}
-                className="rounded-lg border border-[#E4D9CB] bg-[#FFFDF8]/70 p-4"
+                className="stat-value rounded-lg border border-[#E4D9CB] bg-[#FFFDF8]/70 p-4"
               >
                 <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-[#C84B31]">
                   {stat.label}

@@ -7,6 +7,7 @@ import Lab from "@/components/Lab";
 import Manifesto from "@/components/Manifesto";
 import ProductMap from "@/components/ProductMap";
 import SubscribeCTA from "@/components/SubscribeCTA";
+import TechStack from "@/components/TechStack";
 import WorkWithMe from "@/components/WorkWithMe";
 import { getDictionary } from "@/data/i18n";
 import { createLocalizedMetadata } from "@/lib/metadata";
@@ -34,6 +35,7 @@ export default async function Home({ params }: HomePageProps) {
       <Header locale={lang} site={dictionary.site} />
       <main>
         <Hero locale={lang} content={dictionary.home.hero} />
+        <TechStack />
         <ProductMap content={dictionary.home.productMap} items={dictionary.lab.items} />
         <CurrentlyBuilding
           locale={lang}

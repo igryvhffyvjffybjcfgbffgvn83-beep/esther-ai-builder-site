@@ -7,9 +7,9 @@ export const zh = {
     lastUpdated: "2026-05-14",
     links,
     metadata: {
-      title: "Esther — AI 产品实验室",
+      title: "Esther — AI 产品构建者",
       description:
-        "把遇到的问题变成可复用的解决方案，再做成工具。一个文科生用 AI 做出来的产品和实验。",
+        "2026 年交付 10 个产品，1 个上线 App Store。横跨 iOS、桌面端和 Web 的全栈 AI 产品构建者。",
     },
     header: {
       ariaHome: "Esther 首页",
@@ -40,30 +40,29 @@ export const zh = {
   home: {
     hero: {
       title: "Esther.",
-      headline: "公开做。",
-      thesis: "我把遇到的问题，做成工具。",
+      headline: "我做能上线的 AI 产品。",
+      thesis: "10 个产品，1 个上线 App Store，8 个可交互 Demo。",
       productLines: [
-        "简历改不好 → 做了个简历 AI",
-        "拍照不会摆 → 做了个拍照指导 App",
-        "产品没用户反馈 → 做了个用户模拟器",
+        "简历 AI，已上线 App Store →",
+        "自动找工作客户端，评分 + 一键生成材料 →",
+        "视频自动化 pipeline，录屏变宣传片 →",
       ],
-      proof: "九个项目，不同方向，同一个逻辑。",
+      proof: "从真实问题到真实产品。",
       builderLines: [
-        "没有计算机背景的文科生，",
-        "用 AI 把方案落地，",
-        "持续迭代中。",
+        "横跨 iOS、桌面端和 Web 的全栈 AI 产品 —",
+        "React、TypeScript、Electron、Swift、LLM。",
       ],
       primaryCta: {
-        label: "邮件联系",
-        href: links.subscribe,
-      },
-      secondaryCta: {
-        label: "看看我的产品 →",
+        label: "看产品",
         href: links.lab,
       },
-      contactLine: "开放合作与定制。",
+      secondaryCta: {
+        label: "看我在做什么 →",
+        href: links.buildLog,
+      },
+      contactLine: "正在找 AI 产品方向的全职机会。",
       contactCta: {
-        label: "发邮件聊",
+        label: "联系我",
         href: links.email,
       },
     },
@@ -82,10 +81,10 @@ export const zh = {
         href: links.buildLog,
       },
       stats: [
-        { value: "10", label: "项目" },
-        { value: "1", label: "已上线" },
-        { value: "8", label: "Demo" },
-        { value: "开放合作", label: "怎么做" },
+        { value: "10", label: "已交付产品" },
+        { value: "1", label: "App Store 上线" },
+        { value: "8", label: "可交互 Demo" },
+        { value: "6+", label: "技术领域" },
       ],
     },
     lab: {
@@ -93,14 +92,14 @@ export const zh = {
       title: "产品、工具和 Demo。",
     },
     manifesto: {
-      title: "我想做什么",
+      title: "我怎么理解做产品",
       paragraphs: [
-        "我做的大部分东西，都是从一个真实问题开始的。",
-        "一开始就用最简单的方式解决。\n后来发现同样的问题一直在出现 ——\n不只是困住我，也困住别人。",
-        "那它就不只是一个问题了，\n它是一个规律。",
-        "发现规律之后我会想：\n能不能把解决方法做成一个工具？\n让下一次少花点力气，\n少花点时间，\n少做几个重复的决定。",
-        "我不是程序员，\n也没有计算机背景。\n但我有 AI，\n也有足够多让我想动手的问题。",
-        "事实证明，这就够了。",
+        "每个产品都从一个真实问题开始。",
+        "先用最笨的方式解决。\n然后发现同样的问题一直出现 ——\n不只困住我，也困住别人。",
+        "那它就变成了一个规律。\n规律就会变成产品。",
+        "发现规律之后，\n我会围绕它设计一个工具 ——\n让下一次少花点力气，\n少花点时间，\n少做几个重复的决定。",
+        "我横跨全栈 — React、TypeScript、Electron、Swift、LLM —\n因为问题决定工具，\n不是反过来。",
+        "10 个产品之后，这套方法一直在用。",
       ],
     },
     subscribe: {
@@ -111,9 +110,9 @@ export const zh = {
     aboutShort: {
       title: "关于 Esther",
       paragraphs: [
-        "我是 Esther。没有计算机背景的文科生。",
-        "我做的大部分东西，\n都来自自己真实遇到的问题 ——\n简历改不好、拍照不会摆、\n产品没人用也拿不到反馈。",
-        "同样的问题一直出现，\n所以我就一直做下去。",
+        "我是 Esther — 横跨 iOS、桌面端和 Web 的 AI 产品构建者。",
+        "2026 年交付了 10 个产品：1 个上线 App Store 的简历 AI、1 个 Electron 桌面客户端、视频自动化 pipeline、BI 数据看板和工作流自动化系统。",
+        "每一个都从真实问题开始，每一个都从想法做到了可用的产品。",
       ],
       cta: {
         label: "→ 完整版",
@@ -122,59 +121,58 @@ export const zh = {
       comingSoonLabel: "即将开放",
     },
     workWithMe: {
-      title: "合作方向",
-      intro: "感兴趣的方向：",
+      title: "我能做什么",
+      intro: "正在找全职机会，以下是我的交付能力：",
       items: [
-        "→ AI 产品合作",
-        "→ 早期产品探索",
-        "→ AI 工作流定制",
-        "→ 职业工具",
-        "→ 拍照与自我表达",
+        "→ 全栈 AI 产品开发（iOS、桌面端、Web）",
+        "→ 端到端交付：从问题发现到 App Store 上线",
+        "→ LLM 集成、Prompt Engineering、AI Agent 工作流",
+        "→ 业务分析、BI 数据看板、流程自动化",
+        "→ 视频自动化和内容 pipeline 工程",
       ],
-      closing: "有想法的话，发邮件聊。",
+      closing: "如果你在做有意思的事，聊聊。",
       cta: {
-        label: "发邮件聊",
+        label: "联系我",
         href: links.email,
       },
     },
   },
   about: {
     metadata: {
-      title: "关于 Esther — AI 产品实验室",
-      description: "关于 Esther，以及 Esther AI Builder Lab 背后的产品、Demo 和建造原则。",
+      title: "关于 Esther — AI 产品构建者",
+      description: "关于 Esther：2026 年交付 10 个 AI 产品，横跨 iOS、桌面端和 Web 的全栈产品构建者。",
     },
     eyebrow: "Esther Builds",
     title: "关于 Esther",
     ctas: [
-      { label: "看看实验室", href: links.lab },
-      { label: "发邮件聊", href: links.email },
+      { label: "看产品", href: links.lab },
+      { label: "联系我", href: links.email },
     ],
     paragraphs: [
-      "我是 Esther，来自中国。\n没有计算机背景的文科生。\n正在靠真的做东西，学产品、学代码、学怎么把它给人看。",
-      "以前觉得做软件是程序员的事。\nAI 出来之后，从「遇到问题」到「做出工具」的距离突然变短了。",
-      "所以我就开始做。做的大部分东西都来自真实烦到我的事 —\n简历改不好、拍照不会摆、\n星盘看不懂、AI 工作流动不动就断。",
-      "我没在包装什么干净的创业故事。\n我就是从真正困扰我的地方开始做。",
-      "有些后来变成了产品，有些还很粗糙，\n有些大概也不会做下去 —\n但每一个都让我学会了怎么把乱七八糟的东西变得稍微能用一点。",
-      "这个网站就是我留证据的地方：\n做成的产品、\n还很粗糙的 demo、\n还在试的想法、\n还有一路记下来的笔记。",
+      "我是 Esther — 横跨 iOS、桌面端和 Web 的 AI 产品构建者。",
+      "2026 年交付了 10 个产品：上线 App Store 的简历 AI、\n基于 Electron 的自动找工作客户端、视频自动化 pipeline、\nBI 数据看板和工作流自动化系统。",
+      "我横跨全栈 — React、Next.js、TypeScript、Electron、Swift 和 LLM API —\n因为问题决定工具。",
+      "每个产品都从真实遇到的问题开始。\n简历改不好，做成了 App Store 产品。\n手动刷岗位，做成了自动化桌面客户端。\n视频流程太乱，做成了可复用的 pipeline。",
+      "这个网站就是作品集：\n10 个产品、8 个可交互 Demo、\n一份持续更新的构建记录。",
     ],
     principles: {
-      title: "我是怎么做东西的",
+      title: "我怎么做产品",
       items: [
         {
-          title: "从真实问题开始。",
-          body: "不是先做市场调研。\n是先被一个问题烦够了，然后想做个工具。",
+          title: "从真实摩擦开始。",
+          body: "每个产品都从我自己真实遇到的问题开始。\n这让解决方案足够具体。",
         },
         {
-          title: "先做出来再说。",
-          body: "一个能跑的 demo 比一个完美的想法有用得多。",
+          title: "交付能用的版本。",
+          body: "能跑的产品比完美的方案有用。\n10 个产品都是这样做出来的。",
         },
         {
-          title: "保持人味。",
-          body: "好的 AI 工具不应该像机器在打分，\n应该像有人在帮你。",
+          title: "用对的工具做对的事。",
+          body: "需要原生就用 iOS，需要桌面就用 Electron，\n需要 Web 就用 Next.js。问题决定工具。",
         },
         {
-          title: "没准备好就先放出来。",
-          body: "放出来之后，\n哪里不对很快就知道了。",
+          title: "做完整闭环。",
+          body: "从发现问题到生产部署。\n不只是原型 — 是真正有人用的产品。",
         },
       ],
     },
@@ -296,6 +294,7 @@ export const zh = {
         isFeatured: true,
         isExternal: false,
         screenshot: "/demos/tailorcv/poster.jpg",
+        techStack: ["iOS", "Swift", "LLM", "App Store"],
       },
       {
         id: "job-radar",
@@ -315,6 +314,7 @@ export const zh = {
         isFeatured: false,
         isExternal: false,
         screenshot: "/demos/job-radar/poster-zh.jpg",
+        techStack: ["Electron", "React", "TypeScript", "LLM", "Node.js"],
       },
       {
         id: "justphoto",
@@ -334,6 +334,7 @@ export const zh = {
         isFeatured: true,
         isExternal: false,
         screenshot: "/images/lab/justphoto.png",
+        techStack: ["iOS", "Swift", "Computer Vision"],
       },
       {
         id: "auto-promo-recorder",
@@ -353,6 +354,7 @@ export const zh = {
         isFeatured: false,
         isExternal: false,
         screenshot: null,
+        techStack: ["FFmpeg", "HyperFrames", "Node.js"],
       },
       {
         id: "real-estate-workflow",
@@ -372,6 +374,7 @@ export const zh = {
         isFeatured: false,
         isExternal: false,
         screenshot: null,
+        techStack: ["React", "TypeScript", "Systems Design"],
       },
       {
         id: "employment-dashboard",
@@ -391,6 +394,7 @@ export const zh = {
         isFeatured: false,
         isExternal: false,
         screenshot: null,
+        techStack: ["React", "Data Visualization", "BI"],
       },
       {
         id: "process-improvement-tracker",
@@ -410,6 +414,7 @@ export const zh = {
         isFeatured: false,
         isExternal: false,
         screenshot: null,
+        techStack: ["React", "TypeScript", "Stage-Gate"],
       },
       {
         id: "exact-transit",
@@ -429,6 +434,7 @@ export const zh = {
         isFeatured: false,
         isExternal: false,
         screenshot: "/images/lab/exact-transit.png",
+        techStack: ["React", "Astrology API", "Timeline"],
       },
       {
         id: "simuser-loop",
@@ -448,6 +454,7 @@ export const zh = {
         isFeatured: false,
         isExternal: false,
         screenshot: "/images/lab/simuser-loop.png",
+        techStack: ["LLM", "Prompt Engineering", "React"],
       },
       {
         id: "orchestrator-telemetry",
@@ -467,6 +474,7 @@ export const zh = {
         isFeatured: false,
         isExternal: false,
         screenshot: "/images/lab/orchestrator.png",
+        techStack: ["Node.js", "AI Agents", "React"],
       },
       {
         id: "next",
@@ -486,6 +494,7 @@ export const zh = {
         isFeatured: false,
         isExternal: false,
         screenshot: null,
+        techStack: [],
       },
     ],
   },

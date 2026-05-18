@@ -9,6 +9,7 @@ type HeroProps = {
 export default function Hero({ content: hero, locale }: HeroProps) {
   return (
     <section className="relative px-0 pt-12 pb-12 sm:pt-20 sm:pb-18">
+      <div className="hero-gradient" aria-hidden="true" />
       <div className="shell grid gap-10 lg:grid-cols-2 lg:items-end">
         <div>
           <p className="mb-5 text-sm font-semibold uppercase tracking-[0.16em] text-[#C84B31]">
